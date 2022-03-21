@@ -1,5 +1,5 @@
-##  react template select 这里收集一些基于react的后台模板供参考
-1. https://github.com/ltadpoles/react-admin   
+##  这里收集一些基于react的后台管理模板项目供参考
+https://github.com/ltadpoles/react-admin   
 
 ## 文章  
 最好的 6 款 React 后台管理系统模板和框架 - 卡拉云.htm   
