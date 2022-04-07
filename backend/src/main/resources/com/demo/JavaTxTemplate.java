@@ -2,7 +2,7 @@ package com.demo;
 
 import static com.github.drinkjava2.jsqlbox.DB.*;
 import com.github.drinkjava2.jsqlbox.*;
-import com.demo.entity.*;
+import com.github.drinkjava2.reactmrp.entity.*;
 import javax.servlet.http.*;
 import java.util.*;
 import com.alibaba.fastjson.*;

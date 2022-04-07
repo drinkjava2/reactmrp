@@ -2,14 +2,14 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
  <modelVersion>4.0.0</modelVersion>
  <groupId>com.github.drinkjava2</groupId>
- <artifactId>myserverless-server</artifactId>
- <version>3.0</version>
+ <artifactId>react-mrp-backend</artifactId>
+ <version>1.0</version>
  <packaging>jar</packaging> 
   
- <name>myserverless-server</name>
- <description>This is MyServerless server side demo project run on Undertow-Embedded</description> 
+ <name>react-mrp</name>
+ <description>This is react-mrp backend</description> 
    
- <url>https://gitee.com/drinkjava2/myserverless</url>
+ <url>https://github.com/drinkjava2/react-mrp</url>
   
  <licenses>
    <license>
@@ -73,7 +73,7 @@
     <dependency>
       <groupId>com.github.drinkjava2</groupId>
       <artifactId>jsqlbox</artifactId>
-      <version>5.0.6.jre8</version><!--Or newest jSqlBox -->
+      <version>5.0.13.jre8</version><!--Or newest jSqlBox -->
     </dependency>  
 	
    <!-- HikariCP is a dataSource pool quicker than c3p0 -->
