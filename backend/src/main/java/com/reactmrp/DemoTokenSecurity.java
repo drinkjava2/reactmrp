@@ -25,11 +25,12 @@ import com.github.drinkjava2.jsqlbox.DB;
  */
 public class DemoTokenSecurity implements TokenSecurity {
 
+    @Override
     public String login(String username, String password) {
-        int i = DB.qryIntValue("select count(*) from demo_user where username=", DB.que(username), " and password=", DB.que(MD5Util.encryptMD5(password)));
+        int i = DB.qryIntValue("select count(*) from t_user where username=", DB.que(username), " and password=", DB.que(MD5Util.encryptMD5(password)));
         if (i == 1) {
             String token = username + "_" + StrUtils.getRandomString(50);
-            DB.exe("update demo_user set token=", DB.que(token), " where username=", DB.que(username), " and password=", DB.que(MD5Util.encryptMD5(password)));
+            DB.exe("update t_user set token=", DB.que(token), " where username=", DB.que(username), " and password=", DB.que(MD5Util.encryptMD5(password)));
             return token;
         } else {
             return null;
@@ -38,8 +39,9 @@ public class DemoTokenSecurity implements TokenSecurity {
 
     static SimpleCacheHandler tokenCache = new SimpleCacheHandler(3000, 10 * 24 * 60 * 60);//缺省最多同时保存3000个token, 10天过期 
 
+    @Override
     public boolean allowExecute(String token, String methodId) {
-        int i = DB.qryIntValue(tokenCache, "select count(*) from demo_user where token=", DB.que(token));
+        int i = DB.qryIntValue(tokenCache, "select count(*) from t_user where token=", DB.que(token));
         if (i == 1)
             return true;
         else

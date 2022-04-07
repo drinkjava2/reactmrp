@@ -37,7 +37,7 @@ section header {
     
     <script> 
 	  function getUserListHtml(){
-		  var users=$qryMapList(`select * from account where amount>=? order by id`,0);
+		  var users=$qryMapList(`select * from t_account where amount>=? order by id`,0);
 		  var html="User List:<br/>";
 		  for(var i=0;i<users.length;i++) 
 			  html+="User ID:" +  users[i].ID+", AMOUNT:"+ users[i].AMOUNT+"<br/>"; 
@@ -54,7 +54,7 @@ section header {
 		<header>Account A</header>
 		<div id="A" class="amount">
 			<script>
-				document.write($qryObject(`select amount from account where id=? and amount>=?`, 'A',0));
+				document.write($qryObject(`select amount from t_account where id=? and amount>=?`, 'A',0));
 			</script>
 		</div>
 	</section>
@@ -62,7 +62,7 @@ section header {
 		<header>Account B</header>
 		<div id="B" class="amount">
 			<script>
-			    account=$qryEntity(`com.reactmrp.entity.Account, select * from account where id=?`, 'B');
+			    account=$qryEntity(`com.reactmrp.entity.Account, select * from t_account where id=?`, 'B');
 				document.write(account.amount);
 			</script>
 		</div>
@@ -77,8 +77,8 @@ section header {
 					Account a = DB.entityLoadById(Account.class, $1);
 					if (a.getAmount() < money)
 					     return new JsonResult(0, "Error:No enough balance!");
-					DB.exe("update account set amount=amount-?",par(money)," where id=?",par($1));
-					DB.exe("update account set amount=amount+?",par(money)," where id=?",par($2));
+					DB.exe("update t_account set amount=amount-?",par(money)," where id=?",par($1));
+					DB.exe("update t_account set amount=amount+?",par(money)," where id=?",par($2));
 				    return new JsonResult(200, "Transfer success!");
 			        `, from,to,money); 
 		  $("#msgid").text(rst.msg);	
@@ -86,8 +86,8 @@ section header {
 	 	      $("#msgid").css("background", "#dfb");
 		  else 
                      $("#msgid").css("background", "#ffbeb8");
-	      $("#"+from).text($qryObject(`select amount from account where id=?`,'A'));
- 	      $("#"+to).text($qryObject(`select amount from account where id=?`,'B'));
+	      $("#"+from).text($qryObject(`select amount from t_account where id=?`,'A'));
+ 	      $("#"+to).text($qryObject(`select amount from t_account where id=?`,'B'));
  	      $("#Users").html(getUserListHtml());
 		}
 	</script>

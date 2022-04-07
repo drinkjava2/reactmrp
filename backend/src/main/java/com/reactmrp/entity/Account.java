@@ -1,6 +1,7 @@
 package com.reactmrp.entity;
 
 import com.github.drinkjava2.jdialects.annotation.jpa.Id;
+import com.github.drinkjava2.jdialects.annotation.jpa.Table;
 import com.github.drinkjava2.jsqlbox.ActiveEntity;
 
 /**
@@ -8,6 +9,7 @@ import com.github.drinkjava2.jsqlbox.ActiveEntity;
  * 
  * @author Yong Zhu
  */
+@Table(name = "t_account")
 public class Account implements ActiveEntity<Account> {
 	@Id
 	String id;

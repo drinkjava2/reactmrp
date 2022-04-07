@@ -10,16 +10,25 @@
  */
 package com.reactmrp;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.sql.DataSource;
 
 import org.h2.jdbcx.JdbcConnectionPool;
 
+import com.github.drinkjava2.jbeanbox.ClassScanner;
+import com.github.drinkjava2.jdialects.Dialect;
+import com.github.drinkjava2.jdialects.StrUtils;
+import com.github.drinkjava2.jsqlbox.DB;
+import com.github.drinkjava2.jsqlbox.DbContext;
+import com.github.drinkjava2.jtransactions.tinytx.TinyTxConnectionManager;
 import com.github.drinkjava2.myserverless.MyServerlessEnv;
 import com.github.drinkjava2.myserverless.util.MD5Util;
 import com.reactmrp.entity.Account;
-import com.reactmrp.entity.DemoUser;
+import com.reactmrp.entity.User;
 import com.reactmrp.template.JavaTemplate;
 import com.reactmrp.template.JavaTxTemplate;
 import com.reactmrp.template.QryArrayListTemplate;
@@ -31,11 +40,6 @@ import com.reactmrp.template.QryMapListTemplate;
 import com.reactmrp.template.QryMapTemplate;
 import com.reactmrp.template.QryObjectTemplate;
 import com.reactmrp.template.QryTitleArrayListTemplate;
-import com.github.drinkjava2.jdialects.Dialect;
-import com.github.drinkjava2.jdialects.StrUtils;
-import com.github.drinkjava2.jsqlbox.DB;
-import com.github.drinkjava2.jsqlbox.DbContext;
-import com.github.drinkjava2.jtransactions.tinytx.TinyTxConnectionManager;
 
 /**
  * InitConfig is a servlet, but the static method can also be called directly
@@ -67,6 +71,7 @@ public class InitConfig extends HttpServlet {
         MyServerlessEnv.registerMethodTemplate("qryEntityList", QryEntityListTemplate.class);
     }
 
+    @SuppressWarnings("all")
     public static void initDataBase() { //初始化数据库，为演示作准备
         //本示例使用H2内存数据库，如使用其它数据库只要更改下面的DataSource创建方法即可
         DataSource ds = JdbcConnectionPool.create("jdbc:h2:mem:DBName" + StrUtils.getRandomString(30) + ";MODE=MYSQL;DB_CLOSE_DELAY=-1;TRACE_LEVEL_SYSTEM_OUT=0", "sa", "");
@@ -76,16 +81,22 @@ public class InitConfig extends HttpServlet {
         DbContext.setGlobalNextDialect(Dialect.H2Dialect);//手工指定数据库方言
         DbContext.setGlobalNextAllowShowSql(true); //允许输出SQL日志到控制台
         Dialect.setGlobalAllowReservedWords(true); //允许entity字段里用SQL保留字来命名
-        DbContext ctx = new DbContext(ds); 
+        DbContext ctx = new DbContext(ds);
         ctx.setConnectionManager(TinyTxConnectionManager.instance());// 事务相关
         DbContext.setGlobalDbContext(ctx);// 设定全局缺省上下文
-        for (String ddl : ctx.toCreateDDL(Account.class, DemoUser.class))// 第一次要建表
-            DB.exe(ddl);
+
+        List<Class> classes = ClassScanner.scanPackages("com.reactmrp.entity");
+        classes.stream().distinct().forEach(e -> {
+            for (String ddl : ctx.toCreateDDL(e))// 第一次要建表
+                DB.exe(ddl);
+        });
+         
+
         new Account().setId("A").setAmount(500).insert();// 准备测试数据
         new Account().setId("B").setAmount(500).insert();
         new Account().setId("C").setAmount(500).insert();
 
-        DemoUser u = new DemoUser();
+        User u = new User();
         u.setUsername("demo");
         u.setPassword(MD5Util.encryptMD5("123"));
         u.setPhoneNumber("001-123456789");
@@ -93,4 +104,11 @@ public class InitConfig extends HttpServlet {
         u.insert();
     }
 
+    public static void main(String[] args) {
+        List<Class> classes = ClassScanner.scanPackages("com.reactmrp.entity");
+        System.out.println("classes=" + classes);
+        for (Class clazz : classes) {
+            System.out.println("clazz=" + clazz);
+        }
+    }
 }

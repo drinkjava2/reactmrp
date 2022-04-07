@@ -5,8 +5,8 @@ import com.github.drinkjava2.jdialects.annotation.jpa.Id;
 import com.github.drinkjava2.jdialects.annotation.jpa.Table;
 import com.github.drinkjava2.jsqlbox.ActiveEntity;
 
-@Table(name = "demo_user")
-public class DemoUser implements ActiveEntity<DemoUser> {
+@Table(name = "t_user")
+public class User implements ActiveEntity<User> {
     @Id
     @UUID26
     String id;
@@ -16,6 +16,7 @@ public class DemoUser implements ActiveEntity<DemoUser> {
     String password;
     String token;
 
+    //===getter & setter====
     public String getId() {
         return id;
     }

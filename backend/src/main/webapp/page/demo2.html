@@ -66,8 +66,8 @@ section header {
 			  hasNormalMsg: false,
 			  hasErrorMsg: false,
 			  message: '', 
-			  aAmount: $qryObject(`select amount from account where id=? and amount>=?`, 'A',0),
-			  bAmount: $qryObject(`select amount from account where id=? and amount>=?`, 'B',0) 
+			  aAmount: $qryObject(`select amount from t_account where id=? and amount>=?`, 'A',0),
+			  bAmount: $qryObject(`select amount from t_account where id=? and amount>=?`, 'B',0) 
 		  }
 		})
 	

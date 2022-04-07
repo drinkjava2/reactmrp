@@ -2,16 +2,16 @@
 function postDemo3Form(){ 
 		    var rst = $$java(`
 import com.alibaba.fastjson.JSON;
-import com.reactmrp.entity.DemoUser;
+import com.reactmrp.entity.User;
 import com.github.drinkjava2.jdialects.StrUtils;
 import com.github.drinkjava2.jsqlbox.DB;
 import static com.github.drinkjava2.jsqlbox.DB.*;
 import com.github.drinkjava2.myserverless.util.MD5Util; 
-	        DemoUser u = JSON.parseObject($1, DemoUser.class);
+	        User u = JSON.parseObject($1, User.class);
 	        StringBuilder error = new StringBuilder();
 	        if (StrUtils.isEmpty(u.getUsername()))
 	            error.append("User name can not be empty. <br/>");
-	        if (DB.qryIntValue("select count(*) from demo_user where username=",que(u.getUsername()))>0)
+	        if (DB.qryIntValue("select count(*) from t_user where username=",que(u.getUsername()))>0)
 	            error.append("User name already exist. <br/>");	        
 	        if (StrUtils.isEmpty(u.getIdentity()))
 	            error.append("Identity can not be empty. <br/> ");
@@ -23,7 +23,7 @@ import com.github.drinkjava2.myserverless.util.MD5Util;
 	        if (errors.isEmpty()) {
 	            u.setPassword(MD5Util.encryptMD5(u.getUsername()));
 	            u.insert(par());
-	            return new JsonResult(200, "DemoUser saved, now have " + DB.entityCount(DemoUser.class) + " records.");
+	            return new JsonResult(200, "User saved, now have " + DB.entityCount(User.class) + " records.");
 	        } else
       	        return new JsonResult(0, errors);
 	        `, formToJSON("form1"));
@@ -32,7 +32,7 @@ import com.github.drinkjava2.myserverless.util.MD5Util;
 			 if(rst.code==200){
 				 $("#msg").css("background", "#dfb");
 				
-				 users=$qryMapList(`select * from demo_user order by id`);
+				 users=$qryMapList(`select * from t_user order by id`);
 		         if(users.length>0){
 		             html="User List:<br/>";
 			         for(var i=0;i<users.length;i++) 
