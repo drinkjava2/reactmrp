@@ -22,8 +22,11 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-# Ignore temperary files
+# Ignore backend temperary files
 /backend/target/
+/backend/.settings/
 /backend/*.project
 /backend/*.classpath
+
+# Ignore frontend temperary files
 /frontend/build/
