@@ -2,7 +2,7 @@
 function postDemo3Form(){ 
 		    var rst = $$java(`
 import com.alibaba.fastjson.JSON;
-import com.demo.entity.DemoUser;
+import com.reactmrp.entity.DemoUser;
 import com.github.drinkjava2.jdialects.StrUtils;
 import com.github.drinkjava2.jsqlbox.DB;
 import static com.github.drinkjava2.jsqlbox.DB.*;

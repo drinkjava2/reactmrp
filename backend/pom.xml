@@ -2,12 +2,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
  <modelVersion>4.0.0</modelVersion>
  <groupId>com.github.drinkjava2</groupId>
- <artifactId>react-mrp-backend</artifactId>
+ <artifactId>reactmrp-backend</artifactId>
  <version>1.0</version>
  <packaging>jar</packaging> 
   
- <name>react-mrp</name>
- <description>This is react-mrp backend</description> 
+ <name>reactmrp</name>
+ <description>ReactMRP backend</description> 
    
  <url>https://github.com/drinkjava2/react-mrp</url>
   

@@ -8,7 +8,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package com.github.drinkjava2.reactmrp;
+package com.reactmrp;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,21 +16,21 @@ import javax.sql.DataSource;
 
 import org.h2.jdbcx.JdbcConnectionPool;
 
-import com.demo.JavaTemplate;
-import com.demo.JavaTxTemplate;
-import com.demo.QryArrayListTemplate;
-import com.demo.QryArrayTemplate;
-import com.demo.QryEntityListTemplate;
-import com.demo.QryEntityTemplate;
-import com.demo.QryListTemplate;
-import com.demo.QryMapListTemplate;
-import com.demo.QryMapTemplate;
-import com.demo.QryObjectTemplate;
-import com.demo.QryTitleArrayListTemplate;
 import com.github.drinkjava2.myserverless.MyServerlessEnv;
 import com.github.drinkjava2.myserverless.util.MD5Util;
-import com.github.drinkjava2.reactmrp.entity.Account;
-import com.github.drinkjava2.reactmrp.entity.DemoUser;
+import com.reactmrp.entity.Account;
+import com.reactmrp.entity.DemoUser;
+import com.reactmrp.template.JavaTemplate;
+import com.reactmrp.template.JavaTxTemplate;
+import com.reactmrp.template.QryArrayListTemplate;
+import com.reactmrp.template.QryArrayTemplate;
+import com.reactmrp.template.QryEntityListTemplate;
+import com.reactmrp.template.QryEntityTemplate;
+import com.reactmrp.template.QryListTemplate;
+import com.reactmrp.template.QryMapListTemplate;
+import com.reactmrp.template.QryMapTemplate;
+import com.reactmrp.template.QryObjectTemplate;
+import com.reactmrp.template.QryTitleArrayListTemplate;
 import com.github.drinkjava2.jdialects.Dialect;
 import com.github.drinkjava2.jdialects.StrUtils;
 import com.github.drinkjava2.jsqlbox.DB;

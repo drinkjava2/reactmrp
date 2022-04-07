@@ -1,13 +1,13 @@
-package com.demo;
+package com.reactmrp.template;
 
 import static com.github.drinkjava2.jsqlbox.DB.par;
-import static com.github.drinkjava2.jsqlbox.DB.qryList;
+import static com.github.drinkjava2.jsqlbox.DB.qryMap;
 import static com.github.drinkjava2.jsqlbox.DB.qry;
 import com.github.drinkjava2.jsqlbox.*;
 import com.github.drinkjava2.myserverless.BaseTemplate;
 
 @SuppressWarnings("unused")
-public class QryListTemplate extends BaseTemplate {
+public class QryMapTemplate extends BaseTemplate {
     
 	@Override
 	public Object executeBody() {
@@ -16,9 +16,9 @@ public class QryListTemplate extends BaseTemplate {
 		/* MYSERVERLESS BODY END */
 		String[] paramArray = getParamArray();
 		if (paramArray.length == 0)
-			return qryList(sql);
+			return qryMap(sql);
 		else
-			return qryList(sql, par((Object[]) paramArray));
+			return qryMap(sql, par((Object[]) paramArray));
 	}
 
 }

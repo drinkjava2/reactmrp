@@ -17,11 +17,9 @@ import com.github.drinkjava2.myserverless.util.Txt;
  */
 
 public class Texts { 
-
-	// for DynamicCompileEntine test
+ 
 	public static class DemoTxt extends Txt {
-		/*- 
-		 package com.demo.deploy;
+		/*-  
 		 public class A {
 		  public String name="a"; 
 		 } 

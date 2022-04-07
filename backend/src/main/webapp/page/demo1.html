@@ -62,7 +62,7 @@ section header {
 		<header>Account B</header>
 		<div id="B" class="amount">
 			<script>
-			    account=$qryEntity(`com.demo.entity.Account, select * from account where id=?`, 'B');
+			    account=$qryEntity(`com.reactmrp.entity.Account, select * from account where id=?`, 'B');
 				document.write(account.amount);
 			</script>
 		</div>

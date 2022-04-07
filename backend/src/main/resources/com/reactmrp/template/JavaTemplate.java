@@ -1,7 +1,7 @@
-package com.demo;
+package com.reactmrp.template;
 
 import static com.github.drinkjava2.jsqlbox.DB.*;
-import com.github.drinkjava2.reactmrp.entity.*;
+import com.reactmrp.entity.*;
 import com.alibaba.fastjson.*;
 import com.github.drinkjava2.jsqlbox.*;
 import com.github.drinkjava2.jwebbox.WebBox;

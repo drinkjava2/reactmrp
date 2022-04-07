@@ -1,3 +1,3 @@
 cd target\classes
-java -classpath ".;*" com.demo.Deploy goServer
+java -classpath ".;*" com.reactmrp.Deploy goServer
 @pause

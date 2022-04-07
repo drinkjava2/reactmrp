@@ -4,19 +4,19 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
  
     <!-- 这个文件存放通用的MyServerless配置，可用于任意基于web.xml的传统servlet容器，本演示项目因为是从MainApp启动Undertow服务， 并
-                没有用到这个配置，写这个文件只是为了可移植性 -->
+                没有用到这个配置，写这个文件只是为了供学习用 -->
  
     <!-- Dao and database initialization 初始化数据库以备测试 -->  
 	<servlet>
 	   <servlet-name>InitConfig</servlet-name>
-	   <servlet-class>com.demo.InitConfig</servlet-class>
+	   <servlet-class>com.reactmrp.InitConfig</servlet-class>
 	   <load-on-startup>0</load-on-startup>
 	</servlet>  
 
 	<!-- Register MyServerless Servlet -->  
 	<servlet>
 		<servlet-name>MyServerlessServlet</servlet-name>
-		<servlet-class>com.demo.MyServerlessServlet</servlet-class>
+		<servlet-class>com.github.drinkjava2.myserverless.MyServerlessServlet</servlet-class>
 	</servlet>
 
     <!-- Map to MyServerlessServlet -->  

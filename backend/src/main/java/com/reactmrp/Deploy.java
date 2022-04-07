@@ -8,7 +8,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package com.github.drinkjava2.reactmrp;
+package com.reactmrp;
 
 import com.github.drinkjava2.myserverless.DeployTool;
 
@@ -18,10 +18,10 @@ import com.github.drinkjava2.myserverless.DeployTool;
  *  <pre>
  *  
  *  将服务器的MyServerless片段移到前端HTML页面里
- *  java -classpath ".;*" com.demo.Deploy goFront
+ *  java -classpath ".;*" com.reactmrp.Deploy goFront
  *  
  *  将MyServerless片段从HTML页面移到服务器，以实现安全
- *  java -classpath ".;*" com.demo.Deploy goServer
+ *  java -classpath ".;*" com.reactmrp.Deploy goServer
  *  
  *  </pre>
  */

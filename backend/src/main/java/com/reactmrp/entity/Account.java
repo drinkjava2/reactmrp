@@ -1,4 +1,4 @@
-package com.github.drinkjava2.reactmrp.entity;
+package com.reactmrp.entity;
 
 import com.github.drinkjava2.jdialects.annotation.jpa.Id;
 import com.github.drinkjava2.jsqlbox.ActiveEntity;
