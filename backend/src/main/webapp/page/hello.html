@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ReactMRP V1.0</title>
+<style>
+section {
+	margin-bottom: 30px
+}
+
+section header {
+	font-weight: bolder;
+	padding-bottom: 10px;
+}
+
+.amount {
+	width: 200px;
+	text-align: right;
+	border: 1px solid #aaa;
+	background-color: #eee;
+	padding: 3px 8px;
+}
+
+.msg {
+	width: 80%;
+	padding: 8px;
+	margin-bottom: 20px;
+}
+</style>
+<script src="/js/jquery-1.11.3.min.js"></script>
+<script src="/js/jquery-ajax-ext.js"></script>
+<script src="/js/myserverless-3.0.js"></script>
+</head>
+<body>
+      
+    <h2>Backend service started.</h2>
+    <script> 
+	  function getUserListHtml(){
+		  var users=$qryMapList(`select * from users order by username`);
+		  var html="User List:<br/>";
+		  for(var i=0;i<users.length;i++) 
+			  html+="Username:" +  users[i].USERNAME+", password:"+ users[i].PASSWORD+", token:"+ users[i].TOKEN+"<br/>"; 
+	      return html;		   
+	  }
+	</script>
+	   
+	<div id="msgid" class="msg"></div> 
+	<p id="Users">
+	    <script>document.write(getUserListHtml());</script>   
+	</p>
+	 
+</body>
+</html>

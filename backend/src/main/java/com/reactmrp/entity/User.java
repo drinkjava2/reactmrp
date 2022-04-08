@@ -1,29 +1,19 @@
 package com.reactmrp.entity;
 
-import com.github.drinkjava2.jdialects.annotation.jdia.UUID26;
 import com.github.drinkjava2.jdialects.annotation.jpa.Id;
 import com.github.drinkjava2.jdialects.annotation.jpa.Table;
 import com.github.drinkjava2.jsqlbox.ActiveEntity;
 
-@Table(name = "t_user")
+@Table(name = "users")
 public class User implements ActiveEntity<User> {
     @Id
-    @UUID26
-    String id;
     String username;
-    String identity;
-    String phoneNumber;
+
     String password;
+
     String token;
 
-    //===getter & setter====
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    String poPrefix; //订单前缀，下订单时才用到
 
     public String getUsername() {
         return username;
@@ -31,22 +21,6 @@ public class User implements ActiveEntity<User> {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getIdentity() {
-        return identity;
-    }
-
-    public void setIdentity(String identity) {
-        this.identity = identity;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
     }
 
     public String getPassword() {
@@ -63,6 +37,14 @@ public class User implements ActiveEntity<User> {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getPoPrefix() {
+        return poPrefix;
+    }
+
+    public void setPoPrefix(String poPrefix) {
+        this.poPrefix = poPrefix;
     }
 
 }

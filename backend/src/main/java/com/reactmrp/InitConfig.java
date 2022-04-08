@@ -11,7 +11,6 @@
 package com.reactmrp;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -27,7 +26,6 @@ import com.github.drinkjava2.jsqlbox.DbContext;
 import com.github.drinkjava2.jtransactions.tinytx.TinyTxConnectionManager;
 import com.github.drinkjava2.myserverless.MyServerlessEnv;
 import com.github.drinkjava2.myserverless.util.MD5Util;
-import com.reactmrp.entity.Account;
 import com.reactmrp.entity.User;
 import com.reactmrp.template.JavaTemplate;
 import com.reactmrp.template.JavaTxTemplate;
@@ -87,28 +85,25 @@ public class InitConfig extends HttpServlet {
 
         List<Class> classes = ClassScanner.scanPackages("com.reactmrp.entity");
         classes.stream().distinct().forEach(e -> {
-            for (String ddl : ctx.toCreateDDL(e))// 第一次要建表
+            for (String ddl : ctx.toCreateDDL(e)) {// 第一次要建表
+                System.out.println(ddl);
                 DB.exe(ddl);
+            }
         });
-         
-
-        new Account().setId("A").setAmount(500).insert();// 准备测试数据
-        new Account().setId("B").setAmount(500).insert();
-        new Account().setId("C").setAmount(500).insert();
 
         User u = new User();
         u.setUsername("demo");
         u.setPassword(MD5Util.encryptMD5("123"));
-        u.setPhoneNumber("001-123456789");
-        u.setIdentity("312307239834534762345");
         u.insert();
     }
 
     public static void main(String[] args) {
+        initDataBase();
         List<Class> classes = ClassScanner.scanPackages("com.reactmrp.entity");
         System.out.println("classes=" + classes);
         for (Class clazz : classes) {
             System.out.println("clazz=" + clazz);
         }
+
     }
 }

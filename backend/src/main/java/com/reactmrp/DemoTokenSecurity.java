@@ -10,11 +10,11 @@
  */
 package com.reactmrp;
 
-import com.github.drinkjava2.myserverless.TokenSecurity;
-import com.github.drinkjava2.myserverless.util.MD5Util;
 import com.github.drinkjava2.jdbpro.handler.SimpleCacheHandler;
 import com.github.drinkjava2.jdialects.StrUtils;
 import com.github.drinkjava2.jsqlbox.DB;
+import com.github.drinkjava2.myserverless.TokenSecurity;
+import com.github.drinkjava2.myserverless.util.MD5Util;
 
 /**
  * This is the super class of all other templates, execute method return a
@@ -27,10 +27,10 @@ public class DemoTokenSecurity implements TokenSecurity {
 
     @Override
     public String login(String username, String password) {
-        int i = DB.qryIntValue("select count(*) from t_user where username=", DB.que(username), " and password=", DB.que(MD5Util.encryptMD5(password)));
+        int i = DB.qryIntValue("select count(*) from users where username=", DB.que(username), " and password=", DB.que(MD5Util.encryptMD5(password)));
         if (i == 1) {
             String token = username + "_" + StrUtils.getRandomString(50);
-            DB.exe("update t_user set token=", DB.que(token), " where username=", DB.que(username), " and password=", DB.que(MD5Util.encryptMD5(password)));
+            DB.exe("update users set token=", DB.que(token), " where username=", DB.que(username), " and password=", DB.que(MD5Util.encryptMD5(password)));
             return token;
         } else {
             return null;
@@ -41,7 +41,7 @@ public class DemoTokenSecurity implements TokenSecurity {
 
     @Override
     public boolean allowExecute(String token, String methodId) {
-        int i = DB.qryIntValue(tokenCache, "select count(*) from t_user where token=", DB.que(token));
+        int i = DB.qryIntValue(tokenCache, "select count(*) from users where token=", DB.que(token));
         if (i == 1)
             return true;
         else

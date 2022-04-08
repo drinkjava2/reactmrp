@@ -78,7 +78,7 @@ input{
 		var rst =myserverlessLogin($('#usrName').val(), $('#usrPwd').val());
 		if(rst.code==200){
 			localStorage.setItem("token",rst.data);
-			window.location.href="/page/demo1.html";
+			window.location.href="/page/hello.html";
 		} else
 			$("#msg").html("Wrong username or password.");
 	 } 
