@@ -8,7 +8,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package com.reactmrp;
+package com.reactmrp.config;
 
 import com.github.drinkjava2.jdbpro.handler.SimpleCacheHandler;
 import com.github.drinkjava2.jdialects.StrUtils;
@@ -17,20 +17,23 @@ import com.github.drinkjava2.myserverless.TokenSecurity;
 import com.github.drinkjava2.myserverless.util.MD5Util;
 
 /**
- * This is the super class of all other templates, execute method return a
- * WebBox instance, override executeBody method in each template class
+ * MyServerless的TokenSecurity接口两个方法必须实现，以实现登录和token检查功能
  * 
  * @author Yong Zhu
  * @since 1.0.0
  */
-public class DemoTokenSecurity implements TokenSecurity {
+public class SecurityConfig implements TokenSecurity {
+
+    public static String encodePassword(String password) {
+        return MD5Util.encryptMD5("salt8888" + password);
+    }
 
     @Override
     public String login(String username, String password) {
-        int i = DB.qryIntValue("select count(*) from users where username=", DB.que(username), " and password=", DB.que(MD5Util.encryptMD5(password)));
+        int i = DB.qryIntValue("select count(*) from users where username=", DB.que(username), " and password=", DB.que(encodePassword(password)));
         if (i == 1) {
             String token = username + "_" + StrUtils.getRandomString(50);
-            DB.exe("update users set token=", DB.que(token), " where username=", DB.que(username), " and password=", DB.que(MD5Util.encryptMD5(password)));
+            DB.exe("update users set token=", DB.que(token), " where username=", DB.que(username), " and password=", DB.que(encodePassword(password)));
             return token;
         } else {
             return null;

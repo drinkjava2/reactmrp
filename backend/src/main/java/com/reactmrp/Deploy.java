@@ -11,6 +11,7 @@
 package com.reactmrp;
 
 import com.github.drinkjava2.myserverless.DeployTool;
+import com.reactmrp.config.InitConfig;
 
 /**
  *  Deploy工具必须先调用initMyServerlessTemplates方法才可以使用，每个项目的初始化方法内容可能不一样

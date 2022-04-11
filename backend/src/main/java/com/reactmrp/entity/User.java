@@ -1,5 +1,6 @@
 package com.reactmrp.entity;
 
+import com.github.drinkjava2.jdialects.annotation.jdia.COLUMN;
 import com.github.drinkjava2.jdialects.annotation.jpa.Id;
 import com.github.drinkjava2.jdialects.annotation.jpa.Table;
 import com.github.drinkjava2.jsqlbox.ActiveEntity;
@@ -7,13 +8,25 @@ import com.github.drinkjava2.jsqlbox.ActiveEntity;
 @Table(name = "users")
 public class User implements ActiveEntity<User> {
     @Id
-    String username;
+    @COLUMN(length = 30)
+    private String username;
 
-    String password;
+    @COLUMN(length = 32)
+    private String password;
 
-    String token;
+    @COLUMN(length = 200)
+    private String token;
 
-    String poPrefix; //订单前缀，下订单时才用到
+    @COLUMN(length = 20, comment = "手机")
+    private String mobilePhone;
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public void setMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+    }
 
     public String getUsername() {
         return username;
@@ -38,13 +51,4 @@ public class User implements ActiveEntity<User> {
     public void setToken(String token) {
         this.token = token;
     }
-
-    public String getPoPrefix() {
-        return poPrefix;
-    }
-
-    public void setPoPrefix(String poPrefix) {
-        this.poPrefix = poPrefix;
-    }
-
 }

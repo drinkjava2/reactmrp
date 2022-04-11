@@ -140,7 +140,7 @@ function getRemoteJson(remoteMethod, text, args){
 	 var jsonOrHtml= getRemoteResponse(remoteMethod, text, args); 
 	 var jsonObj=JSON.parse(jsonOrHtml);
 	  if(jsonObj.debugInfo!=null)
-	      alert(jsonObj.debugInfo);  // or console.log(jsonObj.debugInfo);
+	      console.log(jsonObj.debugInfo); 
 	  return jsonObj;
 }
 
@@ -153,7 +153,7 @@ function getRemoteJsonData(remoteMethod, text, args){
 	 	return jsonOrHtml;
 	 } 
 	 if(jsonObj.debugInfo!=null)
-	     alert(jsonObj.debugInfo);  // or console.log(jsonObj.debugInfo);
+		 console.log(jsonObj.debugInfo);
 	 return jsonObj.data;
 }
 

@@ -75,10 +75,10 @@ input{
 	<h3 id="msg"></h3>
 	<script> 
 	 function doLogin(){ 
-		var rst =myserverlessLogin($('#usrName').val(), $('#usrPwd').val());
+		var rst =myserverlessLogin($('#username').val(), $('#password').val());
 		if(rst.code==200){
 			localStorage.setItem("token",rst.data);
-			window.location.href="/page/hello.html";
+			window.location.href="/page/welcome.html";
 		} else
 			$("#msg").html("Wrong username or password.");
 	 } 
@@ -86,8 +86,8 @@ input{
 	
 	
 	<form id="loginForm" name="loginForm" onsubmit="return false" action="##" method="post">
-		  <input id="usrName" type="text" required="required" placeholder="username" name="username" value="demo"></input> <br/>
-		  <input id="usrPwd" type="password" required="required" placeholder="password" name="password" value="123"></input>
+		  <input id="username" type="text" required="required" placeholder="username" name=""username"" value="demo"></input> <br/>
+		  <input id="password" type="password" required="required" placeholder="password" name="password" value="123"></input>
 		  <button class="but" name="submit" onclick="doLogin()">Login</button>
 	</form>
 	</div>

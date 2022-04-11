@@ -32,18 +32,22 @@ section header {
 <script src="/js/myserverless-3.0.js"></script>
 </head>
 <body>
+    <script>
+      var token=localStorage.getItem("token");
+      if(token==null)
+    	  window.location.href="/page/login.html";
+      //todo: check token valid or expired
       
-    <h2>Backend service started.</h2>
-    <script> 
 	  function getUserListHtml(){
 		  var users=$qryMapList(`select * from users order by username`);
 		  var html="User List:<br/>";
 		  for(var i=0;i<users.length;i++) 
-			  html+="Username:" +  users[i].USERNAME+", password:"+ users[i].PASSWORD+", token:"+ users[i].TOKEN+"<br/>"; 
+			  html+="username:" +  users[i].username+", password:"+ users[i].password+", token:"+ users[i].token+"<br/>"; 
 	      return html;		   
 	  }
 	</script>
-	   
+	
+    <h2>Backend service started.</h2>	   
 	<div id="msgid" class="msg"></div> 
 	<p id="Users">
 	    <script>document.write(getUserListHtml());</script>   

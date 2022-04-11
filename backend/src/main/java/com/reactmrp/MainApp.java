@@ -13,6 +13,7 @@ package com.reactmrp;
 import java.io.File;
 
 import com.github.drinkjava2.myserverless.MyServerlessServlet;
+import com.reactmrp.config.InitConfig;
 
 import io.undertow.Undertow;
 import io.undertow.server.handlers.resource.FileResourceManager;
@@ -46,18 +47,18 @@ public class MainApp {
         //undertow添加MyServerlessServlet处理所有myserverless.do访问
         info.addServlet(Servlets.servlet("dispatch", MyServerlessServlet.class).addMapping("*.do"));
         info.setResourceManager(new FileResourceManager(new File(webAppFolder), 0))
-                .addWelcomePage("/page/home.html")//指定缺省页
+                .addWelcomePage("/page/login.html")//指定缺省页
                 .addErrorPage(new ErrorPage("/page/404.html")); //指定404页
         DeploymentManager manager = Servlets.defaultContainer().addDeployment(info);
         manager.deploy();
-        Undertow server = Undertow.builder().addHttpListener(80, "localhost").setHandler(manager.start()).build();
+        Undertow server = Undertow.builder().addHttpListener(8001, "localhost").setHandler(manager.start()).build();
         server.start();
 
         try {
-            Runtime.getRuntime().exec("cmd /c start http://127.0.0.1"); //如果在windows下调用缺省browser
+            Runtime.getRuntime().exec("cmd /c start http://127.0.0.1:8001/"); //如果在windows下调用缺省browser
         } catch (Exception e) {
         }
-        System.out.println("Undertow server started at port 80");
+        System.out.println("Undertow server started at port 8001");
     }
 
 }

@@ -8,24 +8,22 @@
  * OF ANY KIND, either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package com.reactmrp;
+package com.reactmrp.config;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.sql.DataSource;
 
-import org.h2.jdbcx.JdbcConnectionPool;
-
 import com.github.drinkjava2.jbeanbox.ClassScanner;
-import com.github.drinkjava2.jdialects.Dialect;
-import com.github.drinkjava2.jdialects.StrUtils;
+import com.github.drinkjava2.jbeanbox.JBEANBOX;
 import com.github.drinkjava2.jsqlbox.DB;
 import com.github.drinkjava2.jsqlbox.DbContext;
 import com.github.drinkjava2.jtransactions.tinytx.TinyTxConnectionManager;
 import com.github.drinkjava2.myserverless.MyServerlessEnv;
-import com.github.drinkjava2.myserverless.util.MD5Util;
+import com.reactmrp.config.DataSourceConfig.DataSourceBox;
 import com.reactmrp.entity.User;
 import com.reactmrp.template.JavaTemplate;
 import com.reactmrp.template.JavaTxTemplate;
@@ -70,40 +68,34 @@ public class InitConfig extends HttpServlet {
     }
 
     @SuppressWarnings("all")
-    public static void initDataBase() { //初始化数据库，为演示作准备
-        //本示例使用H2内存数据库，如使用其它数据库只要更改下面的DataSource创建方法即可
-        DataSource ds = JdbcConnectionPool.create("jdbc:h2:mem:DBName" + StrUtils.getRandomString(30) + ";MODE=MYSQL;DB_CLOSE_DELAY=-1;TRACE_LEVEL_SYSTEM_OUT=0", "sa", "");
+    public static void initDataBase() {
+        //初始化数据库， 本示例使用H2或MySql数据库，如使用其它数据库只要更改下面的DataSourceBox设置即可
+        DataSource ds = JBEANBOX.getBean(DataSourceBox.class);
 
-        //演示项目使用jSqlBox作为DAO工具，以下是jSqlBox的配置
-        DbContext.resetGlobalVariants();
-        DbContext.setGlobalNextDialect(Dialect.H2Dialect);//手工指定数据库方言
+        //本项目使用jSqlBox作为DAO工具，以下是jSqlBox的配置
         DbContext.setGlobalNextAllowShowSql(true); //允许输出SQL日志到控制台
-        Dialect.setGlobalAllowReservedWords(true); //允许entity字段里用SQL保留字来命名
-        DbContext ctx = new DbContext(ds);
-        ctx.setConnectionManager(TinyTxConnectionManager.instance());// 事务相关
+        DbContext ctx = new DbContext(ds); //ctx是全局单例
+        ctx.setConnectionManager(TinyTxConnectionManager.instance());// 事务配置
         DbContext.setGlobalDbContext(ctx);// 设定全局缺省上下文
 
-        List<Class> classes = ClassScanner.scanPackages("com.reactmrp.entity");
+        //创建数据库表
+        List<Class> classes = ClassScanner.scanPackages("com.reactmrp.entity"); //扫描所有实体以创建数据库表
         classes.stream().distinct().forEach(e -> {
-            for (String ddl : ctx.toCreateDDL(e)) {// 第一次要建表
-                System.out.println(ddl);
-                DB.exe(ddl);
+            for (String ddl : ctx.toDropAndCreateDDL(e)) {
+                DB.exe(ddl); //创建 
             }
         });
 
+        //插入种子数据
         User u = new User();
         u.setUsername("demo");
-        u.setPassword(MD5Util.encryptMD5("123"));
+        u.setPassword(SecurityConfig.encodePassword("123"));
         u.insert();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         initDataBase();
-        List<Class> classes = ClassScanner.scanPackages("com.reactmrp.entity");
-        System.out.println("classes=" + classes);
-        for (Class clazz : classes) {
-            System.out.println("clazz=" + clazz);
-        }
-
+        System.out.println(DB.qryMapList("select * from users"));
     }
+
 }

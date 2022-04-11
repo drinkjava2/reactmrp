@@ -27,7 +27,7 @@
  
 	<!-- home page -->
 	<welcome-file-list>
-		<welcome-file>/page/home.html</welcome-file>
+		<welcome-file>/page/login.html</welcome-file>
 	</welcome-file-list>
 
 	<!-- 404 page -->
