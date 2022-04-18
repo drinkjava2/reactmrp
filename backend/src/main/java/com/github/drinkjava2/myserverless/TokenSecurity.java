@@ -21,7 +21,7 @@ public interface TokenSecurity {
      * According given username and password, create a token string, return null if password is not right
      * @param username 
      * @param password 
-     * @return token  the created token
+     * @return token or null
      */
     public String login(String username, String password); 
 

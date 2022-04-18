@@ -10,7 +10,7 @@ import com.zaxxer.hikari.HikariDataSource;
  */
 public class DataSourceConfig {
     
-    public static class DataSourceBox extends H2DataSourceBox { //usually test on H2 or MySql
+    public static class DataSourceBox extends MySqlDataSourceUtcTimeBox { //usually test on H2 or MySql
     }
  
 	// H2Database memory database connection URL

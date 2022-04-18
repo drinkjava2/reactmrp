@@ -89,7 +89,7 @@ public class InitConfig extends HttpServlet {
         //插入种子数据
         User u = new User();
         u.setUsername("demo");
-        u.setPassword(SecurityConfig.encodePassword("123"));
+        u.setPassword(MyTokenSecurity.encodePassword("123"));
         u.insert();
     }
 

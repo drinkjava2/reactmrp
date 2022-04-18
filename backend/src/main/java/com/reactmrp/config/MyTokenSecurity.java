@@ -22,10 +22,10 @@ import com.github.drinkjava2.myserverless.util.MD5Util;
  * @author Yong Zhu
  * @since 1.0.0
  */
-public class SecurityConfig implements TokenSecurity {
+public class MyTokenSecurity implements TokenSecurity {
 
     public static String encodePassword(String password) {
-        return MD5Util.encryptMD5("salt8888" + password);
+        return MD5Util.encryptMD5("saltForMD5" + password);
     }
 
     @Override

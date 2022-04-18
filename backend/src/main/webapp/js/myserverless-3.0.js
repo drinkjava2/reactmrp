@@ -107,9 +107,8 @@ function $qryEntityList(text) {
 function getRemoteResponse(methodName, text, args){
  var postJson;
  if (window.localStorage) {
-   var develop_token=localStorage.getItem("develop_token");
    var token=localStorage.getItem("token");
-   postJson= {"remoteMethod":methodName, "develop_token":develop_token, "token":token, "$0": text};
+   postJson= {"remoteMethod":methodName, "token":token, "$0": text};
  } else 
    postJson= {"remoteMethod":methodName,"$0": text};
    for (var i = 1; i < args.length; i++) 
@@ -122,18 +121,6 @@ function getRemoteResponse(methodName, text, args){
 		data : postJson,
 		async : false
 	}).responseText;
-}
-
-function myserverlessLogin(username, password){
-	  var jsonStr= $.ajax({
-			type : 'POST',
-			url : "/myserverless.do?login=true&username="+username+"&password="+password,
-			cache : false,
-			dataType : "json",
-			data : {},
-			async : false
-		}).responseText;
-	  return JSON.parse(jsonStr); 
 }
 
 function getRemoteJson(remoteMethod, text, args){

@@ -19,9 +19,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
+import com.github.drinkjava2.jwebbox.WebBox;
 import com.github.drinkjava2.myserverless.compile.DynamicCompileEngine;
 import com.github.drinkjava2.myserverless.util.MyServerlessStrUtils;
-import com.github.drinkjava2.jwebbox.WebBox;
 
 /**
  * Dispatch call to local java classes and return a JSON
@@ -87,21 +87,6 @@ public class MyServerlessServlet extends HttpServlet {
 
     /** Dispatch remote call to related classes, and return a json */
     public static JsonResult doActionBody(HttpServletRequest req, HttpServletResponse resp) {
-        if ("true".equals(req.getParameter("login"))) {
-            String token = MyServerlessEnv.getTokenSecurity().login(req.getParameter("username"), req.getParameter("password"));
-            if (!MyServerlessStrUtils.isEmpty(token))
-                return new JsonResult(200, "login success", token);
-            else
-                return new JsonResult(403, "login fail", "").setStatus(403);
-        }
-        if (MyServerlessEnv.isDevelopStage()) {
-            String develop_token = req.getParameter("develop_token");
-            if (MyServerlessStrUtils.isEmpty(develop_token))
-                return JsonResult.json403("Error: develop_token is required in develop stage", req);
-            else if (!develop_token.equals(MyServerlessEnv.getDevelopToken()))
-                return JsonResult.json403("Error: incorrect develop_token", req);
-        }
-
         String sqlOrJavaPiece = req.getParameter("$0");
         if (MyServerlessStrUtils.isEmpty(sqlOrJavaPiece))
             return JsonResult.json403("Error: request is empty.", req);
@@ -125,6 +110,7 @@ public class MyServerlessServlet extends HttpServlet {
                 return JsonResult.json403("Error: compile failed on server side.", req);
 
             String methodId = MyServerlessStrUtils.substringBefore(childClass.getSimpleName(), "_");
+            
             if (!MyServerlessEnv.getTokenSecurity().allowExecute(req.getParameter("token"), methodId))
                 return JsonResult.json403("Error: no privilege to execute '" + methodId + "' method", req);
 

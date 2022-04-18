@@ -45,8 +45,6 @@ public class MyServerlessEnv {// NOSONAR
 
     private static final boolean java_file_export; // if export java class source file in classes/.../deploy folder, default is false
 
-    private static final String develop_token; //develop stage token
-
     private static final TokenSecurity tokenSecurity; //TokenSecurity class name
 
     private static final List<String> web_files = new ArrayList<String>(); //html, htm, jsp, js, php 
@@ -72,11 +70,6 @@ public class MyServerlessEnv {// NOSONAR
             } else
                 throw new IllegalArgumentException("In myserverless.properties, stage can only be develop or product");
             is_product_stage = "product".equalsIgnoreCase(stage);
-
-            String devTokenStr = prop.getProperty("develop_token");
-            if (devTokenStr == null)
-                devTokenStr = "";
-            develop_token = devTokenStr;
 
             String token_security = prop.getProperty("token_security");
             tokenSecurity = (TokenSecurity) Class.forName(token_security).newInstance();
@@ -196,10 +189,6 @@ public class MyServerlessEnv {// NOSONAR
 
     public static boolean isJavaFileExport() {
         return java_file_export;
-    }
-
-    public static String getDevelopToken() {
-        return develop_token;
     }
 
     public static TokenSecurity getTokenSecurity() {

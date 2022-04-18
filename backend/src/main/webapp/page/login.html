@@ -75,7 +75,7 @@ input{
 	<h3 id="msg"></h3>
 	<script> 
 	 function doLogin(){ 
-		var rst =myserverlessLogin($('#username').val(), $('#password').val());
+		var rst =$java(``,formToJSON("loginForm"));
 		if(rst.code==200){
 			localStorage.setItem("token",rst.data);
 			window.location.href="/page/welcome.html";
