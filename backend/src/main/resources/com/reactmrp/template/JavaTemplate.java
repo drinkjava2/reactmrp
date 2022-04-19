@@ -18,8 +18,8 @@ public class JavaTemplate extends BaseTemplate {
     @Override
 	public Object executeBody() {
 		/* MYSERVERLESS BODY BEGIN */
-		return null;
-		/* MYSERVERLESS BODY END */
+        return null;
+        /* MYSERVERLESS BODY END */
 	}
 
 }

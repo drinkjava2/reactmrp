@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
+import com.github.drinkjava2.jbeanbox.JBEANBOX;
 import com.github.drinkjava2.jwebbox.WebBox;
 import com.github.drinkjava2.myserverless.compile.DynamicCompileEngine;
 import com.github.drinkjava2.myserverless.util.MyServerlessStrUtils;
@@ -115,8 +116,10 @@ public class MyServerlessServlet extends HttpServlet {
                 return JsonResult.json403("Error: no privilege to execute '" + methodId + "' method", req);
 
             BaseTemplate instance = null;
-            if (BaseTemplate.class.isAssignableFrom(childClass))
-                instance = (BaseTemplate) childClass.newInstance();
+            if (BaseTemplate.class.isAssignableFrom(childClass)) {
+              //instance = (BaseTemplate) childClass.newInstance(); //用newInstance生成的是多例
+                instance = JBEANBOX.getBean(childClass);            //用jBeanBox缺省生成的是单例
+            }
             else
                 return JsonResult.json403("Error: incorrect MyServerless child template error.", req);
 

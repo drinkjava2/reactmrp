@@ -16,6 +16,7 @@ import java.util.List;
 
 import com.github.drinkjava2.myserverless.util.MyServerlessFileUtils;
 import com.github.drinkjava2.myserverless.util.MyServerlessStrUtils;
+import com.github.drinkjava2.myserverless.util.Systemout;
 
 /**
  * DeployTool extract all SQL and Java in html or .js files to server side, and
@@ -25,14 +26,14 @@ import com.github.drinkjava2.myserverless.util.MyServerlessStrUtils;
  * @since 1.0.0
  */
 public class DeployTool {
-
+    
     public static void deploy(String option) {
         if ("goServer".equalsIgnoreCase(option))
             goServer();
         else if ("goFront".equalsIgnoreCase(option))
             goFront();
         else
-            System.out.println("Error: Deploy option can only be 'goServer' or 'goFront'");
+            Systemout.println("Error: Deploy option can only be 'goServer' or 'goFront'");
     }
 
     /**
@@ -46,13 +47,17 @@ public class DeployTool {
      * Push back all Sql/Java pieces to front side, ignore "SERV" keyword
      */
     public static void goFront() {
-        System.out.println("Current deploy folder is: " + MyServerlessEnv.getSrcDeployFolder());
+        Systemout.println("Current deploy folder is: " + MyServerlessEnv.getSrcDeployFolder());
+        Systemout.println("Current searh folder is: "+MyServerlessEnv.getSrcWebappFolder());
         List<File> htmlJspfiles = searchSupportedWebFiles(MyServerlessEnv.getSrcWebappFolder(), null);
+        Systemout.println("Found "+htmlJspfiles.size()+" files");
         List<String> toDeleteJavas = new ArrayList<String>();
-        for (File file : htmlJspfiles)
+        for (File file : htmlJspfiles) 
             DeployToolUtils.oneFileToFront(file, false, toDeleteJavas, true);
-        for (String javaFile : toDeleteJavas)
+        for (String javaFile : toDeleteJavas) {
+            Systemout.println("Delete file:"+javaFile);
             new File(javaFile).delete();
+        }
     }
 
     /**
@@ -60,11 +65,16 @@ public class DeployTool {
      * keyword or not
      */
     public static void goServer() {
-        System.out.println("Current deploy folder is: " + MyServerlessEnv.getSrcDeployFolder());
+        Systemout.println("Current deploy folder is: " + MyServerlessEnv.getSrcDeployFolder());
+        Systemout.println("Current searh folder is: "+MyServerlessEnv.getSrcWebappFolder());
         List<File> files = searchSupportedWebFiles(MyServerlessEnv.getSrcWebappFolder(), null);
+        Systemout.println("Found "+files.size()+" files");
         List<SqlJavaPiece> sqlJavaPieces = new ArrayList<>();
         for (File file : files)
             DeployToolUtils.oneFileToServ(sqlJavaPieces, file, true);
+        for (SqlJavaPiece sqlJavaPiece : sqlJavaPieces) {
+            System.out.println(sqlJavaPiece.getDebugInfo());
+        }
         exportApiDoc(sqlJavaPieces);
     }
 
@@ -97,7 +107,7 @@ public class DeployTool {
                 "</body>\n" + //
                 "</html>");
         MyServerlessFileUtils.writeFile(apiFile, apiHtml.toString(), "UTF-8");
-        System.out.println("API file export: " + apiFile);
+        //Systemout.println("API file export: " + apiFile);
     }
 
     // ============static methods=============================

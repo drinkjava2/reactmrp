@@ -57,6 +57,7 @@ public class MyServerlessFileUtils {
 	}
 
 	public static void writeFile(String fileFullPath, String text, String encoding) {
+	    Systemout.println("Write file:"+fileFullPath);
 		File file = new File(fileFullPath);
 		if (!file.getParentFile().exists())
 			file.getParentFile().mkdirs();

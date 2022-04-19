@@ -67,7 +67,7 @@ public class DeployToolUtils {
 
 		if (changed) {
 			MyServerlessFileUtils.writeFile(file.getAbsolutePath(), formated, "UTF-8");
-			Systemout.println("goServer => " + file.getAbsolutePath());
+			//Systemout.println("goServer => " + file.getAbsolutePath());
 		}
 	}
 
@@ -140,7 +140,7 @@ public class DeployToolUtils {
 		map.clear();
 		if (changed) {
 			MyServerlessFileUtils.writeFile(file.getAbsolutePath(), formated, "UTF-8");
-			Systemout.println("goFront => " + file.getAbsolutePath());
+			//Systemout.println("goFront => " + file.getAbsolutePath());
 		}
 	}
 

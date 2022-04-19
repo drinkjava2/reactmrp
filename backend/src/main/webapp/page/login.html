@@ -75,7 +75,7 @@ input{
 	<h3 id="msg"></h3>
 	<script> 
 	 function doLogin(){ 
-		var rst =$java(``,formToJSON("loginForm"));
+		var rst =$callDeployed('Public_2vasa1awftbnnyu2jbne',$('#username').val(),$('#password').val());
 		if(rst.code==200){
 			localStorage.setItem("token",rst.data);
 			window.location.href="/page/welcome.html";

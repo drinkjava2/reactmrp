@@ -10,6 +10,8 @@
  */
 package com.reactmrp;
 
+import org.junit.Test;
+
 import com.github.drinkjava2.myserverless.DeployTool;
 import com.reactmrp.config.InitConfig;
 
@@ -30,6 +32,18 @@ public class Deploy {
     public static void main(String[] args) {
         InitConfig.initMyServerlessTemplates();
         DeployTool.deploy(args[0]);
+    }
+
+    @Test
+    public void goServer() {
+        InitConfig.initMyServerlessTemplates();
+        DeployTool.deploy("goServer");
+    }
+
+    @Test
+    public void goFront() {
+        InitConfig.initMyServerlessTemplates();
+        DeployTool.deploy("goFront");
     }
 
 }

@@ -15,6 +15,7 @@ import com.github.drinkjava2.jdialects.StrUtils;
 import com.github.drinkjava2.jsqlbox.DB;
 import com.github.drinkjava2.myserverless.TokenSecurity;
 import com.github.drinkjava2.myserverless.util.MD5Util;
+import com.github.drinkjava2.myserverless.util.MyServerlessStrUtils;
 
 /**
  * MyServerless的TokenSecurity接口两个方法必须实现，以实现登录和token检查功能
@@ -44,6 +45,8 @@ public class MyTokenSecurity implements TokenSecurity {
 
     @Override
     public boolean allowExecute(String token, String methodId) {
+        if (MyServerlessStrUtils.startsWithIgnoreCase(methodId, "public")) //只要public开头的方法都允许执行
+            return true;
         int i = DB.qryIntValue(tokenCache, "select count(*) from users where token=", DB.que(token));
         if (i == 1)
             return true;

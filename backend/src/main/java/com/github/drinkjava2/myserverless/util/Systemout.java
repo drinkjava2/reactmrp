@@ -6,6 +6,7 @@ package com.github.drinkjava2.myserverless.util;
  * @author Yong Zhu
  * @since 2.0.5
  */
+@SuppressWarnings("all")
 public class Systemout {
 	private static final boolean ALLOW_PRINT = true;
 
