@@ -75,9 +75,9 @@ input{
 	<h3 id="msg"></h3>
 	<script> 
 	 function doLogin(){ 
-		var rst =$callDeployed('Public_2vasa1awftbnnyu2jbne',$('#username').val(),$('#password').val());
-		if(rst.code==200){
-			localStorage.setItem("token",rst.data);
+		var token =data$fromServ('Public_2vasa1awftbnnyu2jbne',$('#username').val(),$('#password').val());
+		if(token){
+			localStorage.setItem("token", token);
 			window.location.href="/page/welcome.html";
 		} else
 			$("#msg").html("Wrong username or password.");

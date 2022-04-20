@@ -1,105 +1,104 @@
-//json example: {"code":200, "msg":"sucess", data:"some data", debugInfo:"Error:xxx"}
-//$$: return json object     
-//$: return json.data
+//json$fromServ return example: {"code":200, "msg":"sucess", data:"some data", debugInfo:"Error:xxx"}
+//data$fromServ return example: "some data"
 
-function $$callDeployed(text) {
+function json$fromServ(text) {
 	  if(text==null || text=="" || text.indexOf("FULL ")==0) 
 		  return "";
 	  return getRemoteJson("", text, arguments);
 }
 
-function $$java(text) {
+function json$java(text) {
 	return getRemoteJson("java", text, arguments);
 }
 
-function $$javaTx(text) {
+function json$javaTx(text) {
 	return getRemoteJson("javaTx", text, arguments);
 }
 
-function $$qryObject(text) {
+function json$qryObject(text) {
 	return getRemoteJson("qryObject", text, arguments);
 }
   
-function $$qryArray(text) {
+function json$qryArray(text) {
 	return getRemoteJson("qryArray", text, arguments);
 }
 
-function $$qryArrayList(text) {
+function json$qryArrayList(text) {
 	return getRemoteJson("qryArrayList", text, arguments);
 }
 
-function $$qryTitleArrayList(text) {
+function json$qryTitleArrayList(text) {
 	return getRemoteJson("qryTitleArrayList", text, arguments);
 }
    
-function $$qryMap(text) {
+function json$qryMap(text) {
 	return getRemoteJson("qryMap", text, arguments);
 }
 
-function $$qryList(text) {
+function json$qryList(text) {
 	return getRemoteJson("qryList", text, arguments);
 }
 
-function $$qryMapList(text) {
+function json$qryMapList(text) {
 	return getRemoteJson("qryMapList", text, arguments);
 }
 
-function $$qryEntity(text) {
+function json$qryEntity(text) {
 	return getRemoteJson("qryEntity", text, arguments);
 }
 
-function $$qryEntityList(text) {
+function json$qryEntityList(text) {
 	return getRemoteJson("qryEntityList", text, arguments);
 }
 
 //Below methods return JSON's data 
-function $callDeployed(text) {
+function data$fromServ(text) {
 	  if(text==null || text=="" || text.indexOf("FULL ")==0) 
 		  return "";
 	  return getRemoteJsonData("", text, arguments);
 }
 
-function $java(text) {
+function data$java(text) {
 	return getRemoteJsonData("java", text, arguments);
 }
 
-function $javaTx(text) {
+function data$javaTx(text) {
 	return getRemoteJsonData("javaTx", text, arguments);
 }
 
-function $qryObject(text) {
+function data$qryObject(text) {
 	return getRemoteJsonData("qryObject", text, arguments);
 }
 
-function $qryArray(text) {
+function data$qryArray(text) {
 	return getRemoteJsonData("qryArray", text, arguments);
 }
 
-function $qryArrayList(text) {
+function data$qryArrayList(text) {
 	return getRemoteJsonData("qryArrayList", text, arguments);
 }
 
-function $qryTitleArrayList(text) {
+function data$qryTitleArrayList(text) {
 	return getRemoteJsonData("qryTitleArrayList", text, arguments);
 }
  
-function $qryMap(text) {
+function data$qryMap(text) {
 	return getRemoteJsonData("qryMap", text, arguments);
 }
 
-function $qryList(text) {
+function data$qryList(text) {
 	return getRemoteJsonData("qryList", text, arguments);
 }
 
-function $qryMapList(text) {
+function data$qryMapList(text) {
 	return getRemoteJsonData("qryMapList", text, arguments);
 }
 
-function $qryEntity(text) {
+function data$qryEntity(text) {
 	return getRemoteJsonData("qryEntity", text, arguments);
 }
 
-function $qryEntityList(text) {
+function data$qryEntityList(text) {
 	return getRemoteJsonData("qryEntityList", text, arguments);
 }
 

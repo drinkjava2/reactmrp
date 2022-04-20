@@ -49,7 +49,7 @@ public class MyServerlessEnv {// NOSONAR
 
     private static final List<String> web_files = new ArrayList<String>(); //html, htm, jsp, js, php 
 
-    private static final String call_deployed_method_name; //default is "callDeployed", if change, also need change myserverless.js file.
+    private static final String call_deployed_method_name; //if change setting in properties file, also need change myserverless.js file
     
     private static final String api_export_file; //API export file name, default is empty
 
@@ -98,7 +98,7 @@ public class MyServerlessEnv {// NOSONAR
 
             String call_deployed_method_name_str = prop.getProperty("call_deployed_method_name");
             if (MyServerlessStrUtils.isEmpty(call_deployed_method_name_str))
-                call_deployed_method_name = "callDeployed";
+                call_deployed_method_name = "fromServ"; //default call_deployed_method_name if not set, is fromServ
             else
                 call_deployed_method_name = call_deployed_method_name_str;
 
