@@ -98,32 +98,41 @@ function data$qryEntity(text) {
 	return getRemoteJsonData("qryEntity", text, arguments);
 }
 
+function threadSleep(delay){
+	 var t=(new Date()).getTime();
+	 while ((new Date()).getTime() - t < delay)
+		 continue;  
+}
+	
 function data$qryEntityList(text) {
 	return getRemoteJsonData("qryEntityList", text, arguments);
 }
-
-
-function getRemoteResponse(methodName, text, args){
- var postJson;
- if (window.localStorage) {
-   var token=localStorage.getItem("token");
-   postJson= {"remoteMethod":methodName, "token":token, "$0": text};
- } else 
-   postJson= {"remoteMethod":methodName,"$0": text};
-   for (var i = 1; i < args.length; i++) 
-		  postJson["$"+i]=args[i]; 
-  return $.ajax({
-		type : 'POST',
-		url : "/myserverless.do",
-		cache : false,
-		dataType : "json",
-		data : postJson,
-		async : false
-	}).responseText;
+ 
+async function getRemoteResponse(methodName, text, args){
+  let bodyJson= {"remoteMethod":methodName,"$0": text};
+  for (var i = 1; i < args.length; i++) 
+	   bodyJson["$"+i]=args[i]; 
+  if (window.localStorage)  
+	   bodyJson["token"]=localStorage.getItem("token");  
+  try{ 
+	  let response= await fetch("/myserverless.do", {
+		    method : 'POST',
+		    headers: { 'Content-Type': 'application/json;charset=utf-8' },
+			body : JSON.stringify(bodyJson)
+	      });
+	  return await response.json();
+  }catch(e){
+	  console.log('Request failed ', e);
+  }
 }
 
 function getRemoteJson(remoteMethod, text, args){
-	 var jsonOrHtml= getRemoteResponse(remoteMethod, text, args); 
+	 var jsonOrHtml= null; 
+	 getRemoteResponse(remoteMethod, text, args).then((result)=>{
+		 jsonOrHtml=result;
+		 
+	 
+	 });
 	 var jsonObj=JSON.parse(jsonOrHtml);
 	  if(jsonObj.debugInfo!=null)
 	      console.log(jsonObj.debugInfo); 
@@ -131,7 +140,8 @@ function getRemoteJson(remoteMethod, text, args){
 }
 
 function getRemoteJsonData(remoteMethod, text, args){
-	 var jsonOrHtml= getRemoteResponse(remoteMethod, text, args); 
+	 var jsonOrHtml= null;
+	 getRemoteResponse(remoteMethod, text, args).then((result)=>{jsonOrHtml=result;}); 
 	 var jsonObj;  
 	 try {
 	   jsonObj=JSON.parse(jsonOrHtml);

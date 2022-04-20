@@ -75,8 +75,13 @@ input{
 	<h3 id="msg"></h3>
 	<script> 
 	 function doLogin(){ 
-		var token =data$fromServ('Public_2vasa1awftbnnyu2jbne',$('#username').val(),$('#password').val());
+		var token =data$java(`#Public String token = MyServerlessEnv.getTokenSecurity().login($1, $2);
+		        if (!MyServerlessStrUtils.isEmpty(token))
+	            return new JsonResult(200, "login success", token);
+	        else
+	            return new JsonResult(403, "login fail", "").setStatus(403);`,$('#username').val(),$('#password').val());
 		if(token){
+			console.log("token="+token)
 			localStorage.setItem("token", token);
 			window.location.href="/page/welcome.html";
 		} else

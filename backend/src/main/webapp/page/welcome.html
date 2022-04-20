@@ -39,7 +39,7 @@ section header {
       //todo: check token valid or expired
       
 	  function getUserListHtml(){
-		  var users=data$fromServ('PUBLIC_x2lw3cbow9le877a11uh');
+		  var users=data$qryMapList(`#PUBLIC select * from users order by username`);
 		  var html="User List:<br/>";
 		  for(var i=0;i<users.length;i++) 
 			  html+="username:" +  users[i].username+", password:"+ users[i].password+", token:"+ users[i].token+"<br/>"; 
