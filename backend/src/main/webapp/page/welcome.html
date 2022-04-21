@@ -38,8 +38,8 @@ section header {
     	  window.location.href="/page/login.html";
       //todo: check token valid or expired
       
-	  function getUserListHtml(){
-		  var users=data$qryMapList(`#PUBLIC select * from users order by username`);
+	  async function getUserListHtml(){
+		  var users=await data$qryMapList(`#PUBLIC select * from users order by username`);
 		  var html="User List:<br/>";
 		  for(var i=0;i<users.length;i++) 
 			  html+="username:" +  users[i].username+", password:"+ users[i].password+", token:"+ users[i].token+"<br/>"; 
@@ -50,7 +50,7 @@ section header {
     <h2>Backend service started.</h2>	   
 	<div id="msgid" class="msg"></div> 
 	<p id="Users">
-	    <script>document.write(getUserListHtml());</script>   
+	    <script>document.write(await getUserListHtml());</script>   
 	</p>
 	 
 </body>

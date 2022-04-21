@@ -74,8 +74,8 @@ input{
 	<h2>Login</h2>
 	<h3 id="msg"></h3>
 	<script> 
-	 function doLogin(){ 
-		var token =data$java(`#Public String token = MyServerlessEnv.getTokenSecurity().login($1, $2);
+	async function doLogin(){ 
+		var token =await data$java(`#Public String token = MyServerlessEnv.getTokenSecurity().login($1, $2);
 		        if (!MyServerlessStrUtils.isEmpty(token))
 	            return new JsonResult(200, "login success", token);
 	        else

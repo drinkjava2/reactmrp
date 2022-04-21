@@ -49,7 +49,7 @@ public class MyServerlessEnv {// NOSONAR
 
     private static final List<String> web_files = new ArrayList<String>(); //html, htm, jsp, js, php 
 
-    private static final String call_deployed_method_name; //if change setting in properties file, also need change myserverless.js file
+    private static final String call_server_method; //if change setting in properties file, also need change myserverless.js file
     
     private static final String api_export_file; //API export file name, default is empty
 
@@ -96,11 +96,11 @@ public class MyServerlessEnv {// NOSONAR
                     throw new IllegalArgumentException("web_files configration missing, an example: web_files=html,htm,js");
             }
 
-            String call_deployed_method_name_str = prop.getProperty("call_deployed_method_name");
-            if (MyServerlessStrUtils.isEmpty(call_deployed_method_name_str))
-                call_deployed_method_name = "fromServ"; //default call_deployed_method_name if not set, is fromServ
+            String call_server_method_str = prop.getProperty("call_server_method");
+            if (MyServerlessStrUtils.isEmpty(call_server_method_str))
+                throw new IllegalArgumentException("call_server_method configration missing");
             else
-                call_deployed_method_name = call_deployed_method_name_str;
+                call_server_method = call_server_method_str;
 
             api_export_file=prop.getProperty("api_export_file");
             
@@ -200,7 +200,7 @@ public class MyServerlessEnv {// NOSONAR
     }
 
     public static String getCallDeployedMethodName() {
-        return call_deployed_method_name;
+        return call_server_method;
     }
     
     public static String getApiExportFile() {

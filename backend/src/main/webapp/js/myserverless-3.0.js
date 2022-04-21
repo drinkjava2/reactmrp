@@ -1,158 +1,120 @@
-//json$fromServ return example: {"code":200, "msg":"sucess", data:"some data", debugInfo:"Error:xxx"}
-//data$fromServ return example: "some data"
-
-function json$fromServ(text) {
-	  if(text==null || text=="" || text.indexOf("FULL ")==0) 
-		  return "";
-	  return getRemoteJson("", text, arguments);
+// fetchMyServlessJson fetch a json from MyServerless server,
+// Return example: {"code":200, "msg":"sucess", data:"foo", debugInfo:"bar"}
+async function fetchMyServlessJson(methodName, text, args){
+	  let bodyJson= {"remoteMethod":methodName,"$0": text};
+	  for (let i = 1; i < args.length; i++) 
+		   bodyJson["$"+i]=args[i]; 
+	  if (window.localStorage)  
+		   bodyJson["token"]=localStorage.getItem("token");  
+	  try{ 
+		  let response= await fetch("/myserverless.do", {
+			    method : 'POST',
+			    headers: { 'Content-Type': 'application/json;charset=utf-8' },
+				body : JSON.stringify(bodyJson)
+		      });
+		  return await response.json();
+	  }catch(e){
+		  console.log('Request failed ', e);
+		  return {"code":403, "msg":"Request failed", "data":null};
+	  }
+	}
+  
+async function getMyServJson(text){
+	return await fetchMyServlessJson("", text, arguments);
 }
 
-function json$java(text) {
-	return getRemoteJson("java", text, arguments);
+async function $java(text) {
+	return await fetchMyServlessJson("java", text, arguments);
 }
+ 
+async function $javaTx(text) {
+	return await fetchMyServlessJson("javaTx", text, arguments);
+} 
 
-function json$javaTx(text) {
-	return getRemoteJson("javaTx", text, arguments);
-}
-
-function json$qryObject(text) {
-	return getRemoteJson("qryObject", text, arguments);
+async function $qryObject(text) {
+	return await fetchMyServlessJson("qryObject", text, arguments);
 }
   
-function json$qryArray(text) {
-	return getRemoteJson("qryArray", text, arguments);
+async function $qryArray(text) {
+	return await fetchMyServlessJson("qryArray", text, arguments);
 }
 
-function json$qryArrayList(text) {
-	return getRemoteJson("qryArrayList", text, arguments);
+async function $qryArrayList(text) {
+	return await fetchMyServlessJson("qryArrayList", text, arguments);
 }
 
-function json$qryTitleArrayList(text) {
-	return getRemoteJson("qryTitleArrayList", text, arguments);
+async function $qryTitleArrayList(text) {
+	return await fetchMyServlessJson("qryTitleArrayList", text, arguments);
 }
    
-function json$qryMap(text) {
-	return getRemoteJson("qryMap", text, arguments);
+async function $qryMap(text) {
+	return await fetchMyServlessJson("qryMap", text, arguments);
 }
 
-function json$qryList(text) {
-	return getRemoteJson("qryList", text, arguments);
+async function $qryList(text) {
+	return await fetchMyServlessJson("qryList", text, arguments);
 }
 
-function json$qryMapList(text) {
-	return getRemoteJson("qryMapList", text, arguments);
+async function $qryMapList(text) {
+	return await fetchMyServlessJson("qryMapList", text, arguments);
+} 
+
+async function $qryEntity(text) {
+	return await fetchMyServlessJson("qryEntity", text, arguments);
 }
 
-function json$qryEntity(text) {
-	return getRemoteJson("qryEntity", text, arguments);
+async function $qryEntityList(text) {
+	return await fetchMyServlessJson("qryEntityList", text, arguments);
+}
+  
+
+//===============
+async function data$java(text) {
+	let json= await fetchMyServlessJson("java", text, arguments);
+	return json.data;
+}  
+
+async function data$qryObject(text) {
+	return await fetchMyServlessJson("qryObject", text, arguments).data;
+}
+  
+async function data$qryArray(text) {
+	return await fetchMyServlessJson("qryArray", text, arguments).data;
 }
 
-function json$qryEntityList(text) {
-	return getRemoteJson("qryEntityList", text, arguments);
+async function data$qryArrayList(text) {
+	return await fetchMyServlessJson("qryArrayList", text, arguments).data;
 }
 
-//Below methods return JSON's data 
-function data$fromServ(text) {
-	  if(text==null || text=="" || text.indexOf("FULL ")==0) 
-		  return "";
-	  return getRemoteJsonData("", text, arguments);
+async function data$qryTitleArrayList(text) {
+	return await fetchMyServlessJson("qryTitleArrayList", text, arguments).data;
+}
+   
+async function data$qryMap(text) {
+	return await fetchMyServlessJson("qryMap", text, arguments).data;
 }
 
-function data$java(text) {
-	return getRemoteJsonData("java", text, arguments);
+async function data$qryList(text) {
+	return await fetchMyServlessJson("qryList", text, arguments).data;
 }
 
-function data$javaTx(text) {
-	return getRemoteJsonData("javaTx", text, arguments);
+async function data$javaTx(text) {
+	return await fetchMyServlessJson("javaTx", text, arguments).data;
+}  
+
+async function data$qryMapList(text) {
+	return await fetchMyServlessJson("qryMapList", text, arguments).data;
 }
 
-function data$qryObject(text) {
-	return getRemoteJsonData("qryObject", text, arguments);
+async function data$qryEntity(text) {
+	return await fetchMyServlessJson("qryEntity", text, arguments).data;
 }
 
-function data$qryArray(text) {
-	return getRemoteJsonData("qryArray", text, arguments);
-}
-
-function data$qryArrayList(text) {
-	return getRemoteJsonData("qryArrayList", text, arguments);
-}
-
-function data$qryTitleArrayList(text) {
-	return getRemoteJsonData("qryTitleArrayList", text, arguments);
+async function data$qryEntityList(text) {
+	return await fetchMyServlessJson("qryEntityList", text, arguments).data;
 }
  
-function data$qryMap(text) {
-	return getRemoteJsonData("qryMap", text, arguments);
-}
-
-function data$qryList(text) {
-	return getRemoteJsonData("qryList", text, arguments);
-}
-
-function data$qryMapList(text) {
-	return getRemoteJsonData("qryMapList", text, arguments);
-}
-
-function data$qryEntity(text) {
-	return getRemoteJsonData("qryEntity", text, arguments);
-}
-
-function threadSleep(delay){
-	 var t=(new Date()).getTime();
-	 while ((new Date()).getTime() - t < delay)
-		 continue;  
-}
-	
-function data$qryEntityList(text) {
-	return getRemoteJsonData("qryEntityList", text, arguments);
-}
- 
-async function getRemoteResponse(methodName, text, args){
-  let bodyJson= {"remoteMethod":methodName,"$0": text};
-  for (var i = 1; i < args.length; i++) 
-	   bodyJson["$"+i]=args[i]; 
-  if (window.localStorage)  
-	   bodyJson["token"]=localStorage.getItem("token");  
-  try{ 
-	  let response= await fetch("/myserverless.do", {
-		    method : 'POST',
-		    headers: { 'Content-Type': 'application/json;charset=utf-8' },
-			body : JSON.stringify(bodyJson)
-	      });
-	  return await response.json();
-  }catch(e){
-	  console.log('Request failed ', e);
-  }
-}
-
-function getRemoteJson(remoteMethod, text, args){
-	 var jsonOrHtml= null; 
-	 getRemoteResponse(remoteMethod, text, args).then((result)=>{
-		 jsonOrHtml=result;
-		 
-	 
-	 });
-	 var jsonObj=JSON.parse(jsonOrHtml);
-	  if(jsonObj.debugInfo!=null)
-	      console.log(jsonObj.debugInfo); 
-	  return jsonObj;
-}
-
-function getRemoteJsonData(remoteMethod, text, args){
-	 var jsonOrHtml= null;
-	 getRemoteResponse(remoteMethod, text, args).then((result)=>{jsonOrHtml=result;}); 
-	 var jsonObj;  
-	 try {
-	   jsonObj=JSON.parse(jsonOrHtml);
-	 } catch(e){
-	 	return jsonOrHtml;
-	 } 
-	 if(jsonObj.debugInfo!=null)
-		 console.log(jsonObj.debugInfo);
-	 return jsonObj.data;
-}
-
+//== below misc methods not important, will delete at next push =====
 
 //serialize Object
 $.fn.serializeObject = function(){
@@ -172,7 +134,14 @@ $.fn.serializeObject = function(){
 };
 
 //change a from to JSON string
-function formToJSON(formName){ 
+function transFormToJSON(formName){ 
     var jsonuserinfo = $("#"+formName).serializeObject();
 	return JSON.stringify(jsonuserinfo);
 }  
+
+//sleep main thread
+function threadSleep(delay){
+	 var t=(new Date()).getTime();
+	 while ((new Date()).getTime() - t < delay)
+		 continue;  
+}
