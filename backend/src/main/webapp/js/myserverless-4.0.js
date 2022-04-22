@@ -21,8 +21,9 @@ async function fetchJSon(methodName, text, args){
 	  }
 	}
   
-async function getMyServJson(text){         return await fetchJSon("", text, arguments); }
-//=======
+async function $getMyServJson(text){return await fetchJSon("", text, arguments); }
+async function data$getMyServJson(text){let json= await fetchJSon("", text, arguments); return json.data; }
+
 async function $java(text) { 				return await fetchJSon("java", text, arguments); } 
 async function $javaTx(text) {				return await fetchJSon("javaTx", text, arguments);} 
 async function $qryObject(text) {			return await fetchJSon("qryObject", text, arguments);}  
@@ -34,7 +35,7 @@ async function $qryList(text) {				return await fetchJSon("qryList", text, argum
 async function $qryMapList(text) {			return await fetchJSon("qryMapList", text, arguments);} 
 async function $qryEntity(text) {			return await fetchJSon("qryEntity", text, arguments);}
 async function $qryEntityList(text) {		return await fetchJSon("qryEntityList", text, arguments);}
-//=======
+
 async function data$java(text) {			let json= await fetchJSon("java", text, arguments);	return json.data;}  
 async function data$qryObject(text) {		let json= await fetchJSon("qryObject", text, arguments); return json.data;}  
 async function data$qryArray(text) {		let json= await fetchJSon("qryArray", text, arguments); return json.data;}
@@ -46,3 +47,6 @@ async function data$javaTx(text) {			let json= await fetchJSon("javaTx", text, a
 async function data$qryMapList(text) {		let json= await fetchJSon("qryMapList", text, arguments); return json.data;}
 async function data$qryEntity(text) {		let json= await fetchJSon("qryEntity", text, arguments); return json.data;}
 async function data$qryEntityList(text) {	let json= await fetchJSon("qryEntityList", text, arguments); return json.data;}
+
+function domByid(id){return document.getElementById(id);}
+function domValById(id){return document.getElementById(id).value;}

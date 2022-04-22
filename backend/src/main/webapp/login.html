@@ -64,9 +64,7 @@ input{
  margin: 0;   
 }
 </style>
-<script src="/js/jquery-1.11.3.min.js"></script>
-<script src="/js/jquery-ajax-ext.js"></script>
-<script src="/js/myserverless-3.0.js"></script>
+<script src="/js/myserverless-4.0.js"></script>
 </head>
 <body>
 	<script> localStorage.setItem("develop_token","8888"); </script> 
@@ -75,16 +73,13 @@ input{
 	<h3 id="msg"></h3>
 	<script> 
 	async function doLogin(){ 
-		var token =await data$java(`#Public String token = MyServerlessEnv.getTokenSecurity().login($1, $2);
-		        if (!MyServerlessStrUtils.isEmpty(token))
-	            return new JsonResult(200, "login success", token);
-	        else
-	            return new JsonResult(403, "login fail", "").setStatus(403);`,$('#username').val(),$('#password').val());
+		var token =await data$getMyServJson('Public_mjke9uc6eantcn9dw7sq'
+		            , domValById("username"), domValById("password"));
 		if(token){
 			localStorage.setItem("token", token);
 			window.location.href="/welcome.html";
 		} else
-			$("#msg").html("Wrong username or password.");
+			document.getElementById("msg").innerHTML="Wrong username or password.";
 	 } 
 	</script>
 	
