@@ -1,0 +1,13 @@
+Hot Compile,,role,any,
+,,developer,Y,
+,,other roles,,
+,,,,
+Execute,,role,xxxPublicxxx,other
+,,developer,Y,customized
+,,other roles,Y,customized
+,,,,
+keep on back,,role,xxxBackendxxx,other
+,,,Y,
+,,,,
+keep on front,,role,xxxFrontendxxx,other
+,,,Y,

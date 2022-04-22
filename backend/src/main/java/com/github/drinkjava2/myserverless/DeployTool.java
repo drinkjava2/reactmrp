@@ -44,11 +44,11 @@ public class DeployTool {
     }
 
     /**
-     * Push back all Sql/Java pieces to front side, ignore "SERV" keyword
+     * Push back all Sql/Java pieces to front side, except file start with "back"
      */
     public static void goFront() {
         Systemout.println("Current deploy folder is: " + MyServerlessEnv.getSrcDeployFolder());
-        Systemout.println("Current searh folder is: "+MyServerlessEnv.getSrcWebappFolder());
+        Systemout.println("Current frontend folder is: "+MyServerlessEnv.getSrcWebappFolder());
         List<File> htmlJspfiles = searchSupportedWebFiles(MyServerlessEnv.getSrcWebappFolder(), null);
         Systemout.println("Found "+htmlJspfiles.size()+" files");
         List<String> toDeleteJavas = new ArrayList<String>();
@@ -61,12 +61,11 @@ public class DeployTool {
     }
 
     /**
-     * Extract all Sql/Java pieces from web files to server side java source code, no matter if it have "FRONT"
-     * keyword or not
+     * Extract all Sql/Java pieces from front to backend, except java/sql piece started with "front"
      */
     public static void goServer() {
         Systemout.println("Current deploy folder is: " + MyServerlessEnv.getSrcDeployFolder());
-        Systemout.println("Current searh folder is: "+MyServerlessEnv.getSrcWebappFolder());
+        Systemout.println("Current frontend folder is: "+MyServerlessEnv.getSrcWebappFolder());
         List<File> files = searchSupportedWebFiles(MyServerlessEnv.getSrcWebappFolder(), null);
         Systemout.println("Found "+files.size()+" files");
         List<SqlJavaPiece> sqlJavaPieces = new ArrayList<>();
