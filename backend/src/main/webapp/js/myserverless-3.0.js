@@ -1,6 +1,6 @@
-// fetchMyServlessJson fetch a json from MyServerless server,
+// fetchJSon fetch a json from MyServerless server,
 // Return example: {"code":200, "msg":"sucess", data:"foo", debugInfo:"bar"}
-async function fetchMyServlessJson(methodName, text, args){
+async function fetchJSon(methodName, text, args){
 	  let bodyJson= {"remoteMethod":methodName,"$0": text};
 	  for (let i = 1; i < args.length; i++) 
 		   bodyJson["$"+i]=args[i]; 
@@ -19,129 +19,28 @@ async function fetchMyServlessJson(methodName, text, args){
 	  }
 	}
   
-async function getMyServJson(text){
-	return await fetchMyServlessJson("", text, arguments);
-}
+async function getMyServJson(text){ return await fetchJSon("", text, arguments); }
 
-async function $java(text) {
-	return await fetchMyServlessJson("java", text, arguments);
-}
- 
-async function $javaTx(text) {
-	return await fetchMyServlessJson("javaTx", text, arguments);
-} 
-
-async function $qryObject(text) {
-	return await fetchMyServlessJson("qryObject", text, arguments);
-}
-  
-async function $qryArray(text) {
-	return await fetchMyServlessJson("qryArray", text, arguments);
-}
-
-async function $qryArrayList(text) {
-	return await fetchMyServlessJson("qryArrayList", text, arguments);
-}
-
-async function $qryTitleArrayList(text) {
-	return await fetchMyServlessJson("qryTitleArrayList", text, arguments);
-}
-   
-async function $qryMap(text) {
-	return await fetchMyServlessJson("qryMap", text, arguments);
-}
-
-async function $qryList(text) {
-	return await fetchMyServlessJson("qryList", text, arguments);
-}
-
-async function $qryMapList(text) {
-	return await fetchMyServlessJson("qryMapList", text, arguments);
-} 
-
-async function $qryEntity(text) {
-	return await fetchMyServlessJson("qryEntity", text, arguments);
-}
-
-async function $qryEntityList(text) {
-	return await fetchMyServlessJson("qryEntityList", text, arguments);
-}
-  
-
+async function $java(text) { 				return await fetchJSon("java", text, arguments); } 
+async function $javaTx(text) {				return await fetchJSon("javaTx", text, arguments);} 
+async function $qryObject(text) {			return await fetchJSon("qryObject", text, arguments);}  
+async function $qryArray(text) {			return await fetchJSon("qryArray", text, arguments);}
+async function $qryArrayList(text) {		return await fetchJSon("qryArrayList", text, arguments);}
+async function $qryTitleArrayList(text) {	return await fetchJSon("qryTitleArrayList", text, arguments);}
+async function $qryMap(text) {				return await fetchJSon("qryMap", text, arguments);}
+async function $qryList(text) {				return await fetchJSon("qryList", text, arguments);}
+async function $qryMapList(text) {			return await fetchJSon("qryMapList", text, arguments);} 
+async function $qryEntity(text) {			return await fetchJSon("qryEntity", text, arguments);}
+async function $qryEntityList(text) {		return await fetchJSon("qryEntityList", text, arguments);}
 //===============
-async function data$java(text) {
-	let json= await fetchMyServlessJson("java", text, arguments);
-	return json.data;
-}  
-
-async function data$qryObject(text) {
-	return await fetchMyServlessJson("qryObject", text, arguments).data;
-}
-  
-async function data$qryArray(text) {
-	return await fetchMyServlessJson("qryArray", text, arguments).data;
-}
-
-async function data$qryArrayList(text) {
-	return await fetchMyServlessJson("qryArrayList", text, arguments).data;
-}
-
-async function data$qryTitleArrayList(text) {
-	return await fetchMyServlessJson("qryTitleArrayList", text, arguments).data;
-}
-   
-async function data$qryMap(text) {
-	return await fetchMyServlessJson("qryMap", text, arguments).data;
-}
-
-async function data$qryList(text) {
-	return await fetchMyServlessJson("qryList", text, arguments).data;
-}
-
-async function data$javaTx(text) {
-	return await fetchMyServlessJson("javaTx", text, arguments).data;
-}  
-
-async function data$qryMapList(text) {
-	return await fetchMyServlessJson("qryMapList", text, arguments).data;
-}
-
-async function data$qryEntity(text) {
-	return await fetchMyServlessJson("qryEntity", text, arguments).data;
-}
-
-async function data$qryEntityList(text) {
-	return await fetchMyServlessJson("qryEntityList", text, arguments).data;
-}
- 
-//== below misc methods not important, will delete at next push =====
-
-//serialize Object
-$.fn.serializeObject = function(){
-   var o = {};  
-   var a = this.serializeArray();  
-   $.each(a, function() {  
-       if (o[this.name]) {  
-           if (!o[this.name].push) {  
-               o[this.name] = [o[this.name]];  
-           }  
-           o[this.name].push(this.value || '');  
-       } else {  
-           o[this.name] = this.value || '';  
-       }  
-   });  
-   return o;  
-};
-
-//change a from to JSON string
-function transFormToJSON(formName){ 
-    var jsonuserinfo = $("#"+formName).serializeObject();
-	return JSON.stringify(jsonuserinfo);
-}  
-
-//sleep main thread
-function threadSleep(delay){
-	 var t=(new Date()).getTime();
-	 while ((new Date()).getTime() - t < delay)
-		 continue;  
-}
+async function data$java(text) {			let json= await fetchJSon("java", text, arguments);	return json.data;}  
+async function data$qryObject(text) {		let json= await fetchJSon("qryObject", text, arguments); return json.data;}  
+async function data$qryArray(text) {		let json= await fetchJSon("qryArray", text, arguments); return json.data;}
+async function data$qryArrayList(text) {	let json= await fetchJSon("qryArrayList", text, arguments); return json.data;}
+async function data$qryTitleArrayList(text){let json= await fetchJSon("qryTitleArrayList", text, arguments); return json.data;}
+async function data$qryMap(text) {			let json= await fetchJSon("qryMap", text, arguments); return json.data;}
+async function data$qryList(text) {			let json= await fetchJSon("qryList", text, arguments); return json.data;}
+async function data$javaTx(text) {			let json= await fetchJSon("javaTx", text, arguments); return json.data;}
+async function data$qryMapList(text) {		let json= await fetchJSon("qryMapList", text, arguments); return json.data;}
+async function data$qryEntity(text) {		let json= await fetchJSon("qryEntity", text, arguments); return json.data;}
+async function data$qryEntityList(text) {	let json= await fetchJSon("qryEntityList", text, arguments); return json.data;}
