@@ -10,8 +10,10 @@
  */
 package com.github.drinkjava2.myserverless;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
-import com.github.drinkjava2.jbeanbox.JBEANBOX;
+import com.alibaba.fastjson.JSONObject;
 import com.github.drinkjava2.myserverless.compile.DynamicCompileEngine;
 import com.github.drinkjava2.myserverless.util.MyServerlessStrUtils;
 
@@ -44,8 +46,7 @@ public class MyServerlessServlet extends HttpServlet {
 
     public static void doAction(HttpServletRequest req, HttpServletResponse resp) {
         //1.if has login parameter, treat it as login method
-        
-        
+
         resp.setHeader("Access-Control-Allow-Origin", "*"); //allow cross origin access 
         resp.setHeader("Access-Control-Allow-Methods", "*");
         resp.setHeader("Access-Control-Max-Age", "7200");
@@ -82,42 +83,58 @@ public class MyServerlessServlet extends HttpServlet {
 
     /** Dispatch remote call to related classes, and return a json */
     public static JsonResult doActionBody(HttpServletRequest req, HttpServletResponse resp) {
-        String sqlOrJavaPiece = req.getParameter("$0");
+        JSONObject json = null;
+        String jsonString = null;
+        try {
+            req.setCharacterEncoding("utf-8");
+        } catch (UnsupportedEncodingException e1) {
+            return JsonResult.json403("Error: Unsupported utf-8 encoding on server side.", req, null);
+        }
+
+        try {
+            BufferedReader reader = req.getReader();
+            jsonString = reader.readLine();
+        } catch (IOException e1) {
+            return JsonResult.json403("Error: can not read json on server side.", req, null);
+        }
+        json = JSON.parseObject(jsonString);
+
+        String sqlOrJavaPiece = json.getString("$0");
+        String remoteMethod = json.getString("remoteMethod");
+        String token = json.getString("token");
         if (MyServerlessStrUtils.isEmpty(sqlOrJavaPiece))
-            return JsonResult.json403("Error: request is empty.", req);
+            return JsonResult.json403("Error: request body is empty.", req, json);
 
         Class<?> childClass = null;
         try {
             childClass = MyServerlessEnv.findCachedClass(sqlOrJavaPiece);
             if (childClass == null) {
                 if (MyServerlessEnv.isProductStage())
-                    return JsonResult.json403("Error: in product stage but not found class on server.", req);
-                String remoteMethod = req.getParameter("remoteMethod");
+                    return JsonResult.json403("Error: in product stage but not found class on server.", req, json);
+
                 PieceType pieceType = PieceType.byRemoteMethodName(remoteMethod);
                 Class<?> templateClass = MyServerlessEnv.getMethodTemplates().get(remoteMethod);
                 if (templateClass == null)
-                    return JsonResult.json403("Error: template class for remote method '" + remoteMethod + "' not found.", req);
+                    return JsonResult.json403("Error: template class for remote method '" + remoteMethod + "' not found.", req, json);
                 SqlJavaPiece piece = SqlJavaPiece.parseFromFrontText(remoteMethod, sqlOrJavaPiece);
                 String classSrc = SrcBuilder.createSourceCode(templateClass, pieceType, piece);
                 childClass = DynamicCompileEngine.instance.javaCodeToClass(MyServerlessEnv.getDeployPackage() + "." + piece.getClassName(), classSrc);
             }
             if (childClass == null) //still is null
-                return JsonResult.json403("Error: compile failed on server side.", req);
+                return JsonResult.json403("Error: compile failed on server side.", req, json);
 
             String methodId = MyServerlessStrUtils.substringBefore(childClass.getSimpleName(), "_");
-            
-            if (!MyServerlessEnv.getTokenSecurity().allowExecute(req.getParameter("token"), methodId))
-                return JsonResult.json403("Error: no privilege to execute '" + methodId + "' method", req);
+
+            if (!MyServerlessEnv.getTokenSecurity().allowExecute(token, methodId))
+                return JsonResult.json403("Error: no privilege to execute '" + methodId + "' method", req, json);
 
             BaseTemplate instance = null;
             if (BaseTemplate.class.isAssignableFrom(childClass)) {
-              //instance = (BaseTemplate) childClass.newInstance(); //用newInstance生成的是多例
-                instance = JBEANBOX.getBean(childClass);            //用jBeanBox缺省生成的是单例
-            }
-            else
-                return JsonResult.json403("Error: incorrect MyServerless child template error.", req);
+                instance = (BaseTemplate) childClass.newInstance(); //这里只能用newInstance生成多例，否则req、rep、json要作为参数传递进单例
+            } else
+                return JsonResult.json403("Error: incorrect MyServerless child template error.", req, json);
 
-            instance.initParams(req, resp);
+            instance.initParams(req, resp, json);
 
             //Here do token check
 
@@ -125,9 +142,9 @@ public class MyServerlessServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             if (MyServerlessEnv.isDebugInfo()) //if debugInfo is true, will put exception message and debug info in JSON
-                return new JsonResult(403, "Error: server internal error.").setStatus(403).setDebugInfo(JsonResult.getDebugInfo(req) + "\n" + e.getMessage());
+                return new JsonResult(403, "Error: server internal error.").setStatus(403).setDebugInfo(JsonResult.getDebugInfo(req, json) + "\n" + e.getMessage());
             else
-                return JsonResult.json403("Error: server internal error.", req);
+                return JsonResult.json403("Error: server internal error.", req, json);
         }
     }
 

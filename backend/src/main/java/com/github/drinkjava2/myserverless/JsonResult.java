@@ -14,6 +14,8 @@ import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson.JSONObject;
+
 /**
  * JsonResult used to return a JSON to front end 
  */
@@ -47,39 +49,39 @@ public class JsonResult {
         this.data = data;
     }
 
-    public static JsonResult json403(String msg, HttpServletRequest request) {
+    public static JsonResult json403(String msg, HttpServletRequest request, JSONObject json ) {
         JsonResult result = new JsonResult(403, msg).setStatus(403);
         if (MyServerlessEnv.isDebugInfo())
-            result.setDebugInfo(getDebugInfo(request));
+            result.setDebugInfo(getDebugInfo(request, json));
         return result;
     }
 
     /**  Get debug info of request   */
-    public static String getDebugInfo(HttpServletRequest request) {
+    public static String getDebugInfo(HttpServletRequest request, JSONObject json) {
         if (request == null || !MyServerlessEnv.isDebugInfo())
             return "";
         StringBuilder sb = new StringBuilder("\n");
-        sb.append("Host:").append(request.getHeader("Host")).append("\n");
-        sb.append("URL:").append(request.getRequestURL()).append("\n");
-        sb.append("URI:").append(request.getRequestURI()).append("\n");
+        sb.append("Host: ").append(request.getHeader("Host")).append("\n");
+        sb.append("URL: ").append(request.getRequestURL()).append("\n");
+        sb.append("URI: ").append(request.getRequestURI()).append("\n");
 
-        sb.append("Headers:\n");
+        sb.append("Headers: ");
         Enumeration<String> headNames = request.getHeaderNames();
         while (headNames.hasMoreElements()) {
             String headName = headNames.nextElement();
-            sb.append(headName).append(":").append(request.getHeader(headName)).append("\n");
+            sb.append(headName).append(":").append(request.getHeader(headName)).append(";");
         }
+        sb.append("\n");
 
-        sb.append("Parameters:\n");
+        sb.append("Parameters: ");
         for (Enumeration<String> e = request.getParameterNames(); e.hasMoreElements();) {
             Object o = e.nextElement();
             String name = o.toString();
-            sb.append(name).append("=").append(request.getParameter(o.toString())).append("\n");
+            sb.append(name).append("=").append(request.getParameter(o.toString())).append(";");
         }
-        sb.append("develop_token=").append(request.getParameter("develop_token")).append("\n");
-        sb.append("token=").append(request.getParameter("token")).append("\n");
-        sb.append("username=").append(request.getParameter("username")).append("\n");
-        sb.append("password=").append(request.getParameter("password")).append("\n");
+        sb.append("\n");
+
+        sb.append("JSON: ").append(json.toString()).append("\n");
         return sb.toString();
     }
 

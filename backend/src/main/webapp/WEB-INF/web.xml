@@ -27,13 +27,13 @@
  
 	<!-- home page -->
 	<welcome-file-list>
-		<welcome-file>/page/login.html</welcome-file>
+		<welcome-file>/login.html</welcome-file>
 	</welcome-file-list>
 
 	<!-- 404 page -->
 	<error-page>
 		<error-code>404</error-code>
-		<location>/page/404.html</location>
+		<location>/404.html</location>
 	</error-page> 
 
 </web-app>

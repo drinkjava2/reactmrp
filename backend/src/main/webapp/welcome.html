@@ -32,26 +32,38 @@ section header {
 <script src="/js/myserverless-3.0.js"></script>
 </head>
 <body>
-    <script>
+ <script>
       var token=localStorage.getItem("token");
       if(token==null)
-    	  window.location.href="/page/login.html";
-      //todo: check token valid or expired
+    	  window.location.href="/login.html";
+      //todo: check server side token valid or expired
       
+      /* 调用异步方法或者用async/await, 或者用promise.then
 	  async function getUserListHtml(){
 		  var users=await data$qryMapList(`#PUBLIC select * from users order by username`);
 		  var html="User List:<br/>";
 		  for(var i=0;i<users.length;i++) 
 			  html+="username:" +  users[i].username+", password:"+ users[i].password+", token:"+ users[i].token+"<br/>"; 
-	      return html;		   
+		  document.getElementById("Users").innerHTML=html;
 	  }
-	</script>
+      */
+ </script>
+    
 	
     <h2>Backend service started.</h2>	   
-	<div id="msgid" class="msg"></div> 
+	<div id="msgid" class="msg"></div>
+	 
 	<p id="Users">
-	    <script>document.write(await getUserListHtml());</script>   
 	</p>
 	 
+	 
+	  <script>
+	  data$qryMapList(`#PUBLIC select * from users order by username`).then(users=>{
+				  var html="User List:<br/>";
+				  for(var i=0;i<users.length;i++) 
+					  html+="username:" +  users[i].username+", password:"+ users[i].password+", token:"+ users[i].token+"<br/>"; 
+				  document.getElementById("Users").innerHTML=html;
+			  });
+	</script>
 </body>
 </html>

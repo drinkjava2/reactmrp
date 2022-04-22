@@ -47,8 +47,8 @@ public class MainApp {
         //undertow添加MyServerlessServlet处理所有myserverless.do访问
         info.addServlet(Servlets.servlet("dispatch", MyServerlessServlet.class).addMapping("*.do"));
         info.setResourceManager(new FileResourceManager(new File(webAppFolder), 0))
-                .addWelcomePage("/page/login.html")//指定缺省页
-                .addErrorPage(new ErrorPage("/page/404.html")); //指定404页
+                .addWelcomePage("/login.html")//指定缺省页
+                .addErrorPage(new ErrorPage("/404.html")); //指定404页
         DeploymentManager manager = Servlets.defaultContainer().addDeployment(info);
         manager.deploy();
         Undertow server = Undertow.builder().addHttpListener(8001, "localhost").setHandler(manager.start()).build();

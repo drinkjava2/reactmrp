@@ -6,21 +6,23 @@ async function fetchJSon(methodName, text, args){
 		   bodyJson["$"+i]=args[i]; 
 	  if (window.localStorage)  
 		   bodyJson["token"]=localStorage.getItem("token");  
+	  let bodyJsonStr=JSON.stringify(bodyJson);
 	  try{ 
 		  let response= await fetch("/myserverless.do", {
-			    method : 'POST',
-			    headers: { 'Content-Type': 'application/json;charset=utf-8' },
-				body : JSON.stringify(bodyJson)
+			    method : "POST",
+			    mode: "cors",
+			    headers: {"Accept":"application/json", "Content-Type": "application/json;charset=utf-8"},
+				body : bodyJsonStr
 		      });
 		  return await response.json();
 	  }catch(e){
-		  console.log('Request failed ', e);
+		  console.log("Request failed ", e);
 		  return {"code":403, "msg":"Request failed", "data":null};
 	  }
 	}
   
-async function getMyServJson(text){ return await fetchJSon("", text, arguments); }
-
+async function getMyServJson(text){         return await fetchJSon("", text, arguments); }
+//=======
 async function $java(text) { 				return await fetchJSon("java", text, arguments); } 
 async function $javaTx(text) {				return await fetchJSon("javaTx", text, arguments);} 
 async function $qryObject(text) {			return await fetchJSon("qryObject", text, arguments);}  
@@ -32,7 +34,7 @@ async function $qryList(text) {				return await fetchJSon("qryList", text, argum
 async function $qryMapList(text) {			return await fetchJSon("qryMapList", text, arguments);} 
 async function $qryEntity(text) {			return await fetchJSon("qryEntity", text, arguments);}
 async function $qryEntityList(text) {		return await fetchJSon("qryEntityList", text, arguments);}
-//===============
+//=======
 async function data$java(text) {			let json= await fetchJSon("java", text, arguments);	return json.data;}  
 async function data$qryObject(text) {		let json= await fetchJSon("qryObject", text, arguments); return json.data;}  
 async function data$qryArray(text) {		let json= await fetchJSon("qryArray", text, arguments); return json.data;}

@@ -80,10 +80,9 @@ input{
 	            return new JsonResult(200, "login success", token);
 	        else
 	            return new JsonResult(403, "login fail", "").setStatus(403);`,$('#username').val(),$('#password').val());
-		console.log("token="+token)		
 		if(token){
 			localStorage.setItem("token", token);
-			window.location.href="/page/welcome.html";
+			window.location.href="/welcome.html";
 		} else
 			$("#msg").html("Wrong username or password.");
 	 } 

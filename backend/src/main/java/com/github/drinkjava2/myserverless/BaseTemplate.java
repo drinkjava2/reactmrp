@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.drinkjava2.myserverless.util.MyServerlessFileUtils;
 
 /**
@@ -43,6 +44,8 @@ public abstract class BaseTemplate {
     protected HttpServletRequest request; // request instance
 
     protected HttpServletResponse response; // response instance
+
+    protected JSONObject json; // json instance
 
     protected String $0;
     protected String $1;
@@ -66,39 +69,29 @@ public abstract class BaseTemplate {
     protected String $19;
     protected String $20;
 
-    /** Equal to getRequest().getSession(); */
-    public HttpSession getSession() {
-        return getRequest().getSession();
+    public void initParams(HttpServletRequest request, HttpServletResponse response, JSONObject json) {
+        this.request = request;
+        this.response = response;
+        this.json = json;
+
+        $0 = json.getString("$0");
+        $1 = json.getString("$1");
+        $2 = json.getString("$2");
+        $3 = json.getString("$3");
+        $4 = json.getString("$4");
+        $5 = json.getString("$5");
+        $6 = json.getString("$6");
+        $7 = json.getString("$7");
+        $8 = json.getString("$8");
+        $9 = json.getString("$9");
+        $10 = json.getString("$10"); 
     }
 
-    /** Equal to getRequest().getParameter(paramkey); */
-    public String getParam(String paramkey) {
-        return getRequest().getParameter(paramkey);
-    }
-
-    /** Equal to getRequest().getAttribute(attrKey); */
-    public Object getAttr(String attrKey) {
-        return getRequest().getAttribute(attrKey);
-    }
-
-    /** Pack all $1 , $2, ... to $100 parameters into a Map<String,String> */
-    public Map<String, String> getParamMap() {
-        Map<String, String> result = new HashMap<String, String>();
-        for (int i = 1; i <= 100; i++) {
-            String parameter = getParam("$" + i);
-            if (parameter != null)
-                result.put("$" + i, parameter);
-            else
-                break;
-        }
-        return result;
-    }
-
-    /** Pack all $1 , $2,... to $100 parameters into a String[] */
+    /** Pack all $1 , $2,... to $10 parameters into a String[] */
     public String[] getParamArray() {
         List<String> paramList = new ArrayList<String>();
         for (int i = 1; i <= 100; i++) {
-            String parameter = getParam("$" + i);
+            String parameter = json.getString("$" + i);
             if (parameter != null)
                 paramList.add(parameter);
             else
@@ -106,34 +99,7 @@ public abstract class BaseTemplate {
         }
         return paramList.toArray(new String[paramList.size()]);
     }
-
-    public void initParams(HttpServletRequest request, HttpServletResponse response) {
-        this.request = request;
-        this.response = response;
-
-        $0 = getParam("$0");
-        $1 = getParam("$1");
-        $2 = getParam("$2");
-        $3 = getParam("$3");
-        $4 = getParam("$4");
-        $5 = getParam("$5");
-        $6 = getParam("$6");
-        $7 = getParam("$7");
-        $8 = getParam("$8");
-        $9 = getParam("$9");
-        $10 = getParam("$10");
-        $11 = getParam("$11");
-        $12 = getParam("$12");
-        $13 = getParam("$13");
-        $14 = getParam("$14");
-        $15 = getParam("$15");
-        $16 = getParam("$16");
-        $17 = getParam("$17");
-        $18 = getParam("$18");
-        $19 = getParam("$19");
-        $20 = getParam("$20");
-    }
-
+    
     /**
      * The body method for template
      * @return Object
@@ -168,6 +134,14 @@ public abstract class BaseTemplate {
 
     public HttpServletResponse getResponse() {
         return response;
+    }
+
+    public JSONObject getJson() {
+        return json;
+    }
+
+    public void setJson(JSONObject json) {
+        this.json = json;
     }
 
 }
