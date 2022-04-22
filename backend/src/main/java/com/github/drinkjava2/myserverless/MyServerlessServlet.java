@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
 import com.github.drinkjava2.jbeanbox.JBEANBOX;
-import com.github.drinkjava2.jwebbox.WebBox;
 import com.github.drinkjava2.myserverless.compile.DynamicCompileEngine;
 import com.github.drinkjava2.myserverless.util.MyServerlessStrUtils;
 
@@ -63,11 +62,6 @@ public class MyServerlessServlet extends HttpServlet {
         jsonResult.setStatus(null); //no need put status in json
 
         if (BaseTemplate.NONE.equals(jsonResult.getData())) { // if return NONE, do nothing
-            return;
-        } else if (jsonResult.getData() instanceof WebBox) { //if data is WebBox instance, use it output html page
-            resp.setHeader("Content-Type", "text/html; charset=utf-8");
-            WebBox web = (WebBox) jsonResult.getData();
-            web.show(req, resp);
             return;
         } else {//default return json 
             resp.setHeader("Content-Type", "application/json;charset:utf-8");

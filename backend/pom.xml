@@ -85,13 +85,6 @@
       <scope>provided</scope>
     </dependency> 
 
-    <!-- jWebBox is a server side html or jsp page layout tool -->
-	<dependency>
-      <groupId>com.github.drinkjava2</groupId>
-      <artifactId>jwebbox</artifactId>
-      <version>3.0</version>
-    </dependency>
-	
     <!-- jSqlBox is a DAO tool based on Apache-DbUtils -->
     <dependency>
       <groupId>com.github.drinkjava2</groupId>
