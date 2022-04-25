@@ -35,16 +35,6 @@ section header {
       if(token==null)
     	  window.location.href="/login.html";
       //todo: check server side token valid or expired
-      
-      /* 调用异步方法或者用async/await或者用promise.then，两种写法都麻烦
-	  async function getUserListHtml(){
-		  var users=await data$getMyServJson('PUBLIC_p3y0s5twbrlwrqoyzo7u');
-		  var html="User List:<br/>";
-		  for(var i=0;i<users.length;i++) 
-			  html+="username:" +  users[i].username+", password:"+ users[i].password+", token:"+ users[i].token+"<br/>"; 
-		  document.getElementById("Users").innerHTML=html;
-	  }
-      */
  </script>
     
 	
@@ -55,11 +45,12 @@ section header {
 	</p>
 	 
 	 
-	  <script>
-	  data$getMyServJson('PUBLIC_p3y0s5twbrlwrqoyzo7u').then(users=>{
+	 <script>
+	  //data$getMyServJson返回的是异步方法的promise包装, 要用await或then来获取结果
+	  data$qryMapList(`#PUBLIC select username from users where username like ? order by username`,"demo%").then(users=>{
 				  var html="User List:<br/>";
 				  for(var i=0;i<users.length;i++) 
-					  html+="username:" +  users[i].username+", password:"+ users[i].password+", token:"+ users[i].token+"<br/>"; 
+					  html+="username:" +  users[i].username+"<br/>"; 
 				  document.getElementById("Users").innerHTML=html;
 			  });
 	</script>

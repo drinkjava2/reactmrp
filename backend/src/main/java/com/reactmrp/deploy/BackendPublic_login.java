@@ -14,7 +14,7 @@ import java.sql.Connection;
 
 
 @SuppressWarnings("all")
-public class Public_mjke9uc6eantcn9dw7sq extends com.reactmrp.template.JavaTemplate{
+public class BackendPublic_login extends com.reactmrp.template.JavaTemplate{
 
     @Override
 	public Object executeBody() {

@@ -38,8 +38,8 @@ public class DeployToolUtils {
 	 * Extract sql/java to server side for one html/javascript file, if forceDeploy
 	 * is true, ignore if have FRONT control word, force extract to server side
 	 */
-	public static void oneFileToServ(List<SqlJavaPiece> sqlJavaPieces, File file, boolean forceDeploy) {
-		String text = MyServerlessFileUtils.readFile(file.getAbsolutePath(), "UTF-8");
+	public static void oneFileToServ(List<SqlJavaPiece> sqlJavaPieces, File frontFile, boolean forceDeploy) {
+		String text = MyServerlessFileUtils.readFile(frontFile.getAbsolutePath(), "UTF-8");
 		Map<String, SqlJavaPiece> formatedMap = new LinkedHashMap<String, SqlJavaPiece>();
 		boolean changed = false;
 		String formated = text;
@@ -49,24 +49,29 @@ public class DeployToolUtils {
 			String remoteMtd_ = "$" + remoteMethod + "(`";
 			Class<?> templateClass = entry.getValue();
 			formatedMap.clear();
-			formated = formatText(file, formated, formatedMap, remoteMtd_, '`');
-
+			formated = formatText(frontFile, formated, formatedMap, remoteMtd_, '`');
             for (Entry<String, SqlJavaPiece> item : formatedMap.entrySet()) {
-                changed = true;
                 String key = item.getKey();
                 SqlJavaPiece piece = item.getValue();
                 String className = piece.getClassName();
+                String methodId=piece.getMethodId();
+                if(MyServerlessStrUtils.containsIgnoreCase(methodId, "frontend")) {
+                    formated = restoreKeyToOriginText(formated, key, piece); // 如果方法ID包含frontend字样，则永远保持在前端，不变换到后端。回填占位key
+                    continue;
+                }
+                
+                changed = true; 
                 String src = SrcBuilder.createSourceCode(templateClass, PieceType.byRemoteMethodName(remoteMethod), piece);
                 MyServerlessFileUtils.writeFile(MyServerlessEnv.getSrcDeployFolder() + "/" + className + ".java", src, "UTF-8");
-                formated = MyServerlessStrUtils.replaceFirst(formated, key, "$"+MyServerlessEnv.getCallDeployedMethodName()+"('" + className + "'");
+                formated = MyServerlessStrUtils.replaceFirst(formated, key, "$"+MyServerlessEnv.getCallDeployedMethodName()+"(`" + className + "`");
                 
-                piece.setLocation(file.getAbsolutePath());
+                piece.setLocation(frontFile.getAbsolutePath());
                 sqlJavaPieces.add(piece);
             }
 		}
 
 		if (changed) {
-			MyServerlessFileUtils.writeFile(file.getAbsolutePath(), formated, "UTF-8");
+			MyServerlessFileUtils.writeFile(frontFile.getAbsolutePath(), formated, "UTF-8");
 			//Systemout.println("goServer => " + file.getAbsolutePath());
 		}
 	}
@@ -104,44 +109,65 @@ public class DeployToolUtils {
 	/**
 	 * Push back sql/java source code  from server side to HTML/HTM/JSP
 	 */
-	public static void oneFileToFront(File file, boolean forceGoFront, List<String> toDeleteJavas, boolean force) {
-		String text = MyServerlessFileUtils.readFile(file.getAbsolutePath(), "UTF-8");
-		if (!text.contains("$"+MyServerlessEnv.getCallDeployedMethodName()+"('"))
+	public static void oneFileToFront(File frontFile, boolean forceGoFront, List<String> toDeleteJavas, boolean force) {
+	    String rightStart="$"+MyServerlessEnv.getCallDeployedMethodName()+"(`";
+	    String wrongStart="$"+MyServerlessEnv.getCallDeployedMethodName()+"('";
+	    
+		String text = MyServerlessFileUtils.readFile(frontFile.getAbsolutePath(), "UTF-8");
+		if (text.contains(wrongStart)) { //如果使用单引号而不是反单引号，直接报错退出 
+		    System.err.println("ERROR: in file '"+frontFile.getName() +"', should use ` instead of use '");
+		    System.exit(1);
+		}
+		if (!text.contains("$"+MyServerlessEnv.getCallDeployedMethodName()+"(`")) //如果没有发现要调用后端源码的,则跳过这个文件
 			return;
 
 		boolean changed = false;
 		Map<String, SqlJavaPiece> map = new LinkedHashMap<String, SqlJavaPiece>();
-		String formated = formatText(file, text, map, "$"+MyServerlessEnv.getCallDeployedMethodName()+"('", '\'');
+		//下面这句把所有调用后端的地方用占位符表示，将前端部分的信息解析成SqlJavaPiece放到map里
+		String formated = formatText(frontFile, text, map, rightStart, '`');
         for (Entry<String, SqlJavaPiece> item : map.entrySet()) {
-            changed = true;
             String key = item.getKey();
             SqlJavaPiece piece = item.getValue();
             String javaSrcFileName;
-            javaSrcFileName = MyServerlessEnv.getSrcDeployFolder() + "/" + piece.getOriginText() + ".java";
-            String src = MyServerlessFileUtils.readFile(javaSrcFileName, "UTF-8");
-            String template = MyServerlessStrUtils.substringBetween(src, "extends", "Template");
-            template = MyServerlessStrUtils.substringAfterLast(template, ".");
-            String remoteMethod = MyServerlessStrUtils.toLowerCaseFirstOne(template);
-            SqlJavaPiece newPiece = SqlJavaPiece.parseFromJavaSrcFile(javaSrcFileName);
-            if (MyServerlessStrUtils.isEmpty(piece.getOriginText()))
-                formated = MyServerlessStrUtils.replaceFirst(formated, key, "$"+MyServerlessEnv.getCallDeployedMethodName()+"('" + piece.getOriginText() + "'");
-            else {
-                String classId=MyServerlessStrUtils.substringBefore(piece.getOriginText(), "_"); //to get #classId
-                if("default".equalsIgnoreCase(classId))
-                    classId="";
-                else 
-                    classId="#"+classId+" ";
-                String newPieceStr = SrcBuilder.createFrontText(PieceType.byRemoteMethodName(remoteMethod), newPiece);
-                formated = MyServerlessStrUtils.replaceFirst(formated, key, "$" + remoteMethod + "(`"+ classId + newPieceStr + "`");
-                toDeleteJavas.add(javaSrcFileName);
+            javaSrcFileName = MyServerlessEnv.getSrcDeployFolder() + "/" + piece.getOriginText() + ".java"; // .../com/xx/xxx/deploy/PUBLIC_q1h8arktaif5ljzab96k.java
+            String src = MyServerlessFileUtils.readFile(javaSrcFileName, "UTF-8"); //deploy目录下的java类源码
+            String template = null;
+            if (MyServerlessStrUtils.isEmpty(src)) { //没有找到java文件或为空
+                formated = restoreKeyToOriginText(formated, key, piece);
+                continue;
             }
+
+            template = MyServerlessStrUtils.substringBetween(src, "extends", "Template"); //com.reactmrp.template.QryMapList
+            template = MyServerlessStrUtils.substringAfterLast(template, "."); //QryMapList
+            String remoteMethod = MyServerlessStrUtils.toLowerCaseFirstOne(template); //qryMapList
+            SqlJavaPiece newPiece = SqlJavaPiece.parseFromJavaSrcFile(javaSrcFileName); 
+            String methodId = MyServerlessStrUtils.substringBefore(piece.getOriginText(), "_"); //PUBLIC
+            if (MyServerlessStrUtils.isEmpty(piece.getOriginText()) || MyServerlessStrUtils.containsIgnoreCase(methodId, "backend")) { //如果包含backend就跳过
+                formated = restoreKeyToOriginText(formated, key, piece);
+                continue;
+            }
+
+            ////否则就开始替换并删除一个对应后端的源码
+            changed = true;
+            if ("default".equalsIgnoreCase(methodId)) //default表示没有起methodId的
+                methodId = "";
+            else
+                methodId = "#" + methodId + " ";
+            String newPieceStr = SrcBuilder.createFrontText(PieceType.byRemoteMethodName(remoteMethod), newPiece); //根据后端源码生成前端JavaSqlPiece片段
+            formated = MyServerlessStrUtils.replaceFirst(formated, key, "$" + remoteMethod + "(`" + methodId + newPieceStr + "`"); //用后端的源码替换前端key
+            toDeleteJavas.add(javaSrcFileName);
 
         }
 		map.clear();
 		if (changed) {
-			MyServerlessFileUtils.writeFile(file.getAbsolutePath(), formated, "UTF-8");
+			MyServerlessFileUtils.writeFile(frontFile.getAbsolutePath(), formated, "UTF-8");
 			//Systemout.println("goFront => " + file.getAbsolutePath());
 		}
 	}
+
+    private static String restoreKeyToOriginText(String formated, String key, SqlJavaPiece piece) {
+        formated = MyServerlessStrUtils.replaceFirst(formated, key, "$" + MyServerlessEnv.getCallDeployedMethodName() + "(`" + piece.getOriginText() + "`");
+        return formated;
+    }
 
 }

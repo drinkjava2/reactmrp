@@ -50,7 +50,7 @@ public class DeployTool {
         Systemout.println("Current deploy folder is: " + MyServerlessEnv.getSrcDeployFolder());
         Systemout.println("Current frontend folder is: "+MyServerlessEnv.getSrcWebappFolder());
         List<File> htmlJspfiles = searchSupportedWebFiles(MyServerlessEnv.getSrcWebappFolder(), null);
-        Systemout.println("Found "+htmlJspfiles.size()+" files");
+        Systemout.println("Found "+htmlJspfiles.size()+" files, start transfer...");
         List<String> toDeleteJavas = new ArrayList<String>();
         for (File file : htmlJspfiles) 
             DeployToolUtils.oneFileToFront(file, false, toDeleteJavas, true);
@@ -58,6 +58,7 @@ public class DeployTool {
             Systemout.println("Delete file:"+javaFile);
             new File(javaFile).delete();
         }
+        System.out.println("Done!");
     }
 
     /**
@@ -67,7 +68,7 @@ public class DeployTool {
         Systemout.println("Current deploy folder is: " + MyServerlessEnv.getSrcDeployFolder());
         Systemout.println("Current frontend folder is: "+MyServerlessEnv.getSrcWebappFolder());
         List<File> files = searchSupportedWebFiles(MyServerlessEnv.getSrcWebappFolder(), null);
-        Systemout.println("Found "+files.size()+" files");
+        Systemout.println("Found "+files.size()+" files, start transfer...");
         List<SqlJavaPiece> sqlJavaPieces = new ArrayList<>();
         for (File file : files)
             DeployToolUtils.oneFileToServ(sqlJavaPieces, file, true);
@@ -75,6 +76,7 @@ public class DeployTool {
             System.out.println(sqlJavaPiece.getDebugInfo());
         }
         exportApiDoc(sqlJavaPieces);
+        System.out.println("Done!");
     }
 
     private static void exportApiDoc(List<SqlJavaPiece> pieces) {

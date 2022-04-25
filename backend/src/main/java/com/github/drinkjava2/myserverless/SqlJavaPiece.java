@@ -159,6 +159,10 @@ public class SqlJavaPiece {
         piece.setImports(imports);
         return piece.trim();
     }
+    
+    public String getMethodId() {
+        return MyServerlessStrUtils.substringBefore(className, "_");
+    }
 
     //======garbage code====
     public String getId() {

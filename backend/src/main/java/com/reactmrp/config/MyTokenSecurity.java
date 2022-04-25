@@ -45,7 +45,7 @@ public class MyTokenSecurity implements TokenSecurity {
 
     @Override
     public boolean allowExecute(String token, String methodId) {
-        if (MyServerlessStrUtils.startsWithIgnoreCase(methodId, "public")) //只要public开头的方法都允许执行
+        if (MyServerlessStrUtils.containsIgnoreCase(methodId, "public")) //只要方法id里包含public都允许执行，通常是固定放在后端的方法，即BackendPublicxxx之类的
             return true;
         int i = DB.qryIntValue(tokenCache, "select count(*) from users where token=", DB.que(token));
         if (i == 1)
