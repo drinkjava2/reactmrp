@@ -32,6 +32,6 @@ public interface TokenSecurity {
      * @param methodId
      * @return true if allow execute
      */
-    public boolean allowExecute(String token, String methodId);
+    public boolean allow(String token, String methodId);
 
 }

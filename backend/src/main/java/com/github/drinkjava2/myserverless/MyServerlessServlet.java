@@ -125,7 +125,7 @@ public class MyServerlessServlet extends HttpServlet {
 
             String methodId = MyServerlessStrUtils.substringBefore(childClass.getSimpleName(), "_");
 
-            if (!MyServerlessEnv.getTokenSecurity().allowExecute(token, methodId))
+            if (!MyServerlessEnv.getTokenSecurity().allow(token, methodId))
                 return JsonResult.json403("Error: no privilege to execute '" + methodId + "' method", req, json);
 
             BaseTemplate instance = null;

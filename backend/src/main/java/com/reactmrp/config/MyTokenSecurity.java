@@ -44,7 +44,7 @@ public class MyTokenSecurity implements TokenSecurity {
     static SimpleCacheHandler tokenCache = new SimpleCacheHandler(3000, 10 * 24 * 60 * 60);//缺省最多同时保存3000个token, 10天过期 
 
     @Override
-    public boolean allowExecute(String token, String methodId) {
+    public boolean allow(String token, String methodId) {
         if (MyServerlessStrUtils.containsIgnoreCase(methodId, "public")) //只要方法id里包含public都允许执行，通常是固定放在后端的方法，即BackendPublicxxx之类的
             return true;
         int i = DB.qryIntValue(tokenCache, "select count(*) from users where token=", DB.que(token));
