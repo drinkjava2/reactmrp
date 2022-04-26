@@ -34,6 +34,8 @@ section header {
       var token=localStorage.getItem("token");
       if(token==null)
     	  window.location.href="/login.html";
+      let results=syncData$java(`#PUBLIC return 1;`);
+      console.log(results);
  </script>
     
 	

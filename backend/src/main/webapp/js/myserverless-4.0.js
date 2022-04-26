@@ -20,7 +20,42 @@ async function fetchJSon(methodName, text, args){
 		  return {"code":403, "msg":"Request failed", "data":null};
 	  }
 	}
-  
+
+function syncFetchJSon(methodName, text, args){
+	let bodyJson= {"remoteMethod":methodName,"$0": text};
+	for (let i = 1; i < args.length; i++) 
+		   bodyJson["$"+i]=args[i]; 
+	if (window.localStorage)  
+		   bodyJson["token"]=localStorage.getItem("token");  
+	let bodyJsonStr=JSON.stringify(bodyJson);
+	let xhr = new XMLHttpRequest(); 
+	xhr.open('POST', '/myserverless.do', false); 
+	xhr.setRequestHeader("Content-Type","application/json;charset=utf-8");
+	xhr.setRequestHeader("Accept","application/json");
+	try {
+	  xhr.send(bodyJsonStr);
+	  if (xhr.status != 200) {
+		  return {"code":403, "msg":"Request failed", "data":null};
+	  } else {
+		  return JSON.parse(xhr.responseText);
+	  }
+	} catch(err) { // 代替 onerror
+		return {"code":403, "msg":"Request failed", "data":null};
+	}
+}
+
+//同步方法只有几个
+function sync$getMyServJson(text){		return  syncFetchJSon("", text, arguments); }
+function syncData$getMyServJson(text){	return  syncFetchJSon("", text, arguments).data; }
+
+function sync$java(text) { 				return syncFetchJSon("java", text, arguments); }
+function sync$javaTx(text) {			return syncFetchJSon("javaTx", text, arguments); }
+
+function syncData$java(text) { 			return syncFetchJSon("java", text, arguments).data; } 
+function syncData$javaTx(text) {		return syncFetchJSon("javaTx", text, arguments).data; } 
+
+
+//下面都是异步方法
 async function $getMyServJson(text){return await fetchJSon("", text, arguments); }
 async function data$getMyServJson(text){let json= await fetchJSon("", text, arguments); return json.data; }
 
