@@ -5,7 +5,7 @@ import com.github.drinkjava2.jdialects.annotation.jdia.SingleFKey;
 import com.github.drinkjava2.jdialects.annotation.jpa.Id;
 import com.github.drinkjava2.jsqlbox.ActiveEntity;
 
-public class RoleAction implements ActiveEntity<RoleAction> {
+public class RolePower implements ActiveEntity<RolePower> {
     @Id
     @SingleFKey(refs = {"roles", "roleName"})
     private String roleName;
@@ -19,7 +19,7 @@ public class RoleAction implements ActiveEntity<RoleAction> {
         return roleName;
     }
 
-    public RoleAction setRoleName(String roleName) {
+    public RolePower setRoleName(String roleName) {
         this.roleName = roleName;
         return this;
     }
@@ -28,7 +28,7 @@ public class RoleAction implements ActiveEntity<RoleAction> {
         return powerName;
     }
 
-    public RoleAction setPowerName(String powerName) {
+    public RolePower setPowerName(String powerName) {
         this.powerName = powerName;
         return this;
     }

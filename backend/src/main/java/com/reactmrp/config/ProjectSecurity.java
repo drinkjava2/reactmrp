@@ -26,7 +26,7 @@ import com.reactmrp.entity.User;
  * @author Yong Zhu
  * @since 1.0.0
  */
-public class MyTokenSecurity implements TokenSecurity {
+public class ProjectSecurity implements TokenSecurity {
 
     public static String encodePassword(String password) {
         return MD5Util.encryptMD5("saltForMD5" + password);

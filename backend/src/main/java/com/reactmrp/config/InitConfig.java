@@ -27,7 +27,7 @@ import com.github.drinkjava2.myserverless.MyServerlessEnv;
 import com.reactmrp.config.DataSourceConfig.DataSourceBox;
 import com.reactmrp.entity.Power;
 import com.reactmrp.entity.Role;
-import com.reactmrp.entity.RoleAction;
+import com.reactmrp.entity.RolePower;
 import com.reactmrp.entity.User;
 import com.reactmrp.entity.UserRole;
 import com.reactmrp.template.JavaTemplate;
@@ -79,7 +79,7 @@ public class InitConfig extends HttpServlet {
 
         //本项目使用jSqlBox作为DAO工具，以下是jSqlBox的配置
         DbContext.setGlobalNextAllowShowSql(true); //允许输出SQL日志到控制台
-        Dialect.setGlobalNamingConversion(new MyEntityNamingRule()); //全局表和字段名映射，表名列名为一对一关系，不作变换
+        Dialect.setGlobalNamingConversion(new ProjectNamingRule()); //全局表和字段名映射，表名列名为一对一关系，不作变换
         DbContext ctx = new DbContext(ds); //ctx是全局单例
         ctx.setConnectionManager(TinyTxConnectionManager.instance());// 事务配置
         DbContext.setGlobalDbContext(ctx);// 设定全局缺省上下文
@@ -93,10 +93,10 @@ public class InitConfig extends HttpServlet {
         });
 
         //新建用户 
-        new User().setUserName("developer").setPassword(MyTokenSecurity.encodePassword("123")).insert();
-        new User().setUserName("admin").setPassword(MyTokenSecurity.encodePassword("123")).insert();
-        new User().setUserName("manager").setPassword(MyTokenSecurity.encodePassword("123")).insert();
-        new User().setUserName("user").setPassword(MyTokenSecurity.encodePassword("123")).insert();
+        new User().setUserName("developer").setPassword(ProjectSecurity.encodePassword("123")).insert();
+        new User().setUserName("admin").setPassword(ProjectSecurity.encodePassword("123")).insert();
+        new User().setUserName("manager").setPassword(ProjectSecurity.encodePassword("123")).insert();
+        new User().setUserName("user").setPassword(ProjectSecurity.encodePassword("123")).insert();
 
         //新建角色
         new Role().setRoleName("developerRole").insert();
@@ -121,7 +121,7 @@ public class InitConfig extends HttpServlet {
         ur.setUserName("user").setRoleName("userRole").insert();
 
         //给角色添加行为权限
-        RoleAction ra = new RoleAction().setRoleName("developerRole") //
+        RolePower ra = new RolePower().setRoleName("developerRole") //
                 .setPowerName("DeveloperPower").insert();
 
         ra.setRoleName("adminRole");

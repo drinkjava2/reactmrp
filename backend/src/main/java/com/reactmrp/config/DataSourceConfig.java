@@ -4,7 +4,7 @@ import com.github.drinkjava2.jbeanbox.BeanBox;
 import com.zaxxer.hikari.HikariDataSource;
 
 /**
- * Global DataSource Configuration
+ * Project DataSource Configuration
  * @author Yong Zhu
  * @since 1.0.0
  */
