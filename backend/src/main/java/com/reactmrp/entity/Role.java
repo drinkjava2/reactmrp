@@ -6,17 +6,18 @@ import com.github.drinkjava2.jdialects.annotation.jpa.Table;
 import com.github.drinkjava2.jsqlbox.ActiveEntity;
 
 @Table(name = "roles")
-public class Role implements ActiveEntity<User> {
+public class Role implements ActiveEntity<Role> {
     @Id
     @COLUMN(length = 32)
-    private String role;
+    private String roleName;
 
-    public String getRole() {
-        return role;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public Role setRoleName(String roleName) {
+        this.roleName = roleName;
+        return this;
     }
 
 }

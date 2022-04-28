@@ -14,8 +14,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.drinkjava2.myserverless.util.MyServerlessFileUtils;
-import com.github.drinkjava2.myserverless.util.MyServerlessStrUtils;
+import com.github.drinkjava2.myserverless.util.MyFileUtils;
+import com.github.drinkjava2.myserverless.util.MyStrUtils;
 import com.github.drinkjava2.myserverless.util.Systemout;
 
 /**
@@ -81,7 +81,7 @@ public class DeployTool {
 
     private static void exportApiDoc(List<SqlJavaPiece> pieces) {
         String apiFile = MyServerlessEnv.getApiExportFile();
-        if (MyServerlessStrUtils.isEmpty(apiFile))
+        if (MyStrUtils.isEmpty(apiFile))
             return;
         StringBuilder apiHtml = new StringBuilder();
         apiHtml.insert(0, "<!DOCTYPE html>\n" + //
@@ -107,7 +107,7 @@ public class DeployTool {
         apiHtml.append("</table>\n" + //
                 "</body>\n" + //
                 "</html>");
-        MyServerlessFileUtils.writeFile(apiFile, apiHtml.toString(), "UTF-8");
+        MyFileUtils.writeFile(apiFile, apiHtml.toString(), "UTF-8");
         //Systemout.println("API file export: " + apiFile);
     }
 

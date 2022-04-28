@@ -62,8 +62,8 @@ public abstract class TxtUtils {// NOSONAR
 			return null;
 		if (javaFileCache.containsKey(clazz.getName()))
 			return javaFileCache.get(clazz.getName());
-		String classPathName = MyServerlessStrUtils.substringBefore(clazz.getName(), "$");// aa.bb.Cc
-		classPathName = "/" + MyServerlessStrUtils.replace(classPathName, ".", "/");// /aa/bb/Cc
+		String classPathName = MyStrUtils.substringBefore(clazz.getName(), "$");// aa.bb.Cc
+		classPathName = "/" + MyStrUtils.replace(classPathName, ".", "/");// /aa/bb/Cc
 		String fileName = classPathName + ".java";// /aa/bb/Cc.java
 		InputStream inputStream = null;
 		try {
@@ -71,8 +71,8 @@ public abstract class TxtUtils {// NOSONAR
 			if (inputStream == null) {// Not found, it means in eclipse
 				File file = new File(clazz.getResource(classPathName + ".class").getFile());
 				String absPath = file.getAbsolutePath();
-				absPath = MyServerlessStrUtils.replace(absPath, "\\", "/");
-				String projectFolder = MyServerlessStrUtils.substringBefore(absPath, "/target/");
+				absPath = MyStrUtils.replace(absPath, "\\", "/");
+				String projectFolder = MyStrUtils.substringBefore(absPath, "/target/");
 				String realFile = projectFolder + "/src/main/resources" + classPathName + ".java";
 				file = new File(realFile);
 				if (!file.exists()) {

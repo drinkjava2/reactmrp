@@ -24,9 +24,9 @@ import java.io.InputStream;
  * @author Yong Zhu
  * @since 1.0.0
  */
-public class MyServerlessFileUtils {
+public class MyFileUtils {
 
-	private MyServerlessFileUtils() {
+	private MyFileUtils() {
 		// default constructor
 	}
 

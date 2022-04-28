@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import com.github.drinkjava2.myserverless.util.ClassExistCacheUtils;
-import com.github.drinkjava2.myserverless.util.MyServerlessStrUtils;
+import com.github.drinkjava2.myserverless.util.MyStrUtils;
 
 /**
  * DeployTool extract all SQL and Java in html or .js files to server side, and
@@ -86,18 +86,18 @@ public class MyServerlessEnv {// NOSONAR
                 java_file_export = false;
 
             String web_files_str = prop.getProperty("web_files");
-            if (MyServerlessStrUtils.isEmpty(web_files_str)) {
+            if (MyStrUtils.isEmpty(web_files_str)) {
                 throw new IllegalArgumentException("web_files configration missing, an example: web_files=html,htm,js");
             } else {
-                String[] splited = MyServerlessStrUtils.split(",", web_files_str);
+                String[] splited = MyStrUtils.split(",", web_files_str);
                 for (String s : splited)
-                    web_files.add(MyServerlessStrUtils.trimAllWhitespace(s));
+                    web_files.add(MyStrUtils.trimAllWhitespace(s));
                 if (web_files.isEmpty())
                     throw new IllegalArgumentException("web_files configration missing, an example: web_files=html,htm,js");
             }
 
             String call_server_method_str = prop.getProperty("call_server_method");
-            if (MyServerlessStrUtils.isEmpty(call_server_method_str))
+            if (MyStrUtils.isEmpty(call_server_method_str))
                 throw new IllegalArgumentException("call_server_method configration missing");
             else
                 call_server_method = call_server_method_str;
@@ -105,8 +105,8 @@ public class MyServerlessEnv {// NOSONAR
             api_export_file=prop.getProperty("api_export_file");
             
             String newFilePath = new File("").getAbsolutePath();
-            newFilePath = MyServerlessStrUtils.substringBefore(newFilePath, "\\target");
-            project_root_folder = MyServerlessStrUtils.substringBefore(newFilePath, "/target");
+            newFilePath = MyStrUtils.substringBefore(newFilePath, "\\target");
+            project_root_folder = MyStrUtils.substringBefore(newFilePath, "/target");
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
@@ -134,17 +134,17 @@ public class MyServerlessEnv {// NOSONAR
     public static Class<?> findCachedClass(String sqlJavaPiece) {
         if (sqlJavaPiece == null)
             return null;
-        if (!MyServerlessStrUtils.isLegalClassName(sqlJavaPiece))
+        if (!MyStrUtils.isLegalClassName(sqlJavaPiece))
             return null;
         return ClassExistCacheUtils.checkClassExist(new StringBuilder(MyServerlessEnv.getDeployPackage()).append(".").append(sqlJavaPiece).toString());
     }
 
     public static String getClassesDeployFolder() {
-        return getClassLoaderFolder() + "/" + MyServerlessStrUtils.replace(deploy_package, ".", "/");
+        return getClassLoaderFolder() + "/" + MyStrUtils.replace(deploy_package, ".", "/");
     }
 
     public static String getSrcDeployFolder() {
-        return getProjectRootFolder() + "/src/main/java/" + MyServerlessStrUtils.replace(deploy_package, ".", "/");
+        return getProjectRootFolder() + "/src/main/java/" + MyStrUtils.replace(deploy_package, ".", "/");
     }
 
     public static String getSrcWebappFolder() {
@@ -154,8 +154,8 @@ public class MyServerlessEnv {// NOSONAR
 
     public static String getClassLoaderFolder() {
         String path = Thread.currentThread().getContextClassLoader().getResource("").toString();
-        path = MyServerlessStrUtils.replaceFirst(path, "file:/", "");
-        path = MyServerlessStrUtils.replaceFirst(path, "file:", "");
+        path = MyStrUtils.replaceFirst(path, "file:/", "");
+        path = MyStrUtils.replaceFirst(path, "file:", "");
         if (path.endsWith("/") || path.endsWith("\\"))
             path = path.substring(0, path.length() - 1);
         return path;

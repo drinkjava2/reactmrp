@@ -10,7 +10,7 @@
  */
 package com.github.drinkjava2.myserverless;
 
-import com.github.drinkjava2.myserverless.util.MyServerlessStrUtils;
+import com.github.drinkjava2.myserverless.util.MyStrUtils;
 import com.github.drinkjava2.myserverless.util.TxtUtils;
 
 /**
@@ -50,20 +50,20 @@ public abstract class SrcBuilder { // NOSONAR
         String classSrc;
 
         classSrc = TxtUtils.getJavaSourceCodeUTF8(templateClass);
-        classSrc = MyServerlessStrUtils.substringAfter(classSrc, "package ");
-        classSrc = MyServerlessStrUtils.substringAfter(classSrc, ";");
+        classSrc = MyStrUtils.substringAfter(classSrc, "package ");
+        classSrc = MyStrUtils.substringAfter(classSrc, ";");
         classSrc = sqlJavaPiece.getImports() + "\n" + classSrc;
         classSrc = "package " + MyServerlessEnv.getDeployPackage() + ";\n" + classSrc;
-        String classDeclar = MyServerlessStrUtils.substringBetween(classSrc, "public ", "{");
-        classSrc = MyServerlessStrUtils.replaceFirst(classSrc, classDeclar, "class " + sqlJavaPiece.getClassName() + " extends " + templateClass.getName());
+        String classDeclar = MyStrUtils.substringBetween(classSrc, "public ", "{");
+        classSrc = MyStrUtils.replaceFirst(classSrc, classDeclar, "class " + sqlJavaPiece.getClassName() + " extends " + templateClass.getName());
 
         if (PieceType.JAVA.equals(piectType)) {
-            classSrc = MyServerlessStrUtils.replaceOneBetween(classSrc, "/* MYSERVERLESS BODY BEGIN */", "/* MYSERVERLESS BODY END */", sqlJavaPiece.getBody());
+            classSrc = MyStrUtils.replaceOneBetween(classSrc, "/* MYSERVERLESS BODY BEGIN */", "/* MYSERVERLESS BODY END */", sqlJavaPiece.getBody());
         } else if (PieceType.QRY.equals(piectType)) {
             String sql = sqlJavaPiece.getBody();
-            sql = MyServerlessStrUtils.replace(sql, "\\`", "`");
-            sql = MyServerlessStrUtils.replace(sql, "\"", "\\\"");
-            classSrc = MyServerlessStrUtils.replaceOneBetween(classSrc, "/* MYSERVERLESS BODY BEGIN */", "/* MYSERVERLESS BODY END */", "\n" + "		String sql = \"" + sql + "\";" + "\n		");
+            sql = MyStrUtils.replace(sql, "\\`", "`");
+            sql = MyStrUtils.replace(sql, "\"", "\\\"");
+            classSrc = MyStrUtils.replaceOneBetween(classSrc, "/* MYSERVERLESS BODY BEGIN */", "/* MYSERVERLESS BODY END */", "\n" + "		String sql = \"" + sql + "\";" + "\n		");
         } else
             throw new IllegalArgumentException("Unknow PieceType when create Java source code");
         return classSrc;
@@ -78,9 +78,9 @@ public abstract class SrcBuilder { // NOSONAR
             return head + body;
         } else if (PieceType.QRY.equals(pieceType)) {
             String sql = piece.getBody();
-            sql = MyServerlessStrUtils.substringAfter(sql, "\"");
-            sql = MyServerlessStrUtils.substringBeforeLast(sql, "\"");
-            sql = MyServerlessStrUtils.replace(sql, "`", "\\`").trim();
+            sql = MyStrUtils.substringAfter(sql, "\"");
+            sql = MyStrUtils.substringBeforeLast(sql, "\"");
+            sql = MyStrUtils.replace(sql, "`", "\\`").trim();
             return buildFrontLeadingTagsAndImports(piece) + sql;
         }  
         throw new IllegalArgumentException("Unknow PieceType when create front text");
@@ -89,9 +89,9 @@ public abstract class SrcBuilder { // NOSONAR
     /** build Front Leading Tags */
     public static String buildFrontLeadingTagsAndImports(SqlJavaPiece piece) {
         StringBuilder sb = new StringBuilder();
-        if (!MyServerlessStrUtils.isEmpty(piece.getId()))
+        if (!MyStrUtils.isEmpty(piece.getId()))
             sb.append("#").append(piece.getId()).append(" ");
-        if (!MyServerlessStrUtils.isEmpty(piece.getImports()))
+        if (!MyStrUtils.isEmpty(piece.getImports()))
             sb.append(piece.getImports()).append(" ");
         return sb.toString();
     }

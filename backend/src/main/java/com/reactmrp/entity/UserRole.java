@@ -1,34 +1,37 @@
 package com.reactmrp.entity;
 
+import com.github.drinkjava2.jdialects.annotation.jdia.COLUMN;
 import com.github.drinkjava2.jdialects.annotation.jdia.SingleFKey;
 import com.github.drinkjava2.jdialects.annotation.jpa.Id;
-import com.github.drinkjava2.jdialects.annotation.jpa.Table;
 import com.github.drinkjava2.jsqlbox.ActiveEntity;
 
-@Table(name = "user_role")
-public class UserRole implements ActiveEntity<User> {
+public class UserRole implements ActiveEntity<UserRole> {
     @Id
-    @SingleFKey(refs = {"roles", "role"})
-    private String role;
+    @SingleFKey(refs = {"users", "userName"})
+    @COLUMN(length = 32)
+    private String userName;
 
     @Id
-    @SingleFKey(refs = {"users", "username"})
-    private String username;
+    @SingleFKey(refs = {"roles", "roleName"})
+    @COLUMN(length = 32)
+    private String roleName;
 
-    public String getRole() {
-        return role;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public UserRole setUserName(String userName) {
+        this.userName = userName;
+        return this;
     }
 
-    public String getUsername() {
-        return username;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public UserRole setRoleName(String roleName) {
+        this.roleName = roleName;
+        return this;
     }
 
 }

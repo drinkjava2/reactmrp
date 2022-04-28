@@ -10,15 +10,15 @@
  */
 package com.github.drinkjava2.myserverless;
 
-import static com.github.drinkjava2.myserverless.util.MyServerlessStrUtils.getRandomClassName;
-import static com.github.drinkjava2.myserverless.util.MyServerlessStrUtils.isEmpty;
+import static com.github.drinkjava2.myserverless.util.MyStrUtils.getRandomClassName;
+import static com.github.drinkjava2.myserverless.util.MyStrUtils.isEmpty;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.github.drinkjava2.myserverless.util.MyServerlessFileUtils;
-import com.github.drinkjava2.myserverless.util.MyServerlessStrUtils;
+import com.github.drinkjava2.myserverless.util.MyFileUtils;
+import com.github.drinkjava2.myserverless.util.MyStrUtils;
 
 /**
  * SQL or Java source code piece, this is a virtual model represents the sql or
@@ -72,7 +72,7 @@ public class SqlJavaPiece {
         if (isEmpty(piece.getId()))
             piece.setClassName("Default_" + getRandomOrCachedClassName(remoteMethod, frontText));
         else
-            piece.setClassName(MyServerlessStrUtils.replace(piece.getId(), "#", "") + "_" + getRandomOrCachedClassName(remoteMethod, frontText));
+            piece.setClassName(MyStrUtils.replace(piece.getId(), "#", "") + "_" + getRandomOrCachedClassName(remoteMethod, frontText));
         return piece;
     }
 
@@ -82,7 +82,7 @@ public class SqlJavaPiece {
     private static String getRandomOrCachedClassName(String remoteMethod, String frontText) {
         String key = remoteMethod + ":" + frontText;
         String id = cachedRandomIdMap.get(key);
-        if (MyServerlessStrUtils.isEmpty(id)) {
+        if (MyStrUtils.isEmpty(id)) {
             id = getRandomClassName(20);
             cachedRandomIdMap.put(key, id);
         }
@@ -98,24 +98,24 @@ public class SqlJavaPiece {
     private static SqlJavaPiece doParse(String frontText) {
         SqlJavaPiece piece = new SqlJavaPiece();
         piece.setOriginText(frontText);
-        if (MyServerlessStrUtils.isEmpty(frontText))
+        if (MyStrUtils.isEmpty(frontText))
             return piece.trim();
         String lastPiece = frontText;
-        String trimed = MyServerlessStrUtils.trimLeadingWhitespace(lastPiece);
-        String firstWord = MyServerlessStrUtils.findFirstWordNoWhiteChars(trimed);
-        while (!MyServerlessStrUtils.isEmpty(firstWord)) {
+        String trimed = MyStrUtils.trimLeadingWhitespace(lastPiece);
+        String firstWord = MyStrUtils.findFirstWordNoWhiteChars(trimed);
+        while (!MyStrUtils.isEmpty(firstWord)) {
             if (firstWord.startsWith("#"))
                 piece.setId(firstWord);
             else if ("import".equals(firstWord)) { // NOSONAR
                 // a.b; import b.c; select * from users; // NOSONAR
                 StringBuilder imports = new StringBuilder();
                 while ("import".equals(firstWord)) {
-                    String importStr = MyServerlessStrUtils.substringBefore(lastPiece, ";");
+                    String importStr = MyStrUtils.substringBefore(lastPiece, ";");
                     String stmp = (importStr + "; // MYSERVERLESS IMPORT").trim();
                     imports.append(stmp).append("\n");
                     lastPiece = lastPiece.substring(importStr.length() + 1);// import a.b; import c.d
                     trimed = lastPiece.trim();
-                    firstWord = MyServerlessStrUtils.findFirstWordNoWhiteChars(trimed);
+                    firstWord = MyStrUtils.findFirstWordNoWhiteChars(trimed);
                     if (!"import".equals(firstWord)) {
                         piece.setImports(imports.toString());
                         piece.setBody(lastPiece);
@@ -127,8 +127,8 @@ public class SqlJavaPiece {
                 return piece.trim();
             }
             lastPiece = trimed.substring(firstWord.length());
-            trimed = MyServerlessStrUtils.trimLeadingWhitespace(lastPiece);
-            firstWord = MyServerlessStrUtils.findFirstWordNoWhiteChars(trimed);
+            trimed = MyStrUtils.trimLeadingWhitespace(lastPiece);
+            firstWord = MyStrUtils.findFirstWordNoWhiteChars(trimed);
         }
         piece.setBody(lastPiece);
         return piece.trim();
@@ -136,14 +136,14 @@ public class SqlJavaPiece {
 
     public static SqlJavaPiece parseFromJavaSrcFile(String fileFullPath) {
         SqlJavaPiece piece = new SqlJavaPiece();
-        String src = MyServerlessFileUtils.readFile(fileFullPath, "UTF-8");
+        String src = MyFileUtils.readFile(fileFullPath, "UTF-8");
         piece.setOriginText(src);
-        if (MyServerlessStrUtils.isEmpty(src))
+        if (MyStrUtils.isEmpty(src))
             return piece.trim();
-        String code = MyServerlessStrUtils.substringBetween(src, "/* MYSERVERLESS BODY BEGIN */", "/* MYSERVERLESS BODY END */");
-        if (!MyServerlessStrUtils.isEmpty(code))
+        String code = MyStrUtils.substringBetween(src, "/* MYSERVERLESS BODY BEGIN */", "/* MYSERVERLESS BODY END */");
+        if (!MyStrUtils.isEmpty(code))
             piece.setMethodType("JAVA");
-        if (MyServerlessStrUtils.isEmpty(code))
+        if (MyStrUtils.isEmpty(code))
             return piece.trim();
 
         piece.setBody(code);
@@ -151,17 +151,17 @@ public class SqlJavaPiece {
         piece.setId(null);
         String imports = "";
         while (src.contains("// MYSERVERLESS IMPORT")) {
-            String st = MyServerlessStrUtils.substringBefore(src, "// MYSERVERLESS IMPORT");
-            st = MyServerlessStrUtils.substringAfterLast(st, "import ");
+            String st = MyStrUtils.substringBefore(src, "// MYSERVERLESS IMPORT");
+            st = MyStrUtils.substringAfterLast(st, "import ");
             imports += "\n" + ("import " + st).trim();
-            src = MyServerlessStrUtils.replaceFirst(src, "// MYSERVERLESS IMPORT", "");
+            src = MyStrUtils.replaceFirst(src, "// MYSERVERLESS IMPORT", "");
         }
         piece.setImports(imports);
         return piece.trim();
     }
     
     public String getMethodId() {
-        return MyServerlessStrUtils.substringBefore(className, "_");
+        return MyStrUtils.substringBefore(className, "_");
     }
 
     //======garbage code====

@@ -48,10 +48,10 @@ section header {
 	 
 	 <script>
 	  //data$getMyServJson返回的是异步方法的promise包装, 要用await或then来获取结果
-	  data$qryMapList(`#PUBLIC select username from users where username like ? order by username`,"demo%").then(users=>{
+	  data$qryMapList(`#PUBLIC select username from users order by username`).then(users=>{
 				  var html="User List:<br/>";
 				  for(var i=0;i<users.length;i++) 
-					  html+="username:" +  users[i].username+"<br/>"; 
+					  html+="userName:" +  users[i].userName+"<br/>"; 
 				  document.getElementById("Users").innerHTML=html;
 			  });
 	</script>

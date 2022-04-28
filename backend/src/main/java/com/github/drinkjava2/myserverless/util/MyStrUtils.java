@@ -24,9 +24,9 @@ import com.github.drinkjava2.myserverless.compile.CompileException;
  * @author Yong Zhu
  * @since 1.0.0
  */
-public class MyServerlessStrUtils {
+public class MyStrUtils {
 
-	private MyServerlessStrUtils() {
+	private MyStrUtils() {
 		// default constructor
 	}
 

@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.alibaba.fastjson.JSONObject;
-import com.github.drinkjava2.myserverless.util.MyServerlessFileUtils;
+import com.github.drinkjava2.myserverless.util.MyFileUtils;
 
 /**
  * This is the base environment servlet store environment info

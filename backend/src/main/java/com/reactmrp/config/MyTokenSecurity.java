@@ -10,12 +10,15 @@
  */
 package com.reactmrp.config;
 
+import java.util.List;
+
 import com.github.drinkjava2.jdbpro.handler.SimpleCacheHandler;
 import com.github.drinkjava2.jdialects.StrUtils;
 import com.github.drinkjava2.jsqlbox.DB;
 import com.github.drinkjava2.myserverless.TokenSecurity;
 import com.github.drinkjava2.myserverless.util.MD5Util;
-import com.github.drinkjava2.myserverless.util.MyServerlessStrUtils;
+import com.github.drinkjava2.myserverless.util.MyStrUtils;
+import com.reactmrp.entity.User;
 
 /**
  * MyServerless的TokenSecurity接口两个方法必须实现，以实现登录和token检查功能
@@ -30,24 +33,24 @@ public class MyTokenSecurity implements TokenSecurity {
     }
 
     @Override
-    public String login(String username, String password) {
-        int i = DB.qryIntValue("select count(*) from users where username=", DB.que(username), " and password=", DB.que(encodePassword(password)));
-        if (i == 1) {
-            String token = username + "_" + StrUtils.getRandomString(50);
-            DB.exe("update users set token=", DB.que(token), " where username=", DB.que(username), " and password=", DB.que(encodePassword(password)));
-            return token;
-        } else {
+    public String login(String userName, String password) {
+        if (MyStrUtils.isEmpty(userName) || MyStrUtils.isEmpty(password))
+            return null; 
+        List<User> users = DB.entityFindBySample(new User().setUserName(userName).setPassword(encodePassword(password)));
+        if (users.size() != 1)
             return null;
-        }
+        String token = userName + "_" + StrUtils.getRandomString(50);
+        new User().setUserName(userName).setToken(token).update(DB.IGNORE_EMPTY);
+        return token;
     }
 
-    static SimpleCacheHandler tokenCache = new SimpleCacheHandler(3000, 10 * 24 * 60 * 60);//缺省最多同时保存3000个token, 10天过期 
+    public static SimpleCacheHandler loginTokenCache = new SimpleCacheHandler(3000, 10 * 24 * 60 * 60);//缺省最多同时保存3000个token, 10天过期 
 
     @Override
     public boolean allow(String token, String methodId) {
-        if (MyServerlessStrUtils.containsIgnoreCase(methodId, "public")) //只要方法id里包含public都允许执行，通常是固定放在后端的方法，即BackendPublicxxx之类的
+        if (MyStrUtils.containsIgnoreCase(methodId, "public")) //只要方法id里包含public都允许执行，通常是固定放在后端的方法，即BackendPublicxxx之类的
             return true;
-        int i = DB.qryIntValue(tokenCache, "select count(*) from users where token=", DB.que(token));
+        int i = DB.qryIntValue(loginTokenCache, "select count(*) from users where token=", DB.que(token));
         if (i == 1)
             return true;
         else

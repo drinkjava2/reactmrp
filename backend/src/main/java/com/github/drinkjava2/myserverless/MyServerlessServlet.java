@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.drinkjava2.myserverless.compile.DynamicCompileEngine;
-import com.github.drinkjava2.myserverless.util.MyServerlessStrUtils;
+import com.github.drinkjava2.myserverless.util.MyStrUtils;
 
 /**
  * Dispatch call to local java classes and return a JSON
@@ -102,7 +102,7 @@ public class MyServerlessServlet extends HttpServlet {
         String sqlOrJavaPiece = json.getString("$0");
         String remoteMethod = json.getString("remoteMethod");
         String token = json.getString("token");
-        if (MyServerlessStrUtils.isEmpty(sqlOrJavaPiece))
+        if (MyStrUtils.isEmpty(sqlOrJavaPiece))
             return JsonResult.json403("Error: request body is empty.", req, json);
 
         Class<?> childClass = null;
@@ -123,7 +123,7 @@ public class MyServerlessServlet extends HttpServlet {
             if (childClass == null) //still is null
                 return JsonResult.json403("Error: compile failed on server side.", req, json);
 
-            String methodId = MyServerlessStrUtils.substringBefore(childClass.getSimpleName(), "_");
+            String methodId = MyStrUtils.substringBefore(childClass.getSimpleName(), "_");
 
             if (!MyServerlessEnv.getTokenSecurity().allow(token, methodId))
                 return JsonResult.json403("Error: no privilege to execute '" + methodId + "' method", req, json);

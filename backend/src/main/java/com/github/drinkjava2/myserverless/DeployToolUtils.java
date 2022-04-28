@@ -10,10 +10,10 @@
  */
 package com.github.drinkjava2.myserverless;
 
-import static com.github.drinkjava2.myserverless.util.MyServerlessStrUtils.isEmpty;
-import static com.github.drinkjava2.myserverless.util.MyServerlessStrUtils.positionOfPureChar;
-import static com.github.drinkjava2.myserverless.util.MyServerlessStrUtils.substringAfter;
-import static com.github.drinkjava2.myserverless.util.MyServerlessStrUtils.substringBefore;
+import static com.github.drinkjava2.myserverless.util.MyStrUtils.isEmpty;
+import static com.github.drinkjava2.myserverless.util.MyStrUtils.positionOfPureChar;
+import static com.github.drinkjava2.myserverless.util.MyStrUtils.substringAfter;
+import static com.github.drinkjava2.myserverless.util.MyStrUtils.substringBefore;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.github.drinkjava2.myserverless.util.MyServerlessFileUtils;
-import com.github.drinkjava2.myserverless.util.MyServerlessStrUtils;
+import com.github.drinkjava2.myserverless.util.MyFileUtils;
+import com.github.drinkjava2.myserverless.util.MyStrUtils;
 import com.github.drinkjava2.myserverless.util.Systemout; 
 
 /**
@@ -39,7 +39,7 @@ public class DeployToolUtils {
 	 * is true, ignore if have FRONT control word, force extract to server side
 	 */
 	public static void oneFileToServ(List<SqlJavaPiece> sqlJavaPieces, File frontFile, boolean forceDeploy) {
-		String text = MyServerlessFileUtils.readFile(frontFile.getAbsolutePath(), "UTF-8");
+		String text = MyFileUtils.readFile(frontFile.getAbsolutePath(), "UTF-8");
 		Map<String, SqlJavaPiece> formatedMap = new LinkedHashMap<String, SqlJavaPiece>();
 		boolean changed = false;
 		String formated = text;
@@ -55,15 +55,15 @@ public class DeployToolUtils {
                 SqlJavaPiece piece = item.getValue();
                 String className = piece.getClassName();
                 String methodId=piece.getMethodId();
-                if(MyServerlessStrUtils.containsIgnoreCase(methodId, "frontend")) {
+                if(MyStrUtils.containsIgnoreCase(methodId, "frontend")) {
                     formated = restoreKeyToOriginText(formated, key, piece); // 如果方法ID包含frontend字样，则永远保持在前端，不变换到后端。回填占位key
                     continue;
                 }
                 
                 changed = true; 
                 String src = SrcBuilder.createSourceCode(templateClass, PieceType.byRemoteMethodName(remoteMethod), piece);
-                MyServerlessFileUtils.writeFile(MyServerlessEnv.getSrcDeployFolder() + "/" + className + ".java", src, "UTF-8");
-                formated = MyServerlessStrUtils.replaceFirst(formated, key, "$"+MyServerlessEnv.getCallDeployedMethodName()+"(`" + className + "`");
+                MyFileUtils.writeFile(MyServerlessEnv.getSrcDeployFolder() + "/" + className + ".java", src, "UTF-8");
+                formated = MyStrUtils.replaceFirst(formated, key, "$"+MyServerlessEnv.getCallDeployedMethodName()+"(`" + className + "`");
                 
                 piece.setLocation(frontFile.getAbsolutePath());
                 sqlJavaPieces.add(piece);
@@ -71,7 +71,7 @@ public class DeployToolUtils {
 		}
 
 		if (changed) {
-			MyServerlessFileUtils.writeFile(frontFile.getAbsolutePath(), formated, "UTF-8");
+			MyFileUtils.writeFile(frontFile.getAbsolutePath(), formated, "UTF-8");
 			//Systemout.println("goServer => " + file.getAbsolutePath());
 		}
 	}
@@ -98,7 +98,7 @@ public class DeployToolUtils {
 			String piece = left.substring(0, pos);
 			String leftover = left.substring(pos + 1);
 			SqlJavaPiece parsed = SqlJavaPiece.parseFromFrontText(start, piece);
-			String key = "key" + MyServerlessStrUtils.getRandomString(20);
+			String key = "key" + MyStrUtils.getRandomString(20);
 			map.put(key, parsed);
 			result = front + key + leftover;
 			needTransfer = result.contains(start);
@@ -113,7 +113,7 @@ public class DeployToolUtils {
 	    String rightStart="$"+MyServerlessEnv.getCallDeployedMethodName()+"(`";
 	    String wrongStart="$"+MyServerlessEnv.getCallDeployedMethodName()+"('";
 	    
-		String text = MyServerlessFileUtils.readFile(frontFile.getAbsolutePath(), "UTF-8");
+		String text = MyFileUtils.readFile(frontFile.getAbsolutePath(), "UTF-8");
 		if (text.contains(wrongStart)) { //如果使用单引号而不是反单引号，直接报错退出 
 		    System.err.println("ERROR: in file '"+frontFile.getName() +"', should use ` instead of use '");
 		    System.exit(1);
@@ -130,19 +130,19 @@ public class DeployToolUtils {
             SqlJavaPiece piece = item.getValue();
             String javaSrcFileName;
             javaSrcFileName = MyServerlessEnv.getSrcDeployFolder() + "/" + piece.getOriginText() + ".java"; // .../com/xx/xxx/deploy/PUBLIC_q1h8arktaif5ljzab96k.java
-            String src = MyServerlessFileUtils.readFile(javaSrcFileName, "UTF-8"); //deploy目录下的java类源码
+            String src = MyFileUtils.readFile(javaSrcFileName, "UTF-8"); //deploy目录下的java类源码
             String template = null;
-            if (MyServerlessStrUtils.isEmpty(src)) { //没有找到java文件或为空
+            if (MyStrUtils.isEmpty(src)) { //没有找到java文件或为空
                 formated = restoreKeyToOriginText(formated, key, piece);
                 continue;
             }
 
-            template = MyServerlessStrUtils.substringBetween(src, "extends", "Template"); //com.reactmrp.template.QryMapList
-            template = MyServerlessStrUtils.substringAfterLast(template, "."); //QryMapList
-            String remoteMethod = MyServerlessStrUtils.toLowerCaseFirstOne(template); //qryMapList
+            template = MyStrUtils.substringBetween(src, "extends", "Template"); //com.reactmrp.template.QryMapList
+            template = MyStrUtils.substringAfterLast(template, "."); //QryMapList
+            String remoteMethod = MyStrUtils.toLowerCaseFirstOne(template); //qryMapList
             SqlJavaPiece newPiece = SqlJavaPiece.parseFromJavaSrcFile(javaSrcFileName); 
-            String methodId = MyServerlessStrUtils.substringBefore(piece.getOriginText(), "_"); //PUBLIC
-            if (MyServerlessStrUtils.isEmpty(piece.getOriginText()) || MyServerlessStrUtils.containsIgnoreCase(methodId, "backend")) { //如果包含backend就跳过
+            String methodId = MyStrUtils.substringBefore(piece.getOriginText(), "_"); //PUBLIC
+            if (MyStrUtils.isEmpty(piece.getOriginText()) || MyStrUtils.containsIgnoreCase(methodId, "backend")) { //如果包含backend就跳过
                 formated = restoreKeyToOriginText(formated, key, piece);
                 continue;
             }
@@ -154,19 +154,19 @@ public class DeployToolUtils {
             else
                 methodId = "#" + methodId + " ";
             String newPieceStr = SrcBuilder.createFrontText(PieceType.byRemoteMethodName(remoteMethod), newPiece); //根据后端源码生成前端JavaSqlPiece片段
-            formated = MyServerlessStrUtils.replaceFirst(formated, key, "$" + remoteMethod + "(`" + methodId + newPieceStr + "`"); //用后端的源码替换前端key
+            formated = MyStrUtils.replaceFirst(formated, key, "$" + remoteMethod + "(`" + methodId + newPieceStr + "`"); //用后端的源码替换前端key
             toDeleteJavas.add(javaSrcFileName);
 
         }
 		map.clear();
 		if (changed) {
-			MyServerlessFileUtils.writeFile(frontFile.getAbsolutePath(), formated, "UTF-8");
+			MyFileUtils.writeFile(frontFile.getAbsolutePath(), formated, "UTF-8");
 			//Systemout.println("goFront => " + file.getAbsolutePath());
 		}
 	}
 
     private static String restoreKeyToOriginText(String formated, String key, SqlJavaPiece piece) {
-        formated = MyServerlessStrUtils.replaceFirst(formated, key, "$" + MyServerlessEnv.getCallDeployedMethodName() + "(`" + piece.getOriginText() + "`");
+        formated = MyStrUtils.replaceFirst(formated, key, "$" + MyServerlessEnv.getCallDeployedMethodName() + "(`" + piece.getOriginText() + "`");
         return formated;
     }
 
