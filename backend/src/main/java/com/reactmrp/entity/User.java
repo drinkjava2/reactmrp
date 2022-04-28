@@ -8,7 +8,7 @@ import com.github.drinkjava2.jsqlbox.ActiveEntity;
 @Table(name = "users")
 public class User implements ActiveEntity<User> {
     @Id
-    @COLUMN(length = 30)
+    @COLUMN(length = 32)
     private String username;
 
     @COLUMN(length = 32)
