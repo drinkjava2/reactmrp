@@ -3,6 +3,8 @@ package com.reactmrp.deploy;
 
 
 import static com.github.drinkjava2.jsqlbox.DB.*;
+
+import com.reactmrp.config.ProjectSecurity;
 import com.reactmrp.entity.*;
 import com.alibaba.fastjson.*;
 import com.github.drinkjava2.jsqlbox.*;
@@ -14,11 +16,13 @@ import java.sql.Connection;
 
 
 @SuppressWarnings("all")
-public class BackendPublic_login extends com.reactmrp.template.JavaTemplate{
+public class BackendCheckLogin_do extends com.reactmrp.template.JavaTemplate{
 
     @Override
 	public Object executeBody() {
-		/* MYSERVERLESS BODY BEGIN */String token = MyServerlessEnv.getTokenSecurity().login($1, $2); return token;/* MYSERVERLESS BODY END */
+		/* MYSERVERLESS BODY BEGIN */
+        return ProjectSecurity.ifLogin(json.getString("token"));
+        /* MYSERVERLESS BODY END */
 	}
 
 }

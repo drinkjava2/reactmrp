@@ -21,7 +21,7 @@ async function fetchJSon(methodName, text, args){
 	  }
 	}
 
-function syncFetchJSon(methodName, text, args){
+function syncXhrJSon(methodName, text, args){
 	let bodyJson= {"remoteMethod":methodName,"$0": text};
 	for (let i = 1; i < args.length; i++) 
 		   bodyJson["$"+i]=args[i]; 
@@ -44,20 +44,9 @@ function syncFetchJSon(methodName, text, args){
 	}
 }
 
-//同步方法只有几个
-function sync$getMyServJson(text){		return  syncFetchJSon("", text, arguments); }
-function syncData$getMyServJson(text){	return  syncFetchJSon("", text, arguments).data; }
-
-function sync$java(text) { 				return syncFetchJSon("java", text, arguments); }
-function sync$javaTx(text) {			return syncFetchJSon("javaTx", text, arguments); }
-
-function syncData$java(text) { 			return syncFetchJSon("java", text, arguments).data; } 
-function syncData$javaTx(text) {		return syncFetchJSon("javaTx", text, arguments).data; } 
-
-
-//下面都是异步方法
-async function $getMyServJson(text){return await fetchJSon("", text, arguments); }
-async function data$getMyServJson(text){let json= await fetchJSon("", text, arguments); return json.data; }
+//异步方法
+async function $myServJson(text){return await fetchJSon("", text, arguments); }
+async function data$myServJson(text){let json= await fetchJSon("", text, arguments); return json.data; }
 
 async function $java(text) { 				return await fetchJSon("java", text, arguments); } 
 async function $javaTx(text) {				return await fetchJSon("javaTx", text, arguments);} 
@@ -72,6 +61,7 @@ async function $qryEntity(text) {			return await fetchJSon("qryEntity", text, ar
 async function $qryEntityList(text) {		return await fetchJSon("qryEntityList", text, arguments);}
 
 async function data$java(text) {			let json= await fetchJSon("java", text, arguments);	return json.data;}  
+async function data$javaTx(text) {			let json= await fetchJSon("javaTx", text, arguments);	return json.data;}
 async function data$qryObject(text) {		let json= await fetchJSon("qryObject", text, arguments); return json.data;}  
 async function data$qryArray(text) {		let json= await fetchJSon("qryArray", text, arguments); return json.data;}
 async function data$qryArrayList(text) {	let json= await fetchJSon("qryArrayList", text, arguments); return json.data;}
@@ -82,6 +72,37 @@ async function data$javaTx(text) {			let json= await fetchJSon("javaTx", text, a
 async function data$qryMapList(text) {		let json= await fetchJSon("qryMapList", text, arguments); return json.data;}
 async function data$qryEntity(text) {		let json= await fetchJSon("qryEntity", text, arguments); return json.data;}
 async function data$qryEntityList(text) {	let json= await fetchJSon("qryEntityList", text, arguments); return json.data;}
+
+//同步方法
+function sync$myServJson(text){			return  syncXhrJSon("", text, arguments); }
+function syncData$myServJson(text){		return  syncXhrJSon("", text, arguments).data; }
+
+function sync$java(text) { 				return syncXhrJSon("java", text, arguments); }
+function sync$javaTx(text) {			return syncXhrJSon("javaTx", text, arguments); }
+function sync$qryObject(text) {			return syncXhrJSon("qryObject", text, arguments);}  
+function sync$qryArray(text) {			return syncXhrJSon("qryArray", text, arguments);}
+function sync$qryArrayList(text) {		return syncXhrJSon("qryArrayList", text, arguments);}
+function sync$qryTitleArrayList(text) {	return syncXhrJSon("qryTitleArrayList", text, arguments);}
+function sync$qryMap(text) {			return syncXhrJSon("qryMap", text, arguments);}
+function sync$qryList(text) {			return syncXhrJSon("qryList", text, arguments);}
+function sync$qryMapList(text) {		return syncXhrJSon("qryMapList", text, arguments);} 
+function sync$qryEntity(text) {			return syncXhrJSon("qryEntity", text, arguments);}
+function sync$qryEntityList(text) {		return syncXhrJSon("qryEntityList", text, arguments);}
+
+function syncData$java(text) { 			return syncXhrJSon("java", text, arguments).data; } 
+function syncData$javaTx(text) {		return syncXhrJSon("javaTx", text, arguments).data; } 
+function data$qryObject(text) {			let json= syncXhrJSon("qryObject", text, arguments); return json.data;}  
+function data$qryArray(text) {			let json= syncXhrJSon("qryArray", text, arguments); return json.data;}
+function data$qryArrayList(text) {		let json= syncXhrJSon("qryArrayList", text, arguments); return json.data;}
+function data$qryTitleArrayList(text){	let json= syncXhrJSon("qryTitleArrayList", text, arguments); return json.data;}
+function data$qryMap(text) {			let json= syncXhrJSon("qryMap", text, arguments); return json.data;}
+function data$qryList(text) {			let json= syncXhrJSon("qryList", text, arguments); return json.data;}
+function data$javaTx(text) {			let json= syncXhrJSon("javaTx", text, arguments); return json.data;}
+function data$qryMapList(text) {		let json= syncXhrJSon("qryMapList", text, arguments); return json.data;}
+function data$qryEntity(text) {			let json= syncXhrJSon("qryEntity", text, arguments); return json.data;}
+function data$qryEntityList(text) {		let json= syncXhrJSon("qryEntityList", text, arguments); return json.data;}
+
+
 
 function domByid(id){return document.getElementById(id);}
 function domValById(id){return document.getElementById(id).value;}

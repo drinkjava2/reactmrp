@@ -86,10 +86,16 @@ public class InitConfig extends HttpServlet {
 
         //创建数据库表
         List<Class> classes = ClassScanner.scanPackages("com.reactmrp.entity"); //扫描所有实体以创建数据库表
-        classes.stream().distinct().forEach(e -> {
-            for (String ddl : ctx.toDropAndCreateDDL(e)) {
+
+        for (int i = 0; i < 5; i++) //先静默删库5遍，保证有关联关系的表格也被删除
+            classes.stream().distinct().forEach(e -> {
+                for (String ddl : ctx.toDropDDL(e))
+                    DB.gctx().quiteExecute(ddl);
+            });
+
+        classes.stream().distinct().forEach(e -> { //然后新建所有表格
+            for (String ddl : ctx.toCreateDDL(e))
                 DB.gctx().quiteExecute(ddl);
-            }
         });
 
         //新建用户 
@@ -144,7 +150,16 @@ public class InitConfig extends HttpServlet {
 
     public static void main(String[] args) throws SQLException {
         initDataBase();
-        System.out.println(DB.qryMapList("select * from users"));
+                List<String> powers= DB.qryList("select p.* from users u ", //
+                        " left join userrole ur on u.userName=ur.userName ", //
+                        " left join roles r on ur.roleName=r.roleName ", //
+                        " left join rolepower rp on rp.roleName=r.roleName ", //
+                        " left join powers p on p.powerName=rp.powerName ",//
+                        " where u.userName=",DB.que("user")
+                        );
+                for (String p : powers) {
+                    System.out.println(p);
+                }
     }
 
 }

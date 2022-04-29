@@ -31,12 +31,11 @@ section header {
 </head>
 <body>
  <script>
-      var token=localStorage.getItem("token");
-      if(token==null)
+      var result=syncData$myServJson(`BackendCheckLogin_do`);
+      console.log(result);
+      if(!result)
     	  window.location.href="/login.html";
-      let results=syncData$java(`#PUBLIC return 1;`);
-      console.log(results);
- </script>
+</script>
     
 	
     <h2>Backend service started.</h2>	   
@@ -47,8 +46,7 @@ section header {
 	 
 	 
 	 <script>
-	  //data$getMyServJson返回的是异步方法的promise包装, 要用await或then来获取结果
-	  data$qryMapList(`#PUBLIC select username from users order by username`).then(users=>{
+	  data$qryMapList(`#PUBLIC select userName from users order by userName`).then(users=>{
 				  var html="User List:<br/>";
 				  for(var i=0;i<users.length;i++) 
 					  html+="userName:" +  users[i].userName+"<br/>"; 
