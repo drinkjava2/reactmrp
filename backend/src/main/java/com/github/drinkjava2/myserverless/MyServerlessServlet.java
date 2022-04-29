@@ -62,22 +62,20 @@ public class MyServerlessServlet extends HttpServlet {
             resp.setStatus(200);
         jsonResult.setStatus(null); //no need put status in json
 
-        if (BaseTemplate.NONE.equals(jsonResult.getData())) { // if return NONE, do nothing
-            return;
-        } else {//default return json 
-            resp.setHeader("Content-Type", "application/json;charset:utf-8");
-            String json = JSON.toJSONString(jsonResult);
-            PrintWriter out = null;
-            try {
-                out = resp.getWriter();
-                out.println(json);
-                out.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (out != null)
-                    out.close();
-            }
+        if (BaseTemplate.NONE.equals(jsonResult.getData()))  // if return NONE, do nothing
+            return;  
+        resp.setHeader("Content-Type", "application/json;charset:utf-8");
+        String json = JSON.toJSONString(jsonResult);
+        PrintWriter out = null;
+        try {
+            out = resp.getWriter();
+            out.println(json);
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (out != null)
+                out.close();
         }
     }
 

@@ -91,8 +91,7 @@ public class InitConfig extends HttpServlet {
             classes.stream().distinct().forEach(e -> {
                 for (String ddl : ctx.toDropDDL(e))
                     DB.gctx().quiteExecute(ddl);
-            });
-
+            }); 
         classes.stream().distinct().forEach(e -> { //然后新建所有表格
             for (String ddl : ctx.toCreateDDL(e))
                 DB.gctx().quiteExecute(ddl);

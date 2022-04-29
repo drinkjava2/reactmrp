@@ -21,7 +21,9 @@ public class BackendCheckLogin_do extends com.reactmrp.template.JavaTemplate{
     @Override
 	public Object executeBody() {
 		/* MYSERVERLESS BODY BEGIN */
-        return ProjectSecurity.ifLogin(json.getString("token"));
+        System.out.println("token="+json.getString("token"));
+        boolean result= ProjectSecurity.ifLogin(json.getString("token"));
+        return result;
         /* MYSERVERLESS BODY END */
 	}
 
