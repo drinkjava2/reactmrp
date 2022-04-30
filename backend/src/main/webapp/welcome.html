@@ -31,10 +31,9 @@ section header {
 </head>
 <body>
  <script>
-      var result=syncData$myServJson(`BackendCheckLogin_do`);
-      console.log(result);
-      //if(!result)
-    	//  window.location.href="/login.html";
+      var result=syncData$java(`BackendPublic$CheckLogin`);
+      if(!(result===true))
+    	  window.location.href="/login.html";
 </script>
     
 	

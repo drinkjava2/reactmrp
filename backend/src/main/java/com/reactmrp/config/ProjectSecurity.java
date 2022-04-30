@@ -29,7 +29,7 @@ import com.reactmrp.entity.User;
 public class ProjectSecurity implements TokenSecurity {
 
     public static String encodePassword(String password) {
-        return MD5Util.encryptMD5("saltDef" + password);
+        return MD5Util.encryptMD5("theSalt" + password);
     }
 
     @Override
@@ -47,12 +47,10 @@ public class ProjectSecurity implements TokenSecurity {
     //1.重要： 每当有人员、角色、权限变动时，都要调用clearCache清空缓存防止脏数据
     //2.MRP系统另起守护线程，在每天或每周5晚12点清空所有user的token，并清空这些cache，强制用户下次必须重新登录
     //3.缓存的大小取决于有多少个用户，MRP系统通常用户数不超过1000
-    private static SimpleCacheHandler userTokenCache = new SimpleCacheHandler(1000, 100 * 24 * 60 * 60);//缺省最多同时保存1000个token, 100天过期 
-    private static SimpleCacheHandler userPowerCache = new SimpleCacheHandler(1000, 100 * 24 * 60 * 60);//缺省最多同时保存1000个token, 100天过期
+    private static SimpleCacheHandler userPowerCache = new SimpleCacheHandler(300, 100 * 24 * 60 * 60);//缺省最多同时保存300个token, 100天过期
 
     /** clearCache  */
     public static void clearCache() {
-        userTokenCache.clearCache();
         userPowerCache.clearCache();
     }
 
@@ -70,16 +68,16 @@ public class ProjectSecurity implements TokenSecurity {
     }
     
     public static boolean ifAllow(String token, String methodId) {
-        //只要方法id里包含public都允许执行，通常是固定放在后端的方法，即BackendPublicxxx之类的。  在部署时要检查，所有的public方法都必须是允许不登录就允许执行的
+        //只要方法id里包含public（不分大小写)都允许执行，通常是固定放在后端的方法，即BackendPublicxxx之类的。  在部署时要检查，所有的public方法都必须是允许不登录就允许执行的
         if (MyStrUtils.containsIgnoreCase(methodId, "public"))
             return true;
 
         //检查是否token存在
-        String userName = DB.qryString(userTokenCache, "select userName from users where token=", DB.que(token));
+        String userName = DB.qryString("select userName from users where token=", DB.que(token));
         if (MyStrUtils.isEmpty(userName))
             return false;
 
-        //获取用户权限list
+        //获取用户权限list，注意这里使用了一个缓存，所以每当有人员、角色、权限变动时，都要调用clearCache清空缓存防止脏数据
         List<String> powers = DB.qryList(userPowerCache, "select p.* from users u ", //
                 " left join userrole ur on u.userName=ur.userName ", //
                 " left join roles r on ur.roleName=r.roleName ", //

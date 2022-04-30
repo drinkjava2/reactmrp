@@ -78,7 +78,7 @@ public class InitConfig extends HttpServlet {
         DataSource ds = JBEANBOX.getBean(DataSourceBox.class);
 
         //本项目使用jSqlBox作为DAO工具，以下是jSqlBox的配置
-        DbContext.setGlobalNextAllowShowSql(true); //允许输出SQL日志到控制台
+        DbContext.setGlobalNextAllowShowSql(false); //允许输出SQL日志到控制台
         Dialect.setGlobalNamingConversion(new ProjectNamingRule()); //全局表和字段名映射，表名列名为一对一关系，不作变换
         DbContext ctx = new DbContext(ds); //ctx是全局单例
         ctx.setConnectionManager(TinyTxConnectionManager.instance());// 事务配置

@@ -44,6 +44,7 @@ public abstract class ClassExistCacheUtils {// NOSONAR
 				classExistCache.put(className, ClassOrMethodNotExist.class);
 			return result;
 		} catch (Exception e) {
+		    e.printStackTrace();
 			classExistCache.put(className, ClassOrMethodNotExist.class);
 			return null;
 		}

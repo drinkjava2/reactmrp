@@ -91,16 +91,16 @@ function sync$qryEntityList(text) {		return syncXhrJSon("qryEntityList", text, a
 
 function syncData$java(text) { 			return syncXhrJSon("java", text, arguments).data; } 
 function syncData$javaTx(text) {		return syncXhrJSon("javaTx", text, arguments).data; } 
-function data$qryObject(text) {			let json= syncXhrJSon("qryObject", text, arguments); return json.data;}  
-function data$qryArray(text) {			let json= syncXhrJSon("qryArray", text, arguments); return json.data;}
-function data$qryArrayList(text) {		let json= syncXhrJSon("qryArrayList", text, arguments); return json.data;}
-function data$qryTitleArrayList(text){	let json= syncXhrJSon("qryTitleArrayList", text, arguments); return json.data;}
-function data$qryMap(text) {			let json= syncXhrJSon("qryMap", text, arguments); return json.data;}
-function data$qryList(text) {			let json= syncXhrJSon("qryList", text, arguments); return json.data;}
-function data$javaTx(text) {			let json= syncXhrJSon("javaTx", text, arguments); return json.data;}
-function data$qryMapList(text) {		let json= syncXhrJSon("qryMapList", text, arguments); return json.data;}
-function data$qryEntity(text) {			let json= syncXhrJSon("qryEntity", text, arguments); return json.data;}
-function data$qryEntityList(text) {		let json= syncXhrJSon("qryEntityList", text, arguments); return json.data;}
+function syncData$qryObject(text) {			let json= syncXhrJSon("qryObject", text, arguments); return json.data;}  
+function syncData$qryArray(text) {			let json= syncXhrJSon("qryArray", text, arguments); return json.data;}
+function syncData$qryArrayList(text) {		let json= syncXhrJSon("qryArrayList", text, arguments); return json.data;}
+function syncData$qryTitleArrayList(text){	let json= syncXhrJSon("qryTitleArrayList", text, arguments); return json.data;}
+function syncData$qryMap(text) {			let json= syncXhrJSon("qryMap", text, arguments); return json.data;}
+function syncData$qryList(text) {			let json= syncXhrJSon("qryList", text, arguments); return json.data;}
+function syncData$javaTx(text) {			let json= syncXhrJSon("javaTx", text, arguments); return json.data;}
+function syncData$qryMapList(text) {		let json= syncXhrJSon("qryMapList", text, arguments); return json.data;}
+function syncData$qryEntity(text) {			let json= syncXhrJSon("qryEntity", text, arguments); return json.data;}
+function syncData$qryEntityList(text) {		let json= syncXhrJSon("qryEntityList", text, arguments); return json.data;}
 
 
 

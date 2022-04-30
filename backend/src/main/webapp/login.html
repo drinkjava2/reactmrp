@@ -72,8 +72,8 @@ input{
 	<h2>Login</h2>
 	<h3 id="msg"></h3>
 	<script> 
-	async function doLogin(){ 
-		var token =await data$myServJson(`BackendPublicLogin_do`
+	  function doLogin(){ 
+		var token =syncData$myServJson(`BackendPublic$Login`
 		            , domValById("username"), domValById("password"));
 		if(token){
 			localStorage.setItem("token", token);

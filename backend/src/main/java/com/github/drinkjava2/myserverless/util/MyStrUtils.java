@@ -1009,12 +1009,19 @@ public class MyStrUtils {
 	}
 
 	/**
-	 * Check if a String only have a-z,A-Z,0-9,"_" characters
+	 * Check if a char only in a-z,A-Z,0-9,"_" characters
 	 */
 	public static boolean isNormalLetters(char c) {
 		return (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z') || c == '_';
 	}
 
+	 /**
+     * Check if a char only in a-z,A-Z,0-9,"_","$" characters
+     */
+    public static boolean isNormalLettersOrDollar(char c) {
+        return isNormalLetters(c) || c=='$';
+    }
+    
 	public static boolean isLettersOrUnderline(char c) {
 		return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
 	}
@@ -1029,16 +1036,18 @@ public class MyStrUtils {
 	/**
 	 * Return true if the string can be used as class name
 	 */
-	public static boolean isLegalClassName(String string) {
-		if (isEmpty(string))
-			return false;
-		if (!isLettersOrUnderline(string.charAt(0)))
-			return false;
-		for (int i = 1; i < string.length(); i++) // no space allowed in class name
-			if (!isNormalLetters(string.charAt(i)))
-				return false;
-		return true;
-	}
+    public static boolean isLegalClassName(String string) {
+        if (isEmpty(string))
+            return false;
+        if (!isLettersOrUnderline(string.charAt(0))) //开头只能是字符或下划线
+            return false;
+        for (int i = 1; i < string.length(); i++) // 除开头外可以是字符、下划线或$号
+            if (!isNormalLettersOrDollar(string.charAt(i)))
+                return false;
+        if ('$' == string.charAt(string.length() - 1)) //未尾不能有$号
+            return false;
+        return true;
+    }
 
 	/**
 	 * Build a random class name by give length, name started with letter "Z"

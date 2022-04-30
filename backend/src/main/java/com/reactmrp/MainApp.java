@@ -50,15 +50,16 @@ public class MainApp {
                 .addWelcomePage("/login.html")//指定缺省页
                 .addErrorPage(new ErrorPage("/404.html")); //指定404页
         DeploymentManager manager = Servlets.defaultContainer().addDeployment(info);
-        manager.deploy();
-        Undertow server = Undertow.builder().addHttpListener(8001, "localhost").setHandler(manager.start()).build();
+        manager.deploy(); 
+        int port=8001; //后端服务端口
+        Undertow server = Undertow.builder().addHttpListener(port, "localhost").setHandler(manager.start()).build();
         server.start();
 
         try {
-            Runtime.getRuntime().exec("cmd /c start http://127.0.0.1:8001/"); //如果在windows下调用缺省browser
+            Runtime.getRuntime().exec("cmd /c start http://127.0.0.1:"+port+"/"); //如果在windows下调用缺省browser
         } catch (Exception e) {
         }
-        System.out.println("Undertow server started at port 8001");
+        System.out.println("Undertow server started at port "+port);
     }
 
 }
