@@ -1050,7 +1050,7 @@ public class MyStrUtils {
     }
 
 	/**
-	 * Build a random class name by give length, name started with letter "Z"
+	 * Build a random class name by give length
 	 */
 	public static String getRandomClassName(int length) {
 		String str = "abcdefghijklmnopqrstuvwxyz0123456789";

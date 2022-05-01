@@ -124,7 +124,7 @@ public class MyServerlessServlet extends HttpServlet {
                 return JsonResult.json403("Error: compile failed on server side.", req, json);
 
             String methodId = MyStrUtils.substringBefore(childClass.getName(), "_");
-            methodId = MyStrUtils.substringAfter(methodId, ".");
+            methodId = MyStrUtils.substringAfterLast(methodId, ".");
 
             if (!MyServerlessEnv.getTokenSecurity().allow(token, methodId)) //重要，在这里调用系统配置的TokenSecurity进行权限检查
                 return JsonResult.json403("Error: no privilege to execute '" + methodId + "' method", req, json);

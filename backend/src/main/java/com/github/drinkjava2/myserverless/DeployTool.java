@@ -16,7 +16,6 @@ import java.util.List;
 
 import com.github.drinkjava2.myserverless.util.MyFileUtils;
 import com.github.drinkjava2.myserverless.util.MyStrUtils;
-import com.github.drinkjava2.myserverless.util.Systemout;
 
 /**
  * DeployTool extract all SQL and Java in html or .js files to server side, and
@@ -33,7 +32,7 @@ public class DeployTool {
         else if ("goFront".equalsIgnoreCase(option))
             goFront();
         else
-            Systemout.println("Error: Deploy option can only be 'goServer' or 'goFront'");
+            System.out.println("Error: Deploy option can only be 'goServer' or 'goFront'");
     }
 
     /**
@@ -47,15 +46,15 @@ public class DeployTool {
      * Push back all Sql/Java pieces to front side, except file start with "back"
      */
     public static void goFront() {
-        Systemout.println("Current deploy folder is: " + MyServerlessEnv.getSrcDeployFolder());
-        Systemout.println("Current frontend folder is: "+MyServerlessEnv.getSrcWebappFolder());
+        System.out.println("Current deploy folder is: " + MyServerlessEnv.getSrcDeployFolder());
+        System.out.println("Current frontend folder is: "+MyServerlessEnv.getSrcWebappFolder());
         List<File> htmlJspfiles = searchSupportedWebFiles(MyServerlessEnv.getSrcWebappFolder(), null);
-        Systemout.println("Found "+htmlJspfiles.size()+" files, start transfer...");
+        System.out.println("Found "+htmlJspfiles.size()+" files, start transfer...");
         List<String> toDeleteJavas = new ArrayList<String>();
         for (File file : htmlJspfiles) 
             DeployToolUtils.oneFileToFront(file, false, toDeleteJavas, true);
         for (String javaFile : toDeleteJavas) {
-            Systemout.println("Delete file:"+javaFile);
+            System.out.println("Delete file:"+javaFile);
             new File(javaFile).delete();
         }
         System.out.println("Done!");
@@ -65,12 +64,12 @@ public class DeployTool {
      * Extract all Sql/Java pieces from front to backend, except java/sql piece started with "front"
      */
     public static void goServer() {
-        Systemout.println("Current deploy folder is: " + MyServerlessEnv.getSrcDeployFolder());
-        Systemout.println("Current frontend folder is: "+MyServerlessEnv.getSrcWebappFolder());
-        List<File> files = searchSupportedWebFiles(MyServerlessEnv.getSrcWebappFolder(), null);
-        Systemout.println("Found "+files.size()+" files, start transfer...");
+        System.out.println("Current deploy folder is: " + MyServerlessEnv.getSrcDeployFolder());
+        System.out.println("Current frontend folder is: "+MyServerlessEnv.getSrcWebappFolder());
+        List<File> frontWebFiles = searchSupportedWebFiles(MyServerlessEnv.getSrcWebappFolder(), null);
+        System.out.println("Found "+frontWebFiles.size()+" files, start transfer...");
         List<SqlJavaPiece> sqlJavaPieces = new ArrayList<>();
-        for (File file : files)
+        for (File file : frontWebFiles)
             DeployToolUtils.oneFileToServ(sqlJavaPieces, file, true);
         for (SqlJavaPiece sqlJavaPiece : sqlJavaPieces) {
             System.out.println(sqlJavaPiece.getDebugInfo());
@@ -108,7 +107,6 @@ public class DeployTool {
                 "</body>\n" + //
                 "</html>");
         MyFileUtils.writeFile(apiFile, apiHtml.toString(), "UTF-8");
-        //Systemout.println("API file export: " + apiFile);
     }
 
     // ============static methods=============================

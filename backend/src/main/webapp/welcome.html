@@ -45,15 +45,16 @@ section header {
 	 
 	 
 	 <script>
-	  qryMapList(`#UserRead select userName from users order by userName`).then(json=>{
-	      if(json.code==200){	  
+	  $qryMapList(`#UserRead select userName from users order by userName`).then(json=>{
+	      if(json.code==200){
+		     let users=json.data;
 		     let html="User List:<br/>";
-		     let users=json.users;
   		     for(let i=0;i<users.length;i++) 
 			 html+="userName:" +  users[i].userName+"<br/>"; 
 			 document.getElementById("Users").innerHTML=html;
 	      }  
 	  });
 	</script>
+ 
 </body>
 </html>

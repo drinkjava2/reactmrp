@@ -95,12 +95,11 @@ public class ProjectSecurity implements TokenSecurity {
         cleanedMethodId = MyStrUtils.trimAllWhitespace(cleanedMethodId);
         if (MyStrUtils.isEmpty(cleanedMethodId))
             return false;
-
         for (String p : powers) { //methodId如果以任一个权限名开头，就返回true
             if (MyStrUtils.startsWithIgnoreCase(cleanedMethodId, p))
                 return true;
         }
-
+        
         return false;
     }
 

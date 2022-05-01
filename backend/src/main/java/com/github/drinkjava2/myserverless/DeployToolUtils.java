@@ -22,8 +22,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.github.drinkjava2.myserverless.util.MyFileUtils;
-import com.github.drinkjava2.myserverless.util.MyStrUtils;
-import com.github.drinkjava2.myserverless.util.Systemout; 
+import com.github.drinkjava2.myserverless.util.MyStrUtils; 
 
 /**
  * Store static methods for DeployTool
@@ -72,7 +71,6 @@ public class DeployToolUtils {
 
 		if (changed) {
 			MyFileUtils.writeFile(frontFile.getAbsolutePath(), formated, "UTF-8");
-			//Systemout.println("goServer => " + file.getAbsolutePath());
 		}
 	}
 
@@ -161,7 +159,6 @@ public class DeployToolUtils {
 		map.clear();
 		if (changed) {
 			MyFileUtils.writeFile(frontFile.getAbsolutePath(), formated, "UTF-8");
-			//Systemout.println("goFront => " + file.getAbsolutePath());
 		}
 	}
 

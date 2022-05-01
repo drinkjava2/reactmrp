@@ -161,7 +161,7 @@ public class InitConfig extends HttpServlet {
                 " left join roles r on ur.roleName=r.roleName ", //
                 " left join rolepower rp on rp.roleName=r.roleName ", //
                 " left join powers p on p.powerName=rp.powerName ", //
-                " where u.userName=", DB.que("developer"));
+                " where u.userName=", DB.que("admin"));
         for (String p : powers) {
             System.out.println(p);
         }
