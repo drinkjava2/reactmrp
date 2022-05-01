@@ -10,12 +10,13 @@
  */
 package com.reactmrp.config;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.sql.DataSource;
+
+import org.junit.Test;
 
 import com.github.drinkjava2.jbeanbox.ClassScanner;
 import com.github.drinkjava2.jbeanbox.JBEANBOX;
@@ -54,8 +55,9 @@ public class InitConfig extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        initMyServerlessTemplates();
-        initDataBase();
+        initMyServerlessTemplates(); //登记自定义的MyServerless模板
+        initDataBase(); //删除并重建数据库
+        insertUserAndPowers(); //插入初始用户、角色、权限
     }
 
     public static void initMyServerlessTemplates() { //登记自定义的MyServerless模板
@@ -91,17 +93,15 @@ public class InitConfig extends HttpServlet {
             classes.stream().distinct().forEach(e -> {
                 for (String ddl : ctx.toDropDDL(e))
                     DB.gctx().quiteExecute(ddl); //静默执行
-            }); 
+            });
         classes.stream().distinct().forEach(e -> { //然后新建所有表格
             for (String ddl : ctx.toCreateDDL(e))
                 DB.gctx().quiteExecute(ddl);
         });
 
-        userAndPowerSetting();
-
     }
 
-    private static void userAndPowerSetting() {//插入用户、权限初始值
+    public static void insertUserAndPowers() {//插入用户、角色、权限
         //新建用户 
         new User().setUserName("developer").setPassword(ProjectSecurity.encodePassword("123")).insert();
         new User().setUserName("admin").setPassword(ProjectSecurity.encodePassword("123")).insert();
@@ -131,8 +131,7 @@ public class InitConfig extends HttpServlet {
         ur.setUserName("user").setRoleName("userRole").insert();
 
         //给角色添加行为权限
-        RolePower ra = new RolePower().setRoleName("developerRole")  
-                .setPowerName("DevelopDynamicCompile").insert();//developerRole本身只需要一个权限，就是允许动态编译前端代码
+        RolePower ra = new RolePower().setRoleName("developerRole").setPowerName("DevelopDynamicCompile").insert();//developerRole本身只需要一个权限，就是允许动态编译前端代码
 
         ra.setRoleName("adminRole"); //admin通常具有所有业务相关权限
         ra.setPowerName("UserCreate").insert();
@@ -143,6 +142,7 @@ public class InitConfig extends HttpServlet {
         ra.setPowerName("OrderRead").insert();
 
         ra.setRoleName("managerRole"); //manager
+        ra.setPowerName("UserRead").insert();
         ra.setPowerName("OrderCreate").insert();
         ra.setPowerName("OrderUpdate").insert();
         ra.setPowerName("OrderRead").insert();
@@ -151,18 +151,20 @@ public class InitConfig extends HttpServlet {
         ra.setPowerName("OrderRead").insert();
     }
 
-    public static void main(String[] args) throws SQLException {
+    @Test
+    public void testInitDataBase() { //测试数据库
+        Dialect.setGlobalAllowReservedWords(false);
         initDataBase();
-                List<String> powers= DB.qryList("select p.* from users u ", //
-                        " left join userrole ur on u.userName=ur.userName ", //
-                        " left join roles r on ur.roleName=r.roleName ", //
-                        " left join rolepower rp on rp.roleName=r.roleName ", //
-                        " left join powers p on p.powerName=rp.powerName ",//
-                        " where u.userName=",DB.que("developer")
-                        );
-                for (String p : powers) {
-                    System.out.println(p);
-                }
+        insertUserAndPowers();
+        List<String> powers = DB.qryList("select p.* from users u ", //
+                " left join userrole ur on u.userName=ur.userName ", //
+                " left join roles r on ur.roleName=r.roleName ", //
+                " left join rolepower rp on rp.roleName=r.roleName ", //
+                " left join powers p on p.powerName=rp.powerName ", //
+                " where u.userName=", DB.que("developer"));
+        for (String p : powers) {
+            System.out.println(p);
+        }
     }
 
 }
