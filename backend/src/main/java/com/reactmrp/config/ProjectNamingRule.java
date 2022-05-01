@@ -13,13 +13,13 @@ package com.reactmrp.config;
 import com.github.drinkjava2.jdialects.NamingConversion;
 
 /**
- *  本项目全局映射到数据库的规则为表名变小写，列名不变，注意没有下划线，
- *  个别要加s的以避开关键字的在实体类上用@table来调整
+ *  本项目全局映射到数据库的规则为表名全变小写，列名不变，注意没有下划线，
+ *  个别要加s的以避开关键字的表名在实体类上用@table来调整
  */
 public class ProjectNamingRule implements NamingConversion {
 
     @Override
-    public String getTableName(Class<?> clazz) {
+    public String getTableName(Class<?> clazz) { 
         return clazz.getSimpleName().toLowerCase();
     }
 

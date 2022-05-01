@@ -72,6 +72,8 @@ input{
 	<h2>Login</h2>
 	<h3 id="msg"></h3>
 	<script> 
+	 function domValById(id){return document.getElementById(id).value;}
+	 
 	  function doLogin(){ 
 		var token =syncData$myServJson(`BackendPublic$Login`
 		            , domValById("username"), domValById("password"));

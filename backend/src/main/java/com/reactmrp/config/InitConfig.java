@@ -87,16 +87,21 @@ public class InitConfig extends HttpServlet {
         //创建数据库表
         List<Class> classes = ClassScanner.scanPackages("com.reactmrp.entity"); //扫描所有实体以创建数据库表
 
-        for (int i = 0; i < 5; i++) //先静默删库5遍，保证有关联关系的表格也被删除
+        for (int i = 0; i < 10; i++) //我够狠，先静默删库10遍，保证所有表格包括有关联约束关系的表格都全部删除
             classes.stream().distinct().forEach(e -> {
                 for (String ddl : ctx.toDropDDL(e))
-                    DB.gctx().quiteExecute(ddl);
+                    DB.gctx().quiteExecute(ddl); //静默执行
             }); 
         classes.stream().distinct().forEach(e -> { //然后新建所有表格
             for (String ddl : ctx.toCreateDDL(e))
                 DB.gctx().quiteExecute(ddl);
         });
 
+        userAndPowerSetting();
+
+    }
+
+    private static void userAndPowerSetting() {//插入用户、权限初始值
         //新建用户 
         new User().setUserName("developer").setPassword(ProjectSecurity.encodePassword("123")).insert();
         new User().setUserName("admin").setPassword(ProjectSecurity.encodePassword("123")).insert();
@@ -110,7 +115,7 @@ public class InitConfig extends HttpServlet {
         new Role().setRoleName("userRole").insert();
 
         //新建权限名
-        new Power().setPowerName("DeveloperPower").insert();
+        new Power().setPowerName("DevelopDynamicCompile").insert();
         new Power().setPowerName("UserCreate").insert();
         new Power().setPowerName("UserUpdate").insert();
         new Power().setPowerName("UserRead").insert();
@@ -120,16 +125,16 @@ public class InitConfig extends HttpServlet {
 
         //给用户添加角色
         UserRole ur = new UserRole().setUserName("developer").setRoleName("developerRole").insert() //
-                .setRoleName("adminRole").insert(); //developer同时也具备admin角色
+                .setRoleName("adminRole").insert(); //developer用户通常同时具有developerRole和adminRole两个角色
         ur.setUserName("admin").setRoleName("adminRole").insert();
         ur.setUserName("manager").setRoleName("managerRole").insert();
         ur.setUserName("user").setRoleName("userRole").insert();
 
         //给角色添加行为权限
-        RolePower ra = new RolePower().setRoleName("developerRole") //
-                .setPowerName("DeveloperPower").insert();
+        RolePower ra = new RolePower().setRoleName("developerRole")  
+                .setPowerName("DevelopDynamicCompile").insert();//developerRole本身只需要一个权限，就是允许动态编译前端代码
 
-        ra.setRoleName("adminRole");
+        ra.setRoleName("adminRole"); //admin通常具有所有业务相关权限
         ra.setPowerName("UserCreate").insert();
         ra.setPowerName("UserUpdate").insert();
         ra.setPowerName("UserRead").insert();
@@ -137,14 +142,13 @@ public class InitConfig extends HttpServlet {
         ra.setPowerName("OrderUpdate").insert();
         ra.setPowerName("OrderRead").insert();
 
-        ra.setRoleName("managerRole");
+        ra.setRoleName("managerRole"); //manager
         ra.setPowerName("OrderCreate").insert();
         ra.setPowerName("OrderUpdate").insert();
         ra.setPowerName("OrderRead").insert();
 
-        ra.setRoleName("userRole");
+        ra.setRoleName("userRole"); //普通用户
         ra.setPowerName("OrderRead").insert();
-
     }
 
     public static void main(String[] args) throws SQLException {
@@ -154,7 +158,7 @@ public class InitConfig extends HttpServlet {
                         " left join roles r on ur.roleName=r.roleName ", //
                         " left join rolepower rp on rp.roleName=r.roleName ", //
                         " left join powers p on p.powerName=rp.powerName ",//
-                        " where u.userName=",DB.que("user")
+                        " where u.userName=",DB.que("developer")
                         );
                 for (String p : powers) {
                     System.out.println(p);

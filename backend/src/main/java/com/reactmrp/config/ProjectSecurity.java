@@ -89,15 +89,15 @@ public class ProjectSecurity implements TokenSecurity {
             return false;
 
         //清除methodId关键字
-        String methodId2 = MyStrUtils.replaceIgnoreCase(methodId, "backend", "");
-        methodId2 = MyStrUtils.replaceIgnoreCase(methodId2, "frontend", "");
-        methodId2 = MyStrUtils.replaceIgnoreCase(methodId2, "public", "");
-        methodId2 = MyStrUtils.trimAllWhitespace(methodId2);
-        if (MyStrUtils.isEmpty(methodId2))
+        String cleanedMethodId = MyStrUtils.replaceIgnoreCase(methodId, "backend", "");
+        cleanedMethodId = MyStrUtils.replaceIgnoreCase(cleanedMethodId, "frontend", "");
+        cleanedMethodId = MyStrUtils.replaceIgnoreCase(cleanedMethodId, "public", "");
+        cleanedMethodId = MyStrUtils.trimAllWhitespace(cleanedMethodId);
+        if (MyStrUtils.isEmpty(cleanedMethodId))
             return false;
 
-        for (String p : powers) { //methodId如果以当前用户拥有的任一个权限开头，就返回true
-            if (MyStrUtils.startsWithIgnoreCase(methodId2, p))
+        for (String p : powers) { //methodId如果以任一个权限名开头，就返回true
+            if (MyStrUtils.startsWithIgnoreCase(cleanedMethodId, p))
                 return true;
         }
 

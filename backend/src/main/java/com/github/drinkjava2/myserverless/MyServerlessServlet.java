@@ -96,6 +96,8 @@ public class MyServerlessServlet extends HttpServlet {
             return JsonResult.json403("Error: can not read json on server side.", req, null);
         }
         json = JSON.parseObject(jsonString);
+        if(json==null)
+            return JsonResult.json403("Error: unknow request", req, null);
 
         String sqlOrJavaPiece = json.getString("$0");
         String remoteMethod = json.getString("remoteMethod");

@@ -31,7 +31,7 @@ section header {
 </head>
 <body>
  <script>
-      var result=syncData$java(`BackendPublic$CheckLogin`);
+      var result=syncData$myServJson(`BackendPublic$CheckLogin`);
       if(!(result===true))
     	  window.location.href="/login.html";
 </script>
@@ -45,7 +45,7 @@ section header {
 	 
 	 
 	 <script>
-	  data$qryMapList(`#PUBLIC select userName from users order by userName`).then(users=>{
+	  data$qryMapList(`#public select userName from users order by userName`).then(users=>{
 				  var html="User List:<br/>";
 				  for(var i=0;i<users.length;i++) 
 					  html+="userName:" +  users[i].userName+"<br/>"; 

@@ -1,6 +1,6 @@
 // fetchJSon fetch a json from MyServerless server,
 // Return example: {"code":200, "msg":"sucess", data:"foo", debugInfo:"bar"}
-async function fetchJSon(methodName, text, args){
+async function fetchJSon(methodName, text, args){//异步ajax
 	  let bodyJson= {"remoteMethod":methodName,"$0": text};
 	  for (let i = 1; i < args.length; i++) 
 		   bodyJson["$"+i]=args[i]; 
@@ -8,7 +8,8 @@ async function fetchJSon(methodName, text, args){
 		   bodyJson["token"]=localStorage.getItem("token");  
 	  let bodyJsonStr=JSON.stringify(bodyJson);
 	  try{ 
-		  let response= await fetch("/myserverless.do", {
+		  //m参数布署时可以去掉
+		  let response= await fetch("/myserverless.do?m="+methodInfo(methodName, text), {
 			    method : "POST",
 			    mode: "cors",
 			    headers: {"Accept":"application/json", "Content-Type": "application/json;charset=utf-8"},
@@ -21,7 +22,7 @@ async function fetchJSon(methodName, text, args){
 	  }
 	}
 
-function syncXhrJSon(methodName, text, args){
+function syncXhrJSon(methodName, text, args){//同步ajax
 	let bodyJson= {"remoteMethod":methodName,"$0": text};
 	for (let i = 1; i < args.length; i++) 
 		   bodyJson["$"+i]=args[i]; 
@@ -29,7 +30,8 @@ function syncXhrJSon(methodName, text, args){
 		   bodyJson["token"]=localStorage.getItem("token");  
 	let bodyJsonStr=JSON.stringify(bodyJson);
 	let xhr = new XMLHttpRequest(); 
-	xhr.open('POST', '/myserverless.do', false); 
+	//m参数布署时可以去掉
+	xhr.open("POST", "/myserverless.do?m="+methodInfo(methodName, text), false); 
 	xhr.setRequestHeader("Content-Type","application/json;charset=utf-8");
 	xhr.setRequestHeader("Accept","application/json");
 	try {
@@ -39,10 +41,31 @@ function syncXhrJSon(methodName, text, args){
 	  } else {
 		  return JSON.parse(xhr.responseText);
 	  }
-	} catch(err) { // 代替 onerror
+	} catch(err) {
 		return {"code":403, "msg":"Request failed", "data":null};
 	}
 }
+
+function methodInfo(methodName, text){ //methodInfo参数加在url中，这个只是用来快速定位错误用的，不参与后端逻辑
+	  let rs = "";	 
+	  for (var i = 0; i < text.length; i++) {
+	      let c = text.substr(i, 1);	 
+	      if( "a"<=c && c<="z" || "A"<=c && c<="Z" || "0"<=c && c<="9" || c=="_" || c=="$"){
+	          rs += c;
+	      } else if (c==" "){
+	    	  rs += "+";
+	      } 
+	      if(rs.length>50){
+	       	 rs+="...";
+	       	 break;
+	      }
+	   }	  
+	  if(methodName!="")
+		  rs= methodName+"+"+rs;
+	  return rs;
+};
+	 
+		
 
 //异步方法
 async function $myServJson(text){return await fetchJSon("", text, arguments); }
@@ -102,7 +125,5 @@ function syncData$qryMapList(text) {		let json= syncXhrJSon("qryMapList", text, 
 function syncData$qryEntity(text) {			let json= syncXhrJSon("qryEntity", text, arguments); return json.data;}
 function syncData$qryEntityList(text) {		let json= syncXhrJSon("qryEntityList", text, arguments); return json.data;}
 
-
-
-function domByid(id){return document.getElementById(id);}
-function domValById(id){return document.getElementById(id).value;}
+ 
+ 
