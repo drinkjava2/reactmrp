@@ -23,10 +23,7 @@
 hs_err_pid*
 
 # Ignore backend temperary files
-/backend/target/
-/backend/.settings/
-/backend/*.project
-/backend/*.classpath
-
-# Ignore frontend temperary files
-/frontend/build/
+/target/
+/.settings/
+/*.project
+/*.classpath
