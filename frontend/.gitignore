@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+#ignore package-lock.json 这个文件经常自己变来变去，为避免频繁提交暂时先忽略它
+package-lock.json
