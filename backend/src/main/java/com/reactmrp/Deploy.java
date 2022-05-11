@@ -10,6 +10,10 @@
  */
 package com.reactmrp;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 
 import com.github.drinkjava2.myserverless.DeployTool;
@@ -44,6 +48,32 @@ public class Deploy {
     public void goFront() {
         InitConfig.initMyServerlessTemplates();
         DeployTool.deploy("goFront");
+    }
+
+    @Test
+    public void tempSearchFile() {//临时用一下
+        List<File> files = searchFilesInFolder("E:\\gproj\\githubreactmrp\\react-mrp\\frontend\\src");
+        for (File file : files) {
+            System.out.println(file.getName());
+        }
+    }
+
+    public static List<File> searchFilesInFolder(String fullPath) {
+        List<File> files = new ArrayList<File>();
+        File file = new File(fullPath);
+        File[] array = file.listFiles();
+        if (array == null)
+            return files;
+        for (int i = 0; i < array.length; i++) {
+            System.out.println(array[i].getName());
+            if (array[i].isFile()) {
+                String fileName = array[i].getName();
+                files.add(array[i]);
+            } else if (array[i].isDirectory()) {
+                searchFilesInFolder(array[i].getPath());
+            }
+        }
+        return files;
     }
 
 }

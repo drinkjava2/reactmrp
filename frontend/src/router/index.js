@@ -6,6 +6,7 @@ import Layout from "@/views/layout";
 import Login from "@/views/login";
 class Router extends React.Component {
   render() {
+   console.log("Debug_Router:"+JSON.stringify(this.props));
     const { token, role, getUserInfo } = this.props;
     return (
       <HashRouter>
