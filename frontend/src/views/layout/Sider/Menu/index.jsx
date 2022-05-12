@@ -4,9 +4,9 @@ import { Link, withRouter } from "react-router-dom";
 import { Scrollbars } from "react-custom-scrollbars";
 import { connect } from "react-redux";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { addTag } from "@/store/actions";
-import { getMenuItemInMenuListByProperty } from "@/utils";
-import menuList from "@/config/menuConfig";
+import { addTag } from "E:/react-mrp/frontend/src/store/actions";
+import { getMenuItemInMenuListByProperty } from "E:/react-mrp/frontend/src/utils";
+import menuList from "E:/react-mrp/frontend/src/config/menuConfig";
 import "./index.less";
 const SubMenu = Menu.SubMenu;
 // 重新记录数组顺序

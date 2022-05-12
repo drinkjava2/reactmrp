@@ -1,5 +1,5 @@
 import React from "react";
-import clip from "@/utils/clipboard"; 
+import clip from "E:/react-mrp/frontend/src/utils/clipboard"; 
 import { Button, Row, Col } from "antd";
 
 const text = `

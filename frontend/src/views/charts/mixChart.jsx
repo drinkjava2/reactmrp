@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import echarts from "@/lib/echarts";
-import { debounce } from "@/utils";
+import echarts from "E:/react-mrp/frontend/src/lib/echarts";
+import { debounce } from "E:/react-mrp/frontend/src/utils";
 class MixChart extends Component {
   state = {
     chart: null,

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Table, Collapse, Button,} from "antd";
-import TypingCard from "@/components/TypingCard";
-import { timestampToTime } from "@/utils"
+import TypingCard from "E:/react-mrp/frontend/src/components/TypingCard";
+import { timestampToTime } from "E:/react-mrp/frontend/src/utils"
 
 const { Column } = Table;
 const { Panel } = Collapse;

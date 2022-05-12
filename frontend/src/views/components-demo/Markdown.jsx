@@ -1,7 +1,7 @@
 import React from "react";
 import { Card } from "antd";
-import Markdown from "@/components/Markdown";
-import TypingCard from "@/components/TypingCard";
+import Markdown from "E:/react-mrp/frontend/src/components/Markdown";
+import TypingCard from "E:/react-mrp/frontend/src/components/TypingCard";
 
 const MarkdownDemo = () => {
   const cardContent = `

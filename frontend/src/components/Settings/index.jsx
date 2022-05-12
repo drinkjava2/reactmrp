@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Icon, Tooltip } from "antd";
-import { toggleSettingPanel } from "@/store/actions";
+import { toggleSettingPanel } from "E:/react-mrp/frontend/src/store/actions";
 import "./index.less";
 const Settings = (props) => {
   const { toggleSettingPanel } = props;

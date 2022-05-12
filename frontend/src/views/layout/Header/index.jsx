@@ -2,11 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 import { Icon, Menu, Dropdown, Modal, Layout, Avatar } from "antd";
 import { Link } from "react-router-dom";
-import { logout, getUserInfo } from "@/store/actions";
-import FullScreen from "@/components/FullScreen";
-import Settings from "@/components/Settings";
-import Hamburger from "@/components/Hamburger";
-import BreadCrumb from "@/components/BreadCrumb";
+import { logout, getUserInfo } from "E:/react-mrp/frontend/src/store/actions";
+import FullScreen from "E:/react-mrp/frontend/src/components/FullScreen";
+import Settings from "E:/react-mrp/frontend/src/components/Settings";
+import Hamburger from "E:/react-mrp/frontend/src/components/Hamburger";
+import BreadCrumb from "E:/react-mrp/frontend/src/components/BreadCrumb";
 import "./index.less";
 const { Header } = Layout;
 

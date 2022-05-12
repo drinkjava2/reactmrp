@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Table, Tag, Form, Icon, Button, Input, message, Collapse } from "antd";
-import { excelList } from "@/api/excel";
+import { excelList } from "E:/react-mrp/frontend/src/api/excel";
 const { Panel } = Collapse;
 const columns = [
   {

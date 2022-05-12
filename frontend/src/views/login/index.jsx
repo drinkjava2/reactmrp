@@ -4,7 +4,7 @@ import { Form, Icon, Input, Button, message, Spin } from "antd";
 import { connect } from "react-redux";
 import DocumentTitle from "react-document-title";
 import "./index.less";
-import { login, getUserInfo } from "@/store/actions";
+import { login, getUserInfo } from "E:/react-mrp/frontend/src/store/actions";
 
 const Login = (props) => {
   const { form, token, login, getUserInfo } = props;

@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "@/assets/images/logo.svg";
+import logo from "E:/react-mrp/frontend/src/assets/images/logo.svg";
 import "./index.less";
 const Logo = () => {
   return (

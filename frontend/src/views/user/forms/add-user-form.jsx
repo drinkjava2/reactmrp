@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Form, Input, Select, Modal } from "antd";
-import { reqValidatUserID } from "@/api/user";
+import { reqValidatUserID } from "E:/react-mrp/frontend/src/api/user";
 const { TextArea } = Input;
 class AddUserForm extends Component {
   validatUserID = async (rule, value, callback) => {

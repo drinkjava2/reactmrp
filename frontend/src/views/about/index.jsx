@@ -1,7 +1,7 @@
 import React from "react";
-import TypingCard from "@/components/TypingCard";
-import wechat from "@/assets/images/wechat.jpg";
-import reward from "@/assets/images/reward.jpg";
+import TypingCard from "E:/react-mrp/frontend/src/components/TypingCard";
+import wechat from "E:/react-mrp/frontend/src/assets/images/wechat.jpg";
+import reward from "E:/react-mrp/frontend/src/assets/images/reward.jpg";
 const About = () => {
   const cardContent = `
     <p>大家好，我是难凉热血。</p>
