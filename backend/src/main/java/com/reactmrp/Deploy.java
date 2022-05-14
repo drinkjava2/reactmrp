@@ -52,22 +52,20 @@ public class Deploy {
 
     @Test
     public void tempSearchFile() {//临时用一下
-        List<File> files = searchFilesInFolder("E:\\gproj\\githubreactmrp\\react-mrp\\frontend\\src");
+        List<File> files = searchFilesInFolder("E:\\react-mrp\\frontend\\src");
         for (File file : files) {
             System.out.println(file.getName());
         }
     }
 
-    public static List<File> searchFilesInFolder(String fullPath) {
+    public static List<File> searchFilesInFolder(String fullPath) {//not used, will delete later
         List<File> files = new ArrayList<File>();
         File file = new File(fullPath);
         File[] array = file.listFiles();
         if (array == null)
             return files;
         for (int i = 0; i < array.length; i++) {
-            System.out.println(array[i].getName());
             if (array[i].isFile()) {
-                String fileName = array[i].getName();
                 files.add(array[i]);
             } else if (array[i].isDirectory()) {
                 searchFilesInFolder(array[i].getPath());

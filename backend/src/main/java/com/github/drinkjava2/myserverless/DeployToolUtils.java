@@ -135,9 +135,9 @@ public class DeployToolUtils {
                 continue;
             }
 
-            template = MyStrUtils.substringBetween(src, "extends", "Template"); //com.reactmrp.template.QryMapList
-            template = MyStrUtils.substringAfterLast(template, "."); //QryMapList
-            String remoteMethod = MyStrUtils.toLowerCaseFirstOne(template); //qryMapList
+            template = MyStrUtils.substringBetween(src, "extends", "Template"); //com.xxx.template.XxXxxx
+            template = MyStrUtils.substringAfterLast(template, "."); //XxXxxx
+            String remoteMethod = MyStrUtils.toLowerCaseFirstOne(template); //xxXxxx
             SqlJavaPiece newPiece = SqlJavaPiece.parseFromJavaSrcFile(javaSrcFileName); 
             String methodId = MyStrUtils.substringBefore(piece.getOriginText(), "_"); //PUBLIC
             if (MyStrUtils.isEmpty(piece.getOriginText()) || MyStrUtils.containsIgnoreCase(methodId, "backend")) { //如果包含backend就跳过

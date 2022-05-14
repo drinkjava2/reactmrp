@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.drinkjava2.myserverless.compile.DynamicCompileEngine;
+import com.github.drinkjava2.myserverless.util.Debug;
 import com.github.drinkjava2.myserverless.util.MyStrUtils;
 
 /**
@@ -102,6 +104,16 @@ public class MyServerlessServlet extends HttpServlet {
         String sqlOrJavaPiece = json.getString("$0");
         String remoteMethod = json.getString("remoteMethod");
         String token = json.getString("token");
+        
+        if (MyStrUtils.isEmpty(token) || token.length() < 10) {//if token is empty or wrong, get from cookie
+            Cookie[] cookies = req.getCookies();
+            if (cookies != null && cookies.length > 0)
+                for (Cookie cookie : cookies) {
+                    if ("token".equals(cookie.getName()))
+                        token = cookie.getValue();
+                }
+        }
+        
         if (MyStrUtils.isEmpty(sqlOrJavaPiece))
             return JsonResult.json403("Error: request body is empty.", req, json);
 
@@ -135,7 +147,7 @@ public class MyServerlessServlet extends HttpServlet {
             } else
                 return JsonResult.json403("Error: incorrect MyServerless child template error.", req, json);
 
-            instance.initParams(req, resp, json);
+            instance.initParams(req, resp, json, token);
 
             //Here do token check
 

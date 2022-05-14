@@ -4,11 +4,11 @@ async function fetchJSon(methodName, text, args){//异步ajax
 	  let bodyJson= {"remoteMethod":methodName,"$0": text};
 	  for (let i = 1; i < args.length; i++) 
 		   bodyJson["$"+i]=args[i]; 
-	  if (window.localStorage)  
+	  if (window.localStorage)  //
 		   bodyJson["token"]=localStorage.getItem("token");  
 	  let bodyJsonStr=JSON.stringify(bodyJson);
 	  try{ 
-		  //m参数布署时可以去掉
+		  //m参数只是给开发者用来区分API用的，后端不需要，布署时可以去掉这个参数
 		  let response= await fetch("/myserverless.do?m="+methodInfo(methodName, text), {
 			    method : "POST",
 			    mode: "cors",
@@ -30,7 +30,6 @@ function syncXhrJSon(methodName, text, args){//同步ajax
 		   bodyJson["token"]=localStorage.getItem("token");  
 	let bodyJsonStr=JSON.stringify(bodyJson);
 	let xhr = new XMLHttpRequest(); 
-	//m参数布署时可以去掉
 	xhr.open("POST", "/myserverless.do?m="+methodInfo(methodName, text), false); 
 	xhr.setRequestHeader("Content-Type","application/json;charset=utf-8");
 	xhr.setRequestHeader("Accept","application/json");
@@ -46,7 +45,7 @@ function syncXhrJSon(methodName, text, args){//同步ajax
 	}
 }
 
-function methodInfo(methodName, text){ //methodInfo参数加在url中，这个只是用来快速定位错误用的，不参与后端逻辑
+function methodInfo(methodName, text){ //methodInfo参数加在url中，这个只是用来快速定位API用的，不参与后端逻辑
 	  let rs = "";	 
 	  for (var i = 0; i < text.length; i++) {
 	      let c = text.substr(i, 1);	 
@@ -91,7 +90,6 @@ async function data$qryArrayList(text) {	let json= await fetchJSon("qryArrayList
 async function data$qryTitleArrayList(text){let json= await fetchJSon("qryTitleArrayList", text, arguments); return json.data;}
 async function data$qryMap(text) {			let json= await fetchJSon("qryMap", text, arguments); return json.data;}
 async function data$qryList(text) {			let json= await fetchJSon("qryList", text, arguments); return json.data;}
-async function data$javaTx(text) {			let json= await fetchJSon("javaTx", text, arguments); return json.data;}
 async function data$qryMapList(text) {		let json= await fetchJSon("qryMapList", text, arguments); return json.data;}
 async function data$qryEntity(text) {		let json= await fetchJSon("qryEntity", text, arguments); return json.data;}
 async function data$qryEntityList(text) {	let json= await fetchJSon("qryEntityList", text, arguments); return json.data;}
@@ -112,15 +110,14 @@ function sync$qryMapList(text) {		return syncXhrJSon("qryMapList", text, argumen
 function sync$qryEntity(text) {			return syncXhrJSon("qryEntity", text, arguments);}
 function sync$qryEntityList(text) {		return syncXhrJSon("qryEntityList", text, arguments);}
 
-function syncData$java(text) { 			return syncXhrJSon("java", text, arguments).data; } 
-function syncData$javaTx(text) {		return syncXhrJSon("javaTx", text, arguments).data; } 
+function syncData$java(text) { 				let json= syncXhrJSon("java", text, arguments); return json.data; } 
+function syncData$javaTx(text){ 			let json= syncXhrJSon("javaTx", text, arguments); return json.data;} 
 function syncData$qryObject(text) {			let json= syncXhrJSon("qryObject", text, arguments); return json.data;}  
 function syncData$qryArray(text) {			let json= syncXhrJSon("qryArray", text, arguments); return json.data;}
 function syncData$qryArrayList(text) {		let json= syncXhrJSon("qryArrayList", text, arguments); return json.data;}
 function syncData$qryTitleArrayList(text){	let json= syncXhrJSon("qryTitleArrayList", text, arguments); return json.data;}
 function syncData$qryMap(text) {			let json= syncXhrJSon("qryMap", text, arguments); return json.data;}
 function syncData$qryList(text) {			let json= syncXhrJSon("qryList", text, arguments); return json.data;}
-function syncData$javaTx(text) {			let json= syncXhrJSon("javaTx", text, arguments); return json.data;}
 function syncData$qryMapList(text) {		let json= syncXhrJSon("qryMapList", text, arguments); return json.data;}
 function syncData$qryEntity(text) {			let json= syncXhrJSon("qryEntity", text, arguments); return json.data;}
 function syncData$qryEntityList(text) {		let json= syncXhrJSon("qryEntityList", text, arguments); return json.data;}

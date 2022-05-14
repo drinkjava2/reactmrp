@@ -7,7 +7,7 @@ package com.github.drinkjava2.myserverless.util;
  * @since 2.0.5
  */
 @SuppressWarnings("all")
-public class Systemout {
+public class Debug {
 	private static final boolean ALLOW_PRINT = true;
 
 	public static void print(Object obj) {

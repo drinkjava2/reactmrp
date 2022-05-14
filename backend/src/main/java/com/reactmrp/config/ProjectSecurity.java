@@ -61,7 +61,7 @@ public class ProjectSecurity implements TokenSecurity {
 
     public static boolean ifLogin(String token) {
         token=MyStrUtils.trimAllWhitespace(token);
-        if(MyStrUtils.isEmpty(token))
+        if(MyStrUtils.isEmpty(token) || token.length()<10)
             return false;
         String userName = DB.qryString("select userName from users where token=", DB.que(token));
         return !(MyStrUtils.isEmpty(userName));

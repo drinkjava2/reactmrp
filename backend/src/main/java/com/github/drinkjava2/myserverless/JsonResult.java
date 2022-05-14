@@ -12,6 +12,7 @@ package com.github.drinkjava2.myserverless;
 
 import java.util.Enumeration;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import com.alibaba.fastjson.JSONObject;
@@ -79,6 +80,15 @@ public class JsonResult {
             String name = o.toString();
             sb.append(name).append("=").append(request.getParameter(o.toString())).append(";");
         }
+        sb.append("\n");
+        
+        sb.append("Cookies: ");
+        Cookie[] cookies = request.getCookies();
+        if(cookies != null && cookies.length > 0){
+             for (Cookie cookie : cookies){  
+                 sb.append(cookie.getName()).append("=").append(cookie.getValue()).append(";");
+             }
+         }     
         sb.append("\n");
 
         sb.append("JSON: ").append(json.toString()).append("\n");

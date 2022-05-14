@@ -78,7 +78,8 @@ input{
 		var token =syncData$myServJson(`BackendPublic$Login`
 		            , domValById("username"), domValById("password"));
 		if(token){
-			localStorage.setItem("token", token);
+			//localStorage.setItem("token", token);  //token放cookie或localStorage两个都支持，cookie更安全一些
+			document.cookie = 'token='+token;
 			window.location.href="/welcome.html";
 		} else
 			document.getElementById("msg").innerHTML="Wrong username or password.";
