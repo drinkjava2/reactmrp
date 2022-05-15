@@ -47,7 +47,9 @@ public class DeployTool {
      */
     public static void goFront() {
         System.out.println("Current deploy folder is: " + MyServerlessEnv.getSrcDeployFolder());
-        System.out.println("Current frontend folder is: "+MyServerlessEnv.getSrcWebappFolder());
+        System.out.println("Current classDeploy folder is: " + MyServerlessEnv.getClassesDeployFolder());        
+        System.out.println("Current webapp folder is: "+MyServerlessEnv.getSrcWebappFolder());
+        System.out.println("Current projectRootFolder folder is: "+MyServerlessEnv.getProjectRootFolder());
         List<File> htmlJspfiles = searchSupportedWebFiles(MyServerlessEnv.getSrcWebappFolder(), null);
         System.out.println("Found "+htmlJspfiles.size()+" files, start transfer...");
         List<String> toDeleteJavas = new ArrayList<String>();
@@ -65,7 +67,9 @@ public class DeployTool {
      */
     public static void goServer() {
         System.out.println("Current deploy folder is: " + MyServerlessEnv.getSrcDeployFolder());
-        System.out.println("Current frontend folder is: "+MyServerlessEnv.getSrcWebappFolder());
+        System.out.println("Current classDeploy folder is: " + MyServerlessEnv.getClassesDeployFolder());        
+        System.out.println("Current webapp folder is: "+MyServerlessEnv.getSrcWebappFolder());
+        System.out.println("Current projectRootFolder folder is: "+MyServerlessEnv.getProjectRootFolder());
         List<File> frontWebFiles = searchSupportedWebFiles(MyServerlessEnv.getSrcWebappFolder(), null);
         System.out.println("Found "+frontWebFiles.size()+" files, start transfer...");
         List<SqlJavaPiece> sqlJavaPieces = new ArrayList<>();
@@ -111,7 +115,7 @@ public class DeployTool {
 
     // ============static methods=============================
 
-    private static List<File> searchSupportedWebFiles(String path, List<File> files) {
+    public static List<File> searchSupportedWebFiles(String path, List<File> files) {
         if (files == null)
             files = new ArrayList<File>();
         File file = new File(path);
@@ -121,14 +125,7 @@ public class DeployTool {
         for (int i = 0; i < array.length; i++) {
             if (array[i].isFile()) {
                 String fileName = array[i].getName();
-                boolean isWebFile = false;
-                for (String web_file : MyServerlessEnv.getWebFiles())
-                    if (fileName.endsWith("." + web_file)) {
-                        isWebFile = true;
-                        break;
-                    }
-
-                if (isWebFile)
+                if (MyServerlessEnv.isWebFile(fileName))
                     files.add(array[i]);
             } else if (array[i].isDirectory()) {
                 searchSupportedWebFiles(array[i].getPath(), files);

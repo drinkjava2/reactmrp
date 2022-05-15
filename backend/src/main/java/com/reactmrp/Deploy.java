@@ -17,6 +17,9 @@ import java.util.List;
 import org.junit.Test;
 
 import com.github.drinkjava2.myserverless.DeployTool;
+import com.github.drinkjava2.myserverless.MyServerlessEnv;
+import com.github.drinkjava2.myserverless.util.MyFileUtils;
+import com.github.drinkjava2.myserverless.util.MyStrUtils;
 import com.reactmrp.config.InitConfig;
 
 /**
@@ -51,27 +54,29 @@ public class Deploy {
     }
 
     @Test
-    public void tempSearchFile() {//临时用一下
-        List<File> files = searchFilesInFolder("E:\\react-mrp\\frontend\\src");
-        for (File file : files) {
-            System.out.println(file.getName());
+    public void replaceAtToAbolutePath() {//切换@符号到绝对路径以方便IDE跳转，临时使用，不提交到git
+        for (File file : DeployTool.searchSupportedWebFiles("E:\\react-mrp\\frontend\\src", null)) {
+            String fp = file.getAbsolutePath();
+            String s = MyFileUtils.readFile(fp, "utf-8");
+            if ((fp.endsWith(".js") || fp.endsWith(".jsx")) && s.contains(" from \"@/")) {
+                s = MyStrUtils.replace(s, " from \"@/", " from \"E:/react-mrp/frontend/src/");
+                MyFileUtils.writeFile(file.getAbsolutePath(), s, "utf-8");
+                System.out.println(file.getAbsolutePath());
+            }
         }
     }
 
-    public static List<File> searchFilesInFolder(String fullPath) {//not used, will delete later
-        List<File> files = new ArrayList<File>();
-        File file = new File(fullPath);
-        File[] array = file.listFiles();
-        if (array == null)
-            return files;
-        for (int i = 0; i < array.length; i++) {
-            if (array[i].isFile()) {
-                files.add(array[i]);
-            } else if (array[i].isDirectory()) {
-                searchFilesInFolder(array[i].getPath());
+    @Test
+    public void replaceAbolutePathToAt() {//切换回绝对路径为@符号
+        for (File file : DeployTool.searchSupportedWebFiles("E:\\react-mrp\\frontend\\src", null)) {
+            String fp = file.getAbsolutePath();
+            String s = MyFileUtils.readFile(fp, "utf-8");
+            if ((fp.endsWith(".js") || fp.endsWith(".jsx")) && s.contains(" from \"E:/react-mrp/frontend/src/")) {
+                s = MyStrUtils.replace(s, " from \"E:/react-mrp/frontend/src/", " from \"@/");
+                MyFileUtils.writeFile(file.getAbsolutePath(), s, "utf-8");
+                System.out.println(file.getAbsolutePath());
             }
         }
-        return files;
     }
 
 }

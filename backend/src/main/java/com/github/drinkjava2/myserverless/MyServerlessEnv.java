@@ -161,6 +161,15 @@ public class MyServerlessEnv {// NOSONAR
         return path;
     }
 
+    
+    public static boolean isWebFile(String filename) {
+        for (String web_file : MyServerlessEnv.getWebFiles())
+            if (filename.endsWith("." + web_file)) {
+                return true;
+            }
+        return false;        
+    }
+    
     // ==========getter & setter =============
 
     public static Map<String, Class<?>> getMethodTemplates() {
