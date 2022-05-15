@@ -11,13 +11,10 @@
 package com.reactmrp;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.Test;
 
 import com.github.drinkjava2.myserverless.DeployTool;
-import com.github.drinkjava2.myserverless.MyServerlessEnv;
 import com.github.drinkjava2.myserverless.util.MyFileUtils;
 import com.github.drinkjava2.myserverless.util.MyStrUtils;
 import com.reactmrp.config.InitConfig;
