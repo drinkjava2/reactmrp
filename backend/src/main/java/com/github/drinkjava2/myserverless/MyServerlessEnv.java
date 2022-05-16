@@ -35,7 +35,7 @@ public class MyServerlessEnv {// NOSONAR
 
     private static final String deploy_package; // deploy package name, store dynamic generated classed
 
-    private static final String project_root_folder; // absolute path of deploy package
+    private static final String backend_folder; // absolute path of backend folder
 
     private static final String stage; // product or develop. If set to product, reject receive SQL and Java from front end
 
@@ -50,7 +50,7 @@ public class MyServerlessEnv {// NOSONAR
     private static final List<String> web_files = new ArrayList<String>(); //html, htm, jsp, js, php 
 
     private static final String call_server_method; //if change setting in properties file, also need change myserverless.js file
-    
+
     private static final String api_export_file; //API export file name, default is empty
 
     static {
@@ -102,11 +102,11 @@ public class MyServerlessEnv {// NOSONAR
             else
                 call_server_method = call_server_method_str;
 
-            api_export_file=prop.getProperty("api_export_file");
-            
+            api_export_file = prop.getProperty("api_export_file");
+
             String newFilePath = new File("").getAbsolutePath();
-            newFilePath = MyStrUtils.substringBefore(newFilePath, "\\target");
-            project_root_folder = MyStrUtils.substringBefore(newFilePath, "/target");
+            newFilePath = MyStrUtils.replace(newFilePath, "\\", "/");
+            backend_folder = MyStrUtils.substringBefore(newFilePath, "/target");
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
@@ -139,37 +139,41 @@ public class MyServerlessEnv {// NOSONAR
         return ClassExistCacheUtils.checkClassExist(new StringBuilder(MyServerlessEnv.getDeployPackage()).append(".").append(sqlJavaPiece).toString());
     }
 
-    public static String getClassesDeployFolder() {
-        return getClassLoaderFolder() + "/" + MyStrUtils.replace(deploy_package, ".", "/");
-    }
-
-    public static String getSrcDeployFolder() {
-        return getProjectRootFolder() + "/src/main/java/" + MyStrUtils.replace(deploy_package, ".", "/");
-    }
-
-    public static String getSrcWebappFolder() {
-        return getProjectRootFolder() + "/src/main/webapp";
-
-    }
-
     public static String getClassLoaderFolder() {
         String path = Thread.currentThread().getContextClassLoader().getResource("").toString();
         path = MyStrUtils.replaceFirst(path, "file:/", "");
         path = MyStrUtils.replaceFirst(path, "file:", "");
         if (path.endsWith("/") || path.endsWith("\\"))
             path = path.substring(0, path.length() - 1);
+        path = MyStrUtils.replace(path, "\\", "/");
         return path;
     }
 
-    
+    public static String getClassesDeployFolder() {
+        return getClassLoaderFolder() + "/" + MyStrUtils.replace(deploy_package, ".", "/");
+    }
+
+    public static String getSrcDeployFolder() {
+        return getBackendFolder() + "/src/main/java/" + MyStrUtils.replace(deploy_package, ".", "/");
+    }
+
+    public static String getFrontendFolder() {
+        String s = MyStrUtils.substringBeforeLast(getBackendFolder(), "backend");
+        return s + "frontend";
+    }
+
+    public static String[] getSrcWebappFolders() {
+        return new String[]{getBackendFolder() + "/src/main/webapp", getFrontendFolder() + "/src", getFrontendFolder() + "/public"};
+    }
+
     public static boolean isWebFile(String filename) {
         for (String web_file : MyServerlessEnv.getWebFiles())
             if (filename.endsWith("." + web_file)) {
                 return true;
             }
-        return false;        
+        return false;
     }
-    
+
     // ==========getter & setter =============
 
     public static Map<String, Class<?>> getMethodTemplates() {
@@ -180,8 +184,8 @@ public class MyServerlessEnv {// NOSONAR
         return deploy_package;
     }
 
-    public static String getProjectRootFolder() {
-        return project_root_folder;
+    public static String getBackendFolder() {
+        return backend_folder;
     }
 
     public static boolean isProductStage() {
@@ -211,7 +215,7 @@ public class MyServerlessEnv {// NOSONAR
     public static String getCallDeployedMethodName() {
         return call_server_method;
     }
-    
+
     public static String getApiExportFile() {
         return api_export_file;
     }

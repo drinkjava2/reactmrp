@@ -6,9 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="react-antd-admin-template" />
-    <title>react-antd-admin-template</title>
+    <title>react-mrp</title>
+    <script src="/js/myserverless-4.0.js"></script>
   </head>
   <body>
+    <p id="Users"></p>
+
+	 <script>
+          console.log("==========");
+	  $qryMapList(`#public select userName from users order by userName`).then(json=>{
+	      if(json.code==200){
+		     let users=json.data;
+		     let html="User List:<br/>";
+  		     for(let i=0;i<users.length;i++) 
+			 html+="userName:" +  users[i].userName+"<br/>"; 
+			 document.getElementById("Users").innerHTML=html;
+	      }  
+	  });
+	</script>
+	
     <div id="root"></div>
+   	
+   
   </body>
 </html>

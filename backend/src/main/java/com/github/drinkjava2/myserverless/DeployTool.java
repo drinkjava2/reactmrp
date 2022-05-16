@@ -12,6 +12,7 @@ package com.github.drinkjava2.myserverless;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.github.drinkjava2.myserverless.util.MyFileUtils;
@@ -25,7 +26,7 @@ import com.github.drinkjava2.myserverless.util.MyStrUtils;
  * @since 1.0.0
  */
 public class DeployTool {
-    
+
     public static void deploy(String option) {
         if ("goServer".equalsIgnoreCase(option))
             goServer();
@@ -46,17 +47,23 @@ public class DeployTool {
      * Push back all Sql/Java pieces to front side, except file start with "back"
      */
     public static void goFront() {
-        System.out.println("Current deploy folder is: " + MyServerlessEnv.getSrcDeployFolder());
-        System.out.println("Current classDeploy folder is: " + MyServerlessEnv.getClassesDeployFolder());        
-        System.out.println("Current webapp folder is: "+MyServerlessEnv.getSrcWebappFolder());
-        System.out.println("Current projectRootFolder folder is: "+MyServerlessEnv.getProjectRootFolder());
-        List<File> htmlJspfiles = searchSupportedWebFiles(MyServerlessEnv.getSrcWebappFolder(), null);
-        System.out.println("Found "+htmlJspfiles.size()+" files, start transfer...");
+        /* 
+        Current srcDeploy folder is: E:/xxxx/backend/src/main/java/com/xxx/deploy
+        Current classDeploy folder is: E:/xxxx/backend/target/classes/com/xxx/deploy
+        Current srcWebapp folders are: [E:/xxxx/backend/src/main/webapp, E:/xxxx/frontend/src, E:/xxxx/frontend/public]
+        Current projectRootFolder folder is: E:/xxxx/backend
+         */
+        System.out.println("Current srcDeploy folder is: " + MyServerlessEnv.getSrcDeployFolder());
+        System.out.println("Current classDeploy folder is: " + MyServerlessEnv.getClassesDeployFolder());
+        System.out.println("Current srcWebapp folders are: " + Arrays.deepToString(MyServerlessEnv.getSrcWebappFolders()));
+        System.out.println("Current projectRootFolder folder is: " + MyServerlessEnv.getBackendFolder());
+        List<File> htmlJspfiles = searchSupportedWebFilesInMultiplePaths(MyServerlessEnv.getSrcWebappFolders());
+        System.out.println("Found " + htmlJspfiles.size() + " files, start transfer...");
         List<String> toDeleteJavas = new ArrayList<String>();
-        for (File file : htmlJspfiles) 
+        for (File file : htmlJspfiles)
             DeployToolUtils.oneFileToFront(file, false, toDeleteJavas, true);
         for (String javaFile : toDeleteJavas) {
-            System.out.println("Delete file:"+javaFile);
+            System.out.println("Delete file:" + javaFile);
             new File(javaFile).delete();
         }
         System.out.println("Done!");
@@ -66,12 +73,12 @@ public class DeployTool {
      * Extract all Sql/Java pieces from front to backend, except java/sql piece started with "front"
      */
     public static void goServer() {
-        System.out.println("Current deploy folder is: " + MyServerlessEnv.getSrcDeployFolder());
-        System.out.println("Current classDeploy folder is: " + MyServerlessEnv.getClassesDeployFolder());        
-        System.out.println("Current webapp folder is: "+MyServerlessEnv.getSrcWebappFolder());
-        System.out.println("Current projectRootFolder folder is: "+MyServerlessEnv.getProjectRootFolder());
-        List<File> frontWebFiles = searchSupportedWebFiles(MyServerlessEnv.getSrcWebappFolder(), null);
-        System.out.println("Found "+frontWebFiles.size()+" files, start transfer...");
+        System.out.println("Current srcDeploy folder is: " + MyServerlessEnv.getSrcDeployFolder());
+        System.out.println("Current classDeploy folder is: " + MyServerlessEnv.getClassesDeployFolder());
+        System.out.println("Current srcWebapp folders are: " + Arrays.deepToString(MyServerlessEnv.getSrcWebappFolders()));
+        System.out.println("Current projectRootFolder folder is: " + MyServerlessEnv.getBackendFolder());
+        List<File> frontWebFiles = searchSupportedWebFilesInMultiplePaths(MyServerlessEnv.getSrcWebappFolders());
+        System.out.println("Found " + frontWebFiles.size() + " files, start transfer...");
         List<SqlJavaPiece> sqlJavaPieces = new ArrayList<>();
         for (File file : frontWebFiles)
             DeployToolUtils.oneFileToServ(sqlJavaPieces, file, true);
@@ -114,8 +121,16 @@ public class DeployTool {
     }
 
     // ============static methods=============================
+    public static List<File> searchSupportedWebFilesInMultiplePaths(String[] paths) {
+        List<File> result = new ArrayList<>();
+        for (String path : paths) {
+            List<File> files = searchSupportedWebFilesInOnePath(path, null);
+            result.addAll(files);
+        }
+        return result;
+    }
 
-    public static List<File> searchSupportedWebFiles(String path, List<File> files) {
+    public static List<File> searchSupportedWebFilesInOnePath(String path, List<File> files) {
         if (files == null)
             files = new ArrayList<File>();
         File file = new File(path);
@@ -128,7 +143,7 @@ public class DeployTool {
                 if (MyServerlessEnv.isWebFile(fileName))
                     files.add(array[i]);
             } else if (array[i].isDirectory()) {
-                searchSupportedWebFiles(array[i].getPath(), files);
+                searchSupportedWebFilesInOnePath(array[i].getPath(), files);
             }
         }
         return files;

@@ -52,7 +52,7 @@ public class Deploy {
 
     @Test
     public void replaceAtToAbolutePath() {//切换@符号到绝对路径以方便IDE跳转，临时使用，不提交到git
-        for (File file : DeployTool.searchSupportedWebFiles("E:\\react-mrp\\frontend\\src", null)) {
+        for (File file : DeployTool.searchSupportedWebFilesInOnePath("E:\\react-mrp\\frontend\\src", null)) {
             String fp = file.getAbsolutePath();
             String s = MyFileUtils.readFile(fp, "utf-8");
             if ((fp.endsWith(".js") || fp.endsWith(".jsx")) && s.contains(" from \"@/")) {
@@ -65,7 +65,7 @@ public class Deploy {
 
     @Test
     public void replaceAbolutePathToAt() {//切换回绝对路径为@符号
-        for (File file : DeployTool.searchSupportedWebFiles("E:\\react-mrp\\frontend\\src", null)) {
+        for (File file : DeployTool.searchSupportedWebFilesInOnePath("E:\\react-mrp\\frontend\\src", null)) {
             String fp = file.getAbsolutePath();
             String s = MyFileUtils.readFile(fp, "utf-8");
             if ((fp.endsWith(".js") || fp.endsWith(".jsx")) && s.contains(" from \"E:/react-mrp/frontend/src/")) {
