@@ -1,2 +1,4 @@
-1. 调试ajax post的cors问题
-2. 把backend整个放到eclipse中，但是要排除node_modules这个大folder
+*. 调试ajax post的cors问题 Done
+*. 把backend整个放到eclipse中，但是要排除node_modules这个大folder  做不到，还是只管src目录
+
+

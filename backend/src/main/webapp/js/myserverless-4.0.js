@@ -1,18 +1,13 @@
-// fetchJSon fetch a json from MyServerless server,
 // Return example: {"code":200, "msg":"sucess", data:"foo", debugInfo:"bar"}
 async function fetchJSon(methodName, text, args){//异步ajax
-	  let bodyJson= {"remoteMethod":methodName,"$0": text};
-	  for (let i = 1; i < args.length; i++) 
-		   bodyJson["$"+i]=args[i]; 
-	  if (window.localStorage)  //
-		   bodyJson["token"]=localStorage.getItem("token");  
-	  let bodyJsonStr=JSON.stringify(bodyJson);
+	let bodyJsonStr=getBodyJsonStr(methodName, text, args);
 	  try{ 
 		  //m参数只是给开发者用来区分API用的，后端不需要，布署时可以去掉这个参数
 		  let response= await fetch("/myserverless.do?m="+methodInfo(methodName, text), {
 			    method : "POST",
 			    mode: "cors",
-			    headers: {"Accept":"application/json", "Content-Type": "application/json;charset=utf-8"},
+				headers: {"Accept":"application/json", "Content-Type": "application/json;charset=utf-8"},
+				credentials: 'include',
 				body : bodyJsonStr
 		      });
 		  return await response.json();
@@ -23,16 +18,12 @@ async function fetchJSon(methodName, text, args){//异步ajax
 	}
 
 function syncXhrJSon(methodName, text, args){//同步ajax
-	let bodyJson= {"remoteMethod":methodName,"$0": text};
-	for (let i = 1; i < args.length; i++) 
-		   bodyJson["$"+i]=args[i]; 
-	if (window.localStorage)  
-		   bodyJson["token"]=localStorage.getItem("token");  
-	let bodyJsonStr=JSON.stringify(bodyJson);
+	let bodyJsonStr=getBodyJsonStr(methodName, text, args);
 	let xhr = new XMLHttpRequest(); 
 	xhr.open("POST", "/myserverless.do?m="+methodInfo(methodName, text), false); 
 	xhr.setRequestHeader("Content-Type","application/json;charset=utf-8");
 	xhr.setRequestHeader("Accept","application/json");
+	xhr.withCredentials = true;
 	try {
 	  xhr.send(bodyJsonStr);
 	  if (xhr.status != 200) {
@@ -43,6 +34,15 @@ function syncXhrJSon(methodName, text, args){//同步ajax
 	} catch(err) {
 		return {"code":403, "msg":"Request failed", "data":null};
 	}
+}
+
+function getBodyJsonStr(methodName, text, args){
+	let bodyJson= {"remoteMethod":methodName,"$0": text};
+	for (let i = 1; i < args.length; i++) 
+		   bodyJson["$"+i]=args[i]; 
+	if (window.localStorage)  
+		   bodyJson["token"]=localStorage.getItem("token");  
+	return JSON.stringify(bodyJson);
 }
 
 function methodInfo(methodName, text){ //methodInfo参数加在url中，这个只是用来快速定位API用的，不参与后端逻辑

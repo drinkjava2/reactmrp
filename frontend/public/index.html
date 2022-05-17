@@ -14,7 +14,8 @@
 
 	 <script>
           console.log("==========");
-	  $qryMapList(`#public select userName from users order by userName`).then(json=>{
+	  let json=sync$qryMapList(`#public select userName from users order by userName`);
+          console.log(json);
 	      if(json.code==200){
 		     let users=json.data;
 		     let html="User List:<br/>";
@@ -22,7 +23,17 @@
 			 html+="userName:" +  users[i].userName+"<br/>"; 
 			 document.getElementById("Users").innerHTML=html;
 	      }  
-	  });
+
+	  $qryMapList(`#public select userName from users order by userName`).then(json=>{
+          console.log(json);
+	      if(json.code==200){
+		     let users=json.data;
+		     let html="User List:<br/>";
+  		     for(let i=0;i<users.length;i++) 
+			 html+="userName:" +  users[i].userName+"<br/>"; 
+			 document.getElementById("Users").innerHTML=html;
+	      }  
+          })
 	</script>
 	
     <div id="root"></div>

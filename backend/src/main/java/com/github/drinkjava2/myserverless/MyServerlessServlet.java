@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.drinkjava2.myserverless.compile.DynamicCompileEngine;
-import com.github.drinkjava2.myserverless.util.Debug;
 import com.github.drinkjava2.myserverless.util.MyStrUtils;
 
 /**
@@ -35,6 +34,17 @@ import com.github.drinkjava2.myserverless.util.MyStrUtils;
  */
 @SuppressWarnings("all")
 public class MyServerlessServlet extends HttpServlet {
+
+    @Override 
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException { //CORS options request
+        resp.setHeader("Access-Control-Allow-Origin", "*"); //allow cross origin access 
+        resp.setHeader("Access-Control-Allow-Methods", "*");
+        resp.setHeader("Access-Control-Max-Age", "1728000");
+        resp.addHeader("Access-Control-Allow-Headers", "*");
+        resp.setHeader("Access-Control-Allow-Credentials", "*");
+        resp.setCharacterEncoding("utf-8");
+        resp.setStatus(200); 
+    };
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -48,10 +58,9 @@ public class MyServerlessServlet extends HttpServlet {
 
     public static void doAction(HttpServletRequest req, HttpServletResponse resp) {
         //1.if has login parameter, treat it as login method
-
         resp.setHeader("Access-Control-Allow-Origin", "*"); //allow cross origin access 
         resp.setHeader("Access-Control-Allow-Methods", "*");
-        resp.setHeader("Access-Control-Max-Age", "7200");
+        resp.setHeader("Access-Control-Max-Age", "1728000");
         resp.addHeader("Access-Control-Allow-Headers", "*");
         resp.setHeader("Access-Control-Allow-Credentials", "*");
         resp.setCharacterEncoding("utf-8");
@@ -64,8 +73,9 @@ public class MyServerlessServlet extends HttpServlet {
             resp.setStatus(200);
         jsonResult.setStatus(null); //no need put status in json
 
-        if (BaseTemplate.NONE.equals(jsonResult.getData()))  // if return NONE, do nothing
-            return;  
+        if (BaseTemplate.NONE.equals(jsonResult.getData())) // if return NONE, do nothing
+            return;
+
         resp.setHeader("Content-Type", "application/json;charset:utf-8");
         String json = JSON.toJSONString(jsonResult);
         PrintWriter out = null;
@@ -98,13 +108,13 @@ public class MyServerlessServlet extends HttpServlet {
             return JsonResult.json403("Error: can not read json on server side.", req, null);
         }
         json = JSON.parseObject(jsonString);
-        if(json==null)
+        if (json == null)
             return JsonResult.json403("Error: unknow request", req, null);
 
         String sqlOrJavaPiece = json.getString("$0");
         String remoteMethod = json.getString("remoteMethod");
         String token = json.getString("token");
-        
+
         if (MyStrUtils.isEmpty(token) || token.length() < 10) {//if token is empty or wrong, get from cookie
             Cookie[] cookies = req.getCookies();
             if (cookies != null && cookies.length > 0)
@@ -113,7 +123,7 @@ public class MyServerlessServlet extends HttpServlet {
                         token = cookie.getValue();
                 }
         }
-        
+
         if (MyStrUtils.isEmpty(sqlOrJavaPiece))
             return JsonResult.json403("Error: request body is empty.", req, json);
 
