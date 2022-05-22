@@ -14,53 +14,69 @@
     <p id="Users2"></p>
     <p id="Users3"></p>
     <p id="Users4"></p>
-
+ 
 	 <script>
-	//    let token = getMyServToken();
-	//    if(token==null)
-	//      {
-	// 		token =syncData$myServJson(`BackendPublic$Login`
-	// 						, "admin", "123");
-	// 			if(token){
-	// 				console.log("will set token="+token);
-	// 				//localStorage.setItem("token", token);  //token放cookie或localStorage两个都支持，cookie更安全一些
-	// 				document.cookie = 'token='+token+";SameSite=Lax";
-	// 			} else console("login fail");  
-	// 	}
-	 	      
-    //    console.log("token="+token);
-	//   let json=sync$qryMapList(`#UserUpdate select userId from users order by userId`);
-    //       if(json.code==200){
-  	// 	  let users=json.data;
-	// 	  let html="User List:<br/>";
-	//   	  for(let i=0;i<users.length;i++) 
-	// 		html+="userId:" +  users[i].userId+"<br/>"; 
-	// 	  document.getElementById("Users1").innerHTML=html;
-	//    }
+	   let login = syncData$myServerless(`BackendPublic$CheckLogin`);
+	   console.log("checkLogin="+login)
+	   if(!login){
+		// let myToken =  syncData$myServerless(`BackendPublic$CookieLogin`, "admin", "123");
+		// 		if(myToken){
+		// 			console.log("Login success");
+		// 			//location.reload(true);
+		// 		}
+		// 		else 
+		// 		    console.log("Login fail");  
 
-	//   let users=syncData$qryMapList(`#public select userId from users where age>? order by userId`,  5);
-	//   let html="User List:<br/>";
-  	//   for(let i=0;i<users.length;i++) 
-	// 	html+="userId:" +  users[i].userId+"<br/>"; 
-	//   document.getElementById("Users2").innerHTML=html;
+		 let myToken =  syncData$myServerless(`BackendPublic$TokenLogin`, "admin", "123");
+				if(myToken){
+					localStorage.setItem("myToken", myToken); 
+					console.log("Login success");
+				}
+				else 
+				    console.log("Login fail");  
+		}
 
-	//   $qryMapList(`#public select userId from users order  by userId`).then(json=>{
-	//       if(json.code!=200) return;
-	//       let users=json.data;
-	//       let html="User List:<br/>";
-  	//       for(let i=0;i<users.length;i++) 
-	// 	    html+="userId:" +  users[i].userId+"<br/>"; 
-	//       document.getElementById("Users3").innerHTML=html;
-    //       })
+	   login = syncData$myServerless(`BackendPublic$CheckLogin`);
+	   console.log("checkLogin="+login)
 
-	//   data$qryMapList(`#public select userId from users order by userId`).then(users=>{
-	//       let html="User List:<br/>";
-  	//       for(let i=0;i<users.length;i++) 
-	// 	    html+="userId:" +  users[i].userId+"<br/>"; 
-	//       document.getElementById("Users4").innerHTML=html;
-    //       })
+		let json=sync$qryMapList(`#UserUpdate select userId from users order by userId`);
+          if(json.code==200){
+  		  let users=json.data;
+		  let html="User List:<br/>";
+	  	  for(let i=0;i<users.length;i++) 
+			html+="userId:" +  users[i].userId+"<br/>"; 
+		  document.getElementById("Users1").innerHTML=html;
+	   }
+
+	  let users=syncData$qryMapList(`#public select userId from users where age>? order by userId`,  5);
+	  let html="User List:<br/>";
+  	  for(let i=0;i<users.length;i++) 
+		html+="userId:" +  users[i].userId+"<br/>"; 
+	  document.getElementById("Users2").innerHTML=html;
+
+	  $qryMapList(`#public select userId from users order  by userId`).then(json=>{
+	      if(json.code!=200) return;
+	      let users=json.data;
+	      let html="User List:<br/>";
+  	      for(let i=0;i<users.length;i++) 
+		    html+="userId:" +  users[i].userId+"<br/>"; 
+	      document.getElementById("Users3").innerHTML=html;
+          })
+
+	  data$qryMapList(`#public select userId from users order by userId`).then(users=>{
+	      let html="User List:<br/>";
+  	      for(let i=0;i<users.length;i++) 
+		    html+="userId:" +  users[i].userId+"<br/>"; 
+	      document.getElementById("Users4").innerHTML=html;
+          })
+
+      function doLogout(){
+		sync$myServerless(`BackendPublic$Logout`);
+		window.location.href="/";
+	  }		  
 	</script>
-	
+	<a href="javascript:doLogout()">Logout</a>
+
     <div id="root"></div>
    	
    

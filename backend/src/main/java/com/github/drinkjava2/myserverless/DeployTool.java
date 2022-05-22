@@ -56,7 +56,7 @@ public class DeployTool {
         System.out.println("Current srcDeploy folder is: " + MyServerlessEnv.getSrcDeployFolder());
         System.out.println("Current classDeploy folder is: " + MyServerlessEnv.getClassesDeployFolder());
         System.out.println("Current srcWebapp folders are: " + Arrays.deepToString(MyServerlessEnv.getSrcWebappFolders()));
-        System.out.println("Current projectRootFolder folder is: " + MyServerlessEnv.getBackendFolder());
+        System.out.println("Current projectRootFolder folder is: " + MyServerlessEnv.backend_folder);
         List<File> htmlJspfiles = searchSupportedWebFilesInMultiplePaths(MyServerlessEnv.getSrcWebappFolders());
         System.out.println("Found " + htmlJspfiles.size() + " files, start transfer...");
         List<String> toDeleteJavas = new ArrayList<String>();
@@ -76,7 +76,7 @@ public class DeployTool {
         System.out.println("Current srcDeploy folder is: " + MyServerlessEnv.getSrcDeployFolder());
         System.out.println("Current classDeploy folder is: " + MyServerlessEnv.getClassesDeployFolder());
         System.out.println("Current srcWebapp folders are: " + Arrays.deepToString(MyServerlessEnv.getSrcWebappFolders()));
-        System.out.println("Current projectRootFolder folder is: " + MyServerlessEnv.getBackendFolder());
+        System.out.println("Current projectRootFolder folder is: " + MyServerlessEnv.backend_folder);
         List<File> frontWebFiles = searchSupportedWebFilesInMultiplePaths(MyServerlessEnv.getSrcWebappFolders());
         System.out.println("Found " + frontWebFiles.size() + " files, start transfer...");
         List<SqlJavaPiece> sqlJavaPieces = new ArrayList<>();
@@ -89,9 +89,8 @@ public class DeployTool {
         System.out.println("Done!");
     }
 
-    private static void exportApiDoc(List<SqlJavaPiece> pieces) {
-        String apiFile = MyServerlessEnv.getApiExportFile();
-        if (MyStrUtils.isEmpty(apiFile))
+    private static void exportApiDoc(List<SqlJavaPiece> pieces) { 
+        if (MyStrUtils.isEmpty(MyServerlessEnv.api_export_file))
             return;
         StringBuilder apiHtml = new StringBuilder();
         apiHtml.insert(0, "<!DOCTYPE html>\n" + //
@@ -117,7 +116,7 @@ public class DeployTool {
         apiHtml.append("</table>\n" + //
                 "</body>\n" + //
                 "</html>");
-        MyFileUtils.writeFile(apiFile, apiHtml.toString(), "UTF-8");
+        MyFileUtils.writeFile(MyServerlessEnv.api_export_file, apiHtml.toString(), "UTF-8");
     }
 
     // ============static methods=============================

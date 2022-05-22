@@ -31,11 +31,9 @@ section header {
 </head>
 <body>
  <script>
-      var result=syncData$myServJson(`BackendPublic$CheckLogin`);
-      if(!(result===true))
+      var result=syncData$myServerless(`BackendPublic$CheckLogin`);
+      if(!result)
 		  window.location.href="/login.html";
-	  let myToken=getMyToken();
-	  console.log("the myToken="+myToken);	  
 </script>
     
 	
@@ -56,7 +54,14 @@ section header {
 			 document.getElementById("Users").innerHTML=html;
 	      }  
 	  });
+
+	  function doLogout(){
+		sync$myServerless(`BackendPublic$Logout`);
+		window.location.href="/login.html";
+	  }
 	</script>
+
+	<a href="javascript:doLogout()">Logout</a>
  
 </body>
 </html>

@@ -43,7 +43,7 @@ public class DeployToolUtils {
 		boolean changed = false;
 		String formated = text;
 
-		for (Entry<String, Class<?>> entry : MyServerlessEnv.getMethodTemplates().entrySet()) {
+		for (Entry<String, Class<?>> entry : MyServerlessEnv.methodTemplates.entrySet()) {
 			String remoteMethod = entry.getKey();
 			String remoteMtd_ = "$" + remoteMethod + "(`";
 			Class<?> templateClass = entry.getValue();
@@ -62,7 +62,7 @@ public class DeployToolUtils {
                 changed = true; 
                 String src = SrcBuilder.createSourceCode(templateClass, PieceType.byRemoteMethodName(remoteMethod), piece);
                 MyFileUtils.writeFile(MyServerlessEnv.getSrcDeployFolder() + "/" + className + ".java", src, "UTF-8");
-                formated = MyStrUtils.replaceFirst(formated, key, "$"+MyServerlessEnv.getCallDeployedMethodName()+"(`" + className + "`");
+                formated = MyStrUtils.replaceFirst(formated, key, "$"+MyServerlessEnv.call_server_method+"(`" + className + "`");
                 
                 piece.setLocation(frontFile.getAbsolutePath());
                 sqlJavaPieces.add(piece);
@@ -108,15 +108,15 @@ public class DeployToolUtils {
 	 * Push back sql/java source code  from server side to HTML/HTM/JSP
 	 */
 	public static void oneFileToFront(File frontFile, boolean forceGoFront, List<String> toDeleteJavas, boolean force) {
-	    String rightStart="$"+MyServerlessEnv.getCallDeployedMethodName()+"(`";
-	    String wrongStart="$"+MyServerlessEnv.getCallDeployedMethodName()+"('";
+	    String rightStart="$"+MyServerlessEnv.call_server_method+"(`";
+	    String wrongStart="$"+MyServerlessEnv.call_server_method+"('";
 	    
 		String text = MyFileUtils.readFile(frontFile.getAbsolutePath(), "UTF-8");
 		if (text.contains(wrongStart)) { //如果使用单引号而不是反单引号，直接报错退出 
 		    System.err.println("ERROR: in file '"+frontFile.getName() +"', should use ` instead of use '");
 		    System.exit(1);
 		}
-		if (!text.contains("$"+MyServerlessEnv.getCallDeployedMethodName()+"(`")) //如果没有发现要调用后端源码的,则跳过这个文件
+		if (!text.contains("$"+MyServerlessEnv.call_server_method+"(`")) //如果没有发现要调用后端源码的,则跳过这个文件
 			return;
 
 		boolean changed = false;
@@ -163,7 +163,7 @@ public class DeployToolUtils {
 	}
 
     private static String restoreKeyToOriginText(String formated, String key, SqlJavaPiece piece) {
-        formated = MyStrUtils.replaceFirst(formated, key, "$" + MyServerlessEnv.getCallDeployedMethodName() + "(`" + piece.getOriginText() + "`");
+        formated = MyStrUtils.replaceFirst(formated, key, "$" + MyServerlessEnv.call_server_method + "(`" + piece.getOriginText() + "`");
         return formated;
     }
 

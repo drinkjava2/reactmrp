@@ -10,6 +10,8 @@
  */
 package com.github.drinkjava2.myserverless;
 
+import com.github.drinkjava2.myserverless.util.MyStrUtils;
+
 /**
  * PieceType is the type of SqlJavaPiece, can be: QRY(a piece of query SQL),
  * JAVA (a piece of java in a class extended from ServletTemplate),
@@ -23,6 +25,8 @@ public enum PieceType {
 
 	/** Return a PieceType instance based on method name */
 	public static PieceType byRemoteMethodName(String method) {
+	    if(MyStrUtils.isEmpty(method))
+	        return PieceType.UNKNOW;
 		if (method.startsWith("qry"))
 			return PieceType.QRY;
 		if (method.startsWith("java"))

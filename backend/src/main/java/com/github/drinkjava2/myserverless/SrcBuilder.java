@@ -53,7 +53,7 @@ public abstract class SrcBuilder { // NOSONAR
         classSrc = MyStrUtils.substringAfter(classSrc, "package ");
         classSrc = MyStrUtils.substringAfter(classSrc, ";");
         classSrc = sqlJavaPiece.getImports() + "\n" + classSrc;
-        classSrc = "package " + MyServerlessEnv.getDeployPackage() + ";\n" + classSrc;
+        classSrc = "package " + MyServerlessEnv.deploy_package + ";\n" + classSrc;
         String classDeclar = MyStrUtils.substringBetween(classSrc, "public ", "{");
         classSrc = MyStrUtils.replaceFirst(classSrc, classDeclar, "class " + sqlJavaPiece.getClassName() + " extends " + templateClass.getName());
 

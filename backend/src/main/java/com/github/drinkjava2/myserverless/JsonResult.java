@@ -52,14 +52,14 @@ public class JsonResult {
 
     public static JsonResult json403(String msg, HttpServletRequest request, JSONObject json ) {
         JsonResult result = new JsonResult(403, msg).setStatus(403);
-        if (MyServerlessEnv.isDebugInfo())
+        if (MyServerlessEnv.allow_debug_info)
             result.setDebugInfo(getDebugInfo(request, json));
         return result;
     }
 
     /**  Get debug info of request   */
     public static String getDebugInfo(HttpServletRequest request, JSONObject json) {
-        if (request == null || !MyServerlessEnv.isDebugInfo())
+        if (request == null || !MyServerlessEnv.allow_debug_info)
             return "";
         StringBuilder sb = new StringBuilder("\n");
         sb.append("Host: ").append(request.getHeader("Host")).append("\n");

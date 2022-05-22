@@ -23,90 +23,21 @@ import com.github.drinkjava2.myserverless.util.ClassExistCacheUtils;
 import com.github.drinkjava2.myserverless.util.MyStrUtils;
 
 /**
- * DeployTool extract all SQL and Java in html or .js files to server side, and
- * reverse.
+ * MyServerlessEnv保存了从myserverless.properties中读取的所有配置
  * 
  * @author Yong Zhu
  * @since 1.0.0
  */
 public class MyServerlessEnv {// NOSONAR
-
-    private static final Map<String, Class<?>> methodTemplates = new HashMap<String, Class<?>>();
-
-    private static final String deploy_package; // deploy package name, store dynamic generated classed
-
-    private static final String backend_folder; // absolute path of backend folder
-
-    private static final String stage; // product or develop. If set to product, reject receive SQL and Java from front end
-
-    private static final boolean debug_info; // product or develop. If set to true will return debug info to front end
-
-    private static final boolean is_product_stage;
-
-    private static final boolean java_file_export; // if export java class source file in classes/.../deploy folder, default is false
-
-    private static final TokenSecurity tokenSecurity; //TokenSecurity class name
-
-    private static final List<String> web_files = new ArrayList<String>(); //html, htm, jsp, js, php 
-
-    private static final String call_server_method; //if change setting in properties file, also need change myserverless.js file
-
-    private static final String api_export_file; //API export file name, default is empty
-
+    static Properties prop = new Properties();
     static {
         InputStream is = DeployTool.class.getClassLoader().getResourceAsStream("myserverless.properties");
         if (is == null) {
             System.err.println("Error: Config file myserverless.properties not found.");
             System.exit(0);
         }
-        Properties prop = new Properties();
         try {
             prop.load(is);
-            deploy_package = prop.getProperty("deploy_package");
-            //TEMPLATE_PACKAGE = prop.getProperty("template_package");
-
-            stage = prop.getProperty("stage");
-            if ("product".equalsIgnoreCase(stage) || "develop".equalsIgnoreCase(stage)) {
-            } else
-                throw new IllegalArgumentException("In myserverless.properties, stage can only be develop or product");
-            is_product_stage = "product".equalsIgnoreCase(stage);
-
-            String token_security = prop.getProperty("token_security");
-            tokenSecurity = (TokenSecurity) Class.forName(token_security).newInstance();
-
-            String debug_info_str = prop.getProperty("debug_info");
-            if ("true".equalsIgnoreCase(debug_info_str) || "false".equalsIgnoreCase(debug_info_str)) {
-            } else
-                throw new IllegalArgumentException("In myserverless.properties, debug_info can only be true or false");
-            debug_info = "true".equalsIgnoreCase(prop.getProperty("debug_info"));
-
-            if ("true".equalsIgnoreCase(prop.getProperty("java_file_export")))
-                java_file_export = true;
-            else
-                java_file_export = false;
-
-            String web_files_str = prop.getProperty("web_files");
-            if (MyStrUtils.isEmpty(web_files_str)) {
-                throw new IllegalArgumentException("web_files configration missing, an example: web_files=html,htm,js");
-            } else {
-                String[] splited = MyStrUtils.split(",", web_files_str);
-                for (String s : splited)
-                    web_files.add(MyStrUtils.trimAllWhitespace(s));
-                if (web_files.isEmpty())
-                    throw new IllegalArgumentException("web_files configration missing, an example: web_files=html,htm,js");
-            }
-
-            String call_server_method_str = prop.getProperty("call_server_method");
-            if (MyStrUtils.isEmpty(call_server_method_str))
-                throw new IllegalArgumentException("call_server_method configration missing");
-            else
-                call_server_method = call_server_method_str;
-
-            api_export_file = prop.getProperty("api_export_file");
-
-            String newFilePath = new File("").getAbsolutePath();
-            newFilePath = MyStrUtils.replace(newFilePath, "\\", "/");
-            backend_folder = MyStrUtils.substringBefore(newFilePath, "/target");
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
@@ -116,6 +47,70 @@ public class MyServerlessEnv {// NOSONAR
                 e.printStackTrace();
             }
         }
+    }
+
+    // product or develop. If set to true will return debug info to front end
+    public static final boolean allow_debug_info = "true".equalsIgnoreCase(prop.getProperty("allow_debug_info"));
+
+    // product or develop. If set to product, reject receive SQL and Java from front end
+    public static final String stage = prop.getProperty("stage");
+
+    public static final boolean is_product_stage = "product".equalsIgnoreCase(stage);
+
+    // if export java class source file in classes/.../deploy folder, default is false
+    public static final boolean allow_java_file_export = "true".equalsIgnoreCase(prop.getProperty("allow_java_file_export"));
+
+    public static final TokenSecurity tokenSecurity; //TokenSecurity class name
+
+    public static final List<String> web_files = new ArrayList<String>(); //html, htm, jsp, js, php 
+
+    public static final Map<String, Class<?>> methodTemplates = new HashMap<String, Class<?>>();
+
+    // deploy package name, store dynamic generated classed
+    public static final String deploy_package = prop.getProperty("deploy_package");
+
+    public static final String backend_folder; // absolute path of backend folder
+
+    public static final String call_server_method = prop.getProperty("call_server_method"); //if change setting in properties file, also need change myserverless.js file
+
+    public static final String api_export_file = prop.getProperty("api_export_file"); //API export file name, default is empty
+
+    //http header setting
+    public static final String Access_Control_Allow_Origin = prop.getProperty("Access_Control_Allow_Origin");
+    public static final String Access_Control_Allow_Methods = prop.getProperty("Access_Control_Allow_Methods");
+    public static final String Access_Control_Max_Age = prop.getProperty("Access_Control_Max_Age");
+    public static final String Access_Control_Allow_Headers = prop.getProperty("Access_Control_Allow_Headers");
+    public static final String Access_Control_Allow_Credentials = prop.getProperty("Access_Control_Allow_Credentials");
+
+    static {
+        if (!("product".equalsIgnoreCase(stage) || "develop".equalsIgnoreCase(stage)))
+            throw new IllegalArgumentException("In myserverless.properties, stage can only be develop or product");
+
+        try {
+            String token_security = prop.getProperty("token_security");
+            tokenSecurity = (TokenSecurity) Class.forName(token_security).newInstance();
+        } catch (Exception e) {
+            System.err.println("Error: token_security setting in myserverless.properties not right, should be a class name, like com.xx.Xxxx");
+            throw new RuntimeException(e);
+        }
+
+        String web_files_str = prop.getProperty("web_files");
+        if (MyStrUtils.isEmpty(web_files_str)) {
+            throw new IllegalArgumentException("web_files configration missing, an example: web_files=html,htm,js");
+        } else {
+            String[] splited = MyStrUtils.split(",", web_files_str);
+            for (String s : splited)
+                web_files.add(MyStrUtils.trimAllWhitespace(s));
+            if (web_files.isEmpty())
+                throw new IllegalArgumentException("web_files configration missing, an example: web_files=html,htm,js");
+        }
+
+        if (MyStrUtils.isEmpty(call_server_method))
+            throw new IllegalArgumentException("call_server_method configration missing");
+
+        String newFilePath = new File("").getAbsolutePath();
+        newFilePath = MyStrUtils.replace(newFilePath, "\\", "/");
+        backend_folder = MyStrUtils.substringBefore(newFilePath, "/target");
     }
 
     /**
@@ -136,7 +131,7 @@ public class MyServerlessEnv {// NOSONAR
             return null;
         if (!MyStrUtils.isLegalClassName(sqlJavaPiece))
             return null;
-        return ClassExistCacheUtils.checkClassExist(new StringBuilder(MyServerlessEnv.getDeployPackage()).append(".").append(sqlJavaPiece).toString());
+        return ClassExistCacheUtils.checkClassExist(new StringBuilder(MyServerlessEnv.deploy_package).append(".").append(sqlJavaPiece).toString());
     }
 
     public static String getClassLoaderFolder() {
@@ -154,69 +149,24 @@ public class MyServerlessEnv {// NOSONAR
     }
 
     public static String getSrcDeployFolder() {
-        return getBackendFolder() + "/src/main/java/" + MyStrUtils.replace(deploy_package, ".", "/");
+        return backend_folder + "/src/main/java/" + MyStrUtils.replace(deploy_package, ".", "/");
     }
 
     public static String getFrontendFolder() {
-        String s = MyStrUtils.substringBeforeLast(getBackendFolder(), "backend");
+        String s = MyStrUtils.substringBeforeLast(backend_folder, "backend");
         return s + "frontend";
     }
 
     public static String[] getSrcWebappFolders() {
-        return new String[]{getBackendFolder() + "/src/main/webapp", getFrontendFolder() + "/src", getFrontendFolder() + "/public"};
+        return new String[]{backend_folder + "/src/main/webapp", getFrontendFolder() + "/src", getFrontendFolder() + "/public"};
     }
 
     public static boolean isWebFile(String filename) {
-        for (String web_file : MyServerlessEnv.getWebFiles())
+        for (String web_file : MyServerlessEnv.web_files)
             if (filename.endsWith("." + web_file)) {
                 return true;
             }
         return false;
     }
 
-    // ==========getter & setter =============
-
-    public static Map<String, Class<?>> getMethodTemplates() {
-        return methodTemplates;
-    }
-
-    public static String getDeployPackage() {
-        return deploy_package;
-    }
-
-    public static String getBackendFolder() {
-        return backend_folder;
-    }
-
-    public static boolean isProductStage() {
-        return is_product_stage;
-    }
-
-    public static boolean isDevelopStage() {
-        return !is_product_stage;
-    }
-
-    public static boolean isDebugInfo() {
-        return debug_info;
-    }
-
-    public static boolean isJavaFileExport() {
-        return java_file_export;
-    }
-
-    public static TokenSecurity getTokenSecurity() {
-        return tokenSecurity;
-    }
-
-    public static List<String> getWebFiles() {
-        return web_files;
-    }
-
-    public static String getCallDeployedMethodName() {
-        return call_server_method;
-    }
-
-    public static String getApiExportFile() {
-        return api_export_file;
-    }
 }

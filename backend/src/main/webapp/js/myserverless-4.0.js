@@ -5,7 +5,7 @@ async function fetchJSon(methodName, text, args){//异步ajax
 	let bodyJsonStr=getBodyJsonStr(methodName, text, args);
 	  try{ 
 		  //m参数只是给开发者用来区分API用的，后端不需要，布署时可以去掉这个参数
-		  let response= await fetch(host+"/myserverless.do?m="+methodInfo(methodName, text), {
+		  let response= await fetch(host+"/my.do?m="+methodInfo(methodName, text), {
 			    method : "POST",
 			    mode: "cors",
 				headers: {"Accept":"application/json", "Content-Type": "application/json;charset=utf-8"},
@@ -22,7 +22,7 @@ async function fetchJSon(methodName, text, args){//异步ajax
 function syncXhrJSon(methodName, text, args){//同步ajax
 	let bodyJsonStr=getBodyJsonStr(methodName, text, args);
 	let xhr = new XMLHttpRequest(); 
-	xhr.open("POST", host+"/myserverless.do?m="+methodInfo(methodName, text), false); 
+	xhr.open("POST", host+"/my.do?m="+methodInfo(methodName, text), false); 
 	xhr.setRequestHeader("Content-Type","application/json;charset=utf-8");
 	xhr.setRequestHeader("Accept","application/json");
 	//xhr.withCredentials = true;
@@ -38,26 +38,13 @@ function syncXhrJSon(methodName, text, args){//同步ajax
 	}
 }
 
-function getMyToken() {//服务端设定httponly则cookie拿不到myToken, 这个方法待删
-	let myToken = localStorage.getItem("myToken");
-	if(myToken!=null)
-	   return myToken;
-	let getCookie = document.cookie.replace(/[ ]/g, "");
-	let arrCookie = getCookie.split(";") 
-	let tips=null;
-	for (let i = 0; i < arrCookie.length; i++) {
-		let arr = arrCookie[i].split("=");
-		if ("myToken" == arr[0])  
-			 return arr[1];  
-	}
-	return tips;
-}
-
 function getBodyJsonStr(methodName, text, args){
-	let bodyJson= {"remoteMethod":methodName,"$0": text};
+	let bodyJson= {"$0": text};
+	if(methodName)
+	   bodyJson= {"remoteMethod":methodName,"$0": text};
 	for (let i = 1; i < args.length; i++) 
 		   bodyJson["$"+i]=args[i]; 
-	if (window.localStorage)  
+	if (window.localStorage && localStorage.getItem("myToken"))  
 		   bodyJson["myToken"]=localStorage.getItem("myToken");  
 	return JSON.stringify(bodyJson);
 }
@@ -84,8 +71,8 @@ function methodInfo(methodName, text){ //methodInfo参数加在url中，这个�
 		
 
 //异步方法
-async function $myServJson(text){return await fetchJSon("", text, arguments); }
-async function data$myServJson(text){let json= await fetchJSon("", text, arguments); return json.data; }
+async function $myServerless(text){return await fetchJSon("", text, arguments); }
+async function data$myServerless(text){let json= await fetchJSon("", text, arguments); return json.data; }
 
 async function $java(text) { 				return await fetchJSon("java", text, arguments); } 
 async function $javaTx(text) {				return await fetchJSon("javaTx", text, arguments);} 
@@ -112,8 +99,8 @@ async function data$qryEntity(text) {		let json= await fetchJSon("qryEntity", te
 async function data$qryEntityList(text) {	let json= await fetchJSon("qryEntityList", text, arguments); return json.data;}
 
 //同步方法
-function sync$myServJson(text){			return  syncXhrJSon("", text, arguments); }
-function syncData$myServJson(text){		return  syncXhrJSon("", text, arguments).data; }
+function sync$myServerless(text){			return  syncXhrJSon("", text, arguments); }
+function syncData$myServerless(text){		return  syncXhrJSon("", text, arguments).data; }
 
 function sync$java(text) { 				return syncXhrJSon("java", text, arguments); }
 function sync$javaTx(text) {			return syncXhrJSon("javaTx", text, arguments); }

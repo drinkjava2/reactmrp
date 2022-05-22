@@ -145,7 +145,7 @@ public class DynamicCompileEngine {
             String fileName = path + MyStrUtils.replace(fullClassName, ".", "/") + ".class";
             MyFileUtils.writeFile(fileName, jco.getBytes());
 
-            if (MyServerlessEnv.isJavaFileExport()) {
+            if (MyServerlessEnv.allow_java_file_export) {
                 fileName = path + MyStrUtils.replace(fullClassName, ".", "/") + ".java";
                 MyFileUtils.writeFile(fileName, javaCode, "utf-8");
             }

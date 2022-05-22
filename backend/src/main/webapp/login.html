@@ -75,22 +75,31 @@ input{
 	<script> 
 	 function domValById(id){return document.getElementById(id).value;}
 	 
-	  function doLogin(){ 
-		var result =syncData$myServJson(`BackendPublic$Login`
+	 function cookieLogin(){ 
+		var result =syncData$myServerless(`BackendPublic$CookieLogin`
 		            , domValById("userId"), domValById("password"));
-		if("success"==result){
-			//localStorage.setItem("myToken", myToken);  //token也可以放localStorage里，两个都支持，但缺省用cookie方式，更安全一些
+		if(result==true){
 		   window.location.href="/welcome.html";
 		} else
 			document.getElementById("msg").innerHTML="Wrong userId or password.";
 	 } 
+		 
+	 function tokenLogin(){ //这是另一种登录方式，token也可以放localStorage里，但没cookie安全
+		var myToken =syncData$myServerless(`BackendPublic$TokenLogin`
+					, domValById("userId"), domValById("password"));
+		if(myToken){
+			localStorage.setItem("myToken", myToken); 
+			window.location.href="/welcome.html";
+		} else
+			document.getElementById("msg").innerHTML="Wrong userId or password.";
+	 }
 	</script>
 	
 	
 	<form id="loginForm" name="loginForm" onsubmit="return false" action="##" method="post">
 		  <input id="userId" type="text" required="required" placeholder="userId" name="userId" value="admin"></input> <br/>
 		  <input id="password" type="password" required="required" placeholder="password" name="password" value="123"></input>
-		  <button class="but" name="submit" onclick="doLogin()">Login</button>
+		  <button class="but" name="submit" onclick="cookieLogin()">Login</button>
 	</form>
 	</div>
 </body>

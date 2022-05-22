@@ -55,7 +55,7 @@ public class MainApp {
         Undertow server = Undertow.builder().addHttpListener(port, "localhost").setHandler(manager.start()).build();
         server.start();
 
-        try {
+        try { 
             Runtime.getRuntime().exec("cmd /c start http://127.0.0.1:"+port+"/"); //如果在windows下调用缺省browser
         } catch (Exception e) {
         }

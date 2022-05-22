@@ -20,6 +20,8 @@ public class User implements ActiveEntity<User> {
 
     @COLUMN(length = 20)
     private String mobilePhone;
+    
+    private Integer age=10;
 
     public String getUserId() {
         return userId;
@@ -54,6 +56,15 @@ public class User implements ActiveEntity<User> {
 
     public User setMobilePhone(String mobilePhone) {
         this.mobilePhone = mobilePhone;
+        return this;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public User setAge(Integer age) {
+        this.age = age;
         return this;
     }
 

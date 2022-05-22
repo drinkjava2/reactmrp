@@ -35,16 +35,21 @@ import com.github.drinkjava2.myserverless.util.MyStrUtils;
 @SuppressWarnings("all")
 public class MyServerlessServlet extends HttpServlet {
 
+    private static void setResponseXhrHeaders(HttpServletResponse resp) {
+        resp.addHeader("Access-Control-Allow-Origin", MyServerlessEnv.Access_Control_Allow_Origin); 
+        resp.addHeader("Access-Control-Allow-Methods", MyServerlessEnv.Access_Control_Allow_Methods);
+        resp.addHeader("Access-Control-Max-Age", MyServerlessEnv.Access_Control_Max_Age);
+        resp.addHeader("Access-Control-Allow-Headers", MyServerlessEnv.Access_Control_Allow_Headers); 
+        resp.addHeader("Access-Control-Allow-Credentials", MyServerlessEnv.Access_Control_Allow_Credentials);
+    };
+    
     @Override 
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException { //CORS options request
-        resp.setHeader("Access-Control-Allow-Origin", "*"); //allow cross origin access 
-        resp.setHeader("Access-Control-Allow-Methods", "*");
-        resp.setHeader("Access-Control-Max-Age", "1728000");
-        resp.addHeader("Access-Control-Allow-Headers", "*");
-        resp.setHeader("Access-Control-Allow-Credentials", "*");
+        setResponseXhrHeaders(resp);
         resp.setCharacterEncoding("utf-8");
         resp.setStatus(200); 
-    };
+    }
+ 
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -57,14 +62,9 @@ public class MyServerlessServlet extends HttpServlet {
     }
 
     public static void doAction(HttpServletRequest req, HttpServletResponse resp) {
-        //1.if has login parameter, treat it as login method
-        resp.setHeader("Access-Control-Allow-Origin", "*"); //allow cross origin access 
-        resp.setHeader("Access-Control-Allow-Methods", "*");
-        resp.setHeader("Access-Control-Max-Age", "1728000");
-        resp.addHeader("Access-Control-Allow-Headers", "*");
-        resp.setHeader("Access-Control-Allow-Credentials", "*");
+        setResponseXhrHeaders(resp);
         resp.setCharacterEncoding("utf-8");
-
+        
         JsonResult jsonResult = doActionBody(req, resp);
         Integer status = jsonResult.getStatus();
         if (status != null)
@@ -113,6 +113,8 @@ public class MyServerlessServlet extends HttpServlet {
 
         String sqlOrJavaPiece = json.getString("$0");
         String remoteMethod = json.getString("remoteMethod");
+        if(remoteMethod==null)
+            remoteMethod="";
         String myToken = json.getString("myToken");
 
         if (MyStrUtils.isEmpty(myToken) || myToken.length() < 10) {//if myToken is empty or wrong, get from cookie
@@ -131,16 +133,16 @@ public class MyServerlessServlet extends HttpServlet {
         try {
             childClass = MyServerlessEnv.findCachedClass(sqlOrJavaPiece);
             if (childClass == null) {
-                if (MyServerlessEnv.isProductStage())
+                if (MyServerlessEnv.is_product_stage)
                     return JsonResult.json403("Error: in product stage but not found class on server.", req, json);
 
                 PieceType pieceType = PieceType.byRemoteMethodName(remoteMethod);
-                Class<?> templateClass = MyServerlessEnv.getMethodTemplates().get(remoteMethod);
+                Class<?> templateClass = MyServerlessEnv.methodTemplates.get(remoteMethod);
                 if (templateClass == null)
-                    return JsonResult.json403("Error: template class for remote method '" + remoteMethod + "' not found.", req, json);
+                    return JsonResult.json403("Error: server method '" + remoteMethod + "' not found.", req, json);
                 SqlJavaPiece piece = SqlJavaPiece.parseFromFrontText(remoteMethod, sqlOrJavaPiece);
                 String classSrc = SrcBuilder.createSourceCode(templateClass, pieceType, piece);
-                childClass = DynamicCompileEngine.instance.javaCodeToClass(MyServerlessEnv.getDeployPackage() + "." + piece.getClassName(), classSrc);
+                childClass = DynamicCompileEngine.instance.javaCodeToClass(MyServerlessEnv.deploy_package + "." + piece.getClassName(), classSrc);
             }
             if (childClass == null) //still is null
                 return JsonResult.json403("Error: compile failed on server side.", req, json);
@@ -148,12 +150,12 @@ public class MyServerlessServlet extends HttpServlet {
             String methodId = MyStrUtils.substringBefore(childClass.getName(), "_");
             methodId = MyStrUtils.substringAfterLast(methodId, ".");
 
-            if (!MyServerlessEnv.getTokenSecurity().allow(myToken, methodId)) //重要，在这里调用系统配置的TokenSecurity进行权限检查
+            if (!MyServerlessEnv.tokenSecurity.allow(myToken, methodId)) //重要，在这里调用系统配置的TokenSecurity进行权限检查
                 return JsonResult.json403("Error: no privilege to execute '" + methodId + "' method", req, json);
 
             BaseTemplate instance = null;
             if (BaseTemplate.class.isAssignableFrom(childClass)) {
-                instance = (BaseTemplate) childClass.newInstance(); //这里只能用newInstance生成多例，如果要采用单例模式虽然可以节省一点内存，但是req、rep、json只能放在线程变量里传递太麻烦
+                    instance = (BaseTemplate) childClass.newInstance(); //这里只能用newInstance生成多例，如果要采用单例模式虽然可以节省一点内存，但是req、rep、json只能放在线程变量里传递太麻烦
             } else
                 return JsonResult.json403("Error: incorrect MyServerless child template error.", req, json);
 
@@ -162,7 +164,7 @@ public class MyServerlessServlet extends HttpServlet {
             return instance.execute();
         } catch (Exception e) {
             e.printStackTrace();
-            if (MyServerlessEnv.isDebugInfo()) //if debugInfo is true, will put exception message and debug info in JSON
+            if (MyServerlessEnv.allow_debug_info) //if debugInfo is true, will put exception message and debug info in JSON
                 return new JsonResult(403, "Error: server internal error.").setStatus(403).setDebugInfo(JsonResult.getDebugInfo(req, json) + "\n" + e.getMessage());
             else
                 return JsonResult.json403("Error: server internal error.", req, json);
