@@ -18,20 +18,20 @@ package com.github.drinkjava2.myserverless;
 public interface TokenSecurity {
 
     /**
-     * According given username and password, create a token string, return null if password is not right
-     * @param username 
+     * According given userId and password, create a myToken string, return null if password is not right
+     * @param userId 
      * @param password 
-     * @return token or null
+     * @return myToken or null
      */
-    public String login(String username, String password); 
+    public String login(String userId, String password); 
 
     /**
-     * By given token and MyServerless methodId, check if allow execute
+     * By given myToken and MyServerless methodId, check if allow execute
      * 
-     * @param token
+     * @param myToken
      * @param methodId
      * @return true if allow execute
      */
-    public boolean allow(String token, String methodId);
+    public boolean allow(String myToken, String methodId);
 
 }

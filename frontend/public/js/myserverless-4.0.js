@@ -1,9 +1,11 @@
+const host="http://localhost:8001";
+
 // Return example: {"code":200, "msg":"sucess", data:"foo", debugInfo:"bar"}
 async function fetchJSon(methodName, text, args){//异步ajax
 	let bodyJsonStr=getBodyJsonStr(methodName, text, args);
 	  try{ 
 		  //m参数只是给开发者用来区分API用的，后端不需要，布署时可以去掉这个参数
-		  let response= await fetch("http://localhost:8001/myserverless.do?m="+methodInfo(methodName, text), {
+		  let response= await fetch(host+"/myserverless.do?m="+methodInfo(methodName, text), {
 			    method : "POST",
 			    mode: "cors",
 				headers: {"Accept":"application/json", "Content-Type": "application/json;charset=utf-8"},
@@ -20,7 +22,7 @@ async function fetchJSon(methodName, text, args){//异步ajax
 function syncXhrJSon(methodName, text, args){//同步ajax
 	let bodyJsonStr=getBodyJsonStr(methodName, text, args);
 	let xhr = new XMLHttpRequest(); 
-	xhr.open("POST", "http://localhost:8001/myserverless.do?m="+methodInfo(methodName, text), false); 
+	xhr.open("POST", host+"/myserverless.do?m="+methodInfo(methodName, text), false); 
 	xhr.setRequestHeader("Content-Type","application/json;charset=utf-8");
 	xhr.setRequestHeader("Accept","application/json");
 	//xhr.withCredentials = true;
@@ -36,12 +38,27 @@ function syncXhrJSon(methodName, text, args){//同步ajax
 	}
 }
 
+function getMyToken() {
+	let myToken = localStorage.getItem("myToken");
+	if(myToken!=null)
+	   return myToken;
+	let getCookie = document.cookie.replace(/[ ]/g, "");
+	let arrCookie = getCookie.split(";") 
+	let tips=null;
+	for (let i = 0; i < arrCookie.length; i++) {
+		let arr = arrCookie[i].split("=");
+		if ("myToken" == arr[0])  
+			 return arr[1];  
+	}
+	return tips;
+}
+
 function getBodyJsonStr(methodName, text, args){
 	let bodyJson= {"remoteMethod":methodName,"$0": text};
 	for (let i = 1; i < args.length; i++) 
 		   bodyJson["$"+i]=args[i]; 
 	if (window.localStorage)  
-		   bodyJson["token"]=localStorage.getItem("token");  
+		   bodyJson["myToken"]=localStorage.getItem("myToken");  
 	return JSON.stringify(bodyJson);
 }
 

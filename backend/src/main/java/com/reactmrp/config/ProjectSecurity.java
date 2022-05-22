@@ -27,63 +27,71 @@ import com.reactmrp.entity.User;
  * @since 1.0.0
  */
 public class ProjectSecurity implements TokenSecurity {
+    //重要： 每当有人员、角色、权限变动时，都要调用userPowerCache.clearCache()清空缓存防止脏数据
+    private static SimpleCacheHandler userPowerCache = new SimpleCacheHandler(300, 100 * 24 * 60 * 60);//缺省最多同时保存300个用户的权限表, 100天过期
+    
+    //重要： 每当有user登录、注销时，都要调用userTokenCache.clearCache()清空缓存防止脏数据
+    private static SimpleCacheHandler userTokenCache = new SimpleCacheHandler(300, 100 * 24 * 60 * 60);//缺省最多同时保存300个用户的token, 100天过期
 
+    
     public static String encodePassword(String password) {
         return MD5Util.encryptMD5("theSalt" + password);
     }
 
     @Override
-    public String login(String userName, String password) {
-        if (MyStrUtils.isEmpty(userName) || MyStrUtils.isEmpty(password))
+    public String login(String userId, String password) { 
+        if (MyStrUtils.isEmpty(userId) || MyStrUtils.isEmpty(password))
             return null;
-        List<User> users = DB.entityFindBySample(new User().setUserName(userName).setPassword(encodePassword(password)));
+        List<User> users = DB.entityFindBySample(new User().setUserId(userId).setPassword(encodePassword(password)));
         if (users.size() != 1)
             return null;
-        String token = userName + "_" + StrUtils.getRandomString(50);
-        new User().setUserName(userName).setToken(token).update(DB.IGNORE_EMPTY);
-        return token;
+        String myToken = userId+ "_" + StrUtils.getRandomString(50);
+        userTokenCache.clearCache();
+        new User().setUserId(userId).setMyToken(myToken).update(DB.IGNORE_EMPTY);
+        return myToken;
     }
 
-    //1.重要： 每当有人员、角色、权限变动时，都要调用clearCache清空缓存防止脏数据
-    //2.MRP系统另起守护线程，在每天或每周5晚12点清空所有user的token，并清空这些cache，强制用户下次必须重新登录
-    //3.缓存的大小取决于有多少个用户，MRP系统通常用户数不超过1000
-    private static SimpleCacheHandler userPowerCache = new SimpleCacheHandler(300, 100 * 24 * 60 * 60);//缺省最多同时保存300个token, 100天过期
 
     /** clearCache  */
-    public static void clearCache() {
+    public static void clearUserPowerCache() {
         userPowerCache.clearCache();
     }
 
     @Override
-    public boolean allow(String token, String methodId) {
-        return ifAllow(token, methodId);
+    public boolean allow(String myToken, String methodId) {
+        return ifAllow(myToken, methodId);
     }
 
-    public static boolean ifLogin(String token) {
-        token=MyStrUtils.trimAllWhitespace(token);
-        if(MyStrUtils.isEmpty(token) || token.length()<10)
+    public static boolean isValidToken(String myToken) { 
+        myToken=MyStrUtils.trimAllWhitespace(myToken);
+        if(MyStrUtils.isEmpty(myToken) || myToken.length()<10)
             return false;
-        String userName = DB.qryString("select userName from users where token=", DB.que(token));
-        return !(MyStrUtils.isEmpty(userName));
+        String userId = DB.qryString(userTokenCache, "select userId from users where myToken=", DB.que(myToken));
+        return !(MyStrUtils.isEmpty(userId));
     }
     
-    public static boolean ifAllow(String token, String methodId) {
+    public static void logout(String myToken) {
+        DB.exe("update users set myToken=null where myToken=", DB.que(myToken));
+        userTokenCache.clearCache();
+    }
+    
+    public static boolean ifAllow(String myToken, String methodId) {
         //只要方法id里包含public（不分大小写)都允许执行，通常是固定放在后端的方法，即BackendPublicxxx之类的。  在部署时要检查，所有的public方法都必须是允许不登录就允许执行的
         if (MyStrUtils.containsIgnoreCase(methodId, "public"))
             return true;
 
         //检查是否token存在
-        String userName = DB.qryString("select userName from users where token=", DB.que(token));
-        if (MyStrUtils.isEmpty(userName))
+        String userId = DB.qryString(userTokenCache, "select userId from users where myToken=", DB.que(myToken));
+        if (MyStrUtils.isEmpty(userId))
             return false;
 
         //获取用户权限list，注意这里使用了一个缓存，所以每当有人员、角色、权限变动时，都要调用clearCache清空缓存防止脏数据
         List<String> powers = DB.qryList(userPowerCache, "select p.* from users u ", //
-                " left join userrole ur on u.userName=ur.userName ", //
+                " left join userrole ur on u.userId=ur.userId ", //
                 " left join roles r on ur.roleName=r.roleName ", //
                 " left join rolepower rp on rp.roleName=r.roleName ", //
                 " left join powers p on p.powerName=rp.powerName ", //
-                " where u.userName=", DB.que(userName));
+                " where u.userId=", DB.que(userId));
 
         if (powers.size() == 0) //如果什么权限都没有
             return false;

@@ -113,14 +113,14 @@ public class MyServerlessServlet extends HttpServlet {
 
         String sqlOrJavaPiece = json.getString("$0");
         String remoteMethod = json.getString("remoteMethod");
-        String token = json.getString("token");
+        String myToken = json.getString("myToken");
 
-        if (MyStrUtils.isEmpty(token) || token.length() < 10) {//if token is empty or wrong, get from cookie
+        if (MyStrUtils.isEmpty(myToken) || myToken.length() < 10) {//if myToken is empty or wrong, get from cookie
             Cookie[] cookies = req.getCookies();
             if (cookies != null && cookies.length > 0)
                 for (Cookie cookie : cookies) {
-                    if ("token".equals(cookie.getName()))
-                        token = cookie.getValue();
+                    if ("myToken".equals(cookie.getName()))
+                        myToken = cookie.getValue();
                 }
         }
 
@@ -148,18 +148,16 @@ public class MyServerlessServlet extends HttpServlet {
             String methodId = MyStrUtils.substringBefore(childClass.getName(), "_");
             methodId = MyStrUtils.substringAfterLast(methodId, ".");
 
-            if (!MyServerlessEnv.getTokenSecurity().allow(token, methodId)) //重要，在这里调用系统配置的TokenSecurity进行权限检查
+            if (!MyServerlessEnv.getTokenSecurity().allow(myToken, methodId)) //重要，在这里调用系统配置的TokenSecurity进行权限检查
                 return JsonResult.json403("Error: no privilege to execute '" + methodId + "' method", req, json);
 
             BaseTemplate instance = null;
             if (BaseTemplate.class.isAssignableFrom(childClass)) {
-                instance = (BaseTemplate) childClass.newInstance(); //这里只能用newInstance生成多例，否则req、rep、json要作为参数传递进单例
+                instance = (BaseTemplate) childClass.newInstance(); //这里只能用newInstance生成多例，如果要采用单例模式虽然可以节省一点内存，但是req、rep、json只能放在线程变量里传递太麻烦
             } else
                 return JsonResult.json403("Error: incorrect MyServerless child template error.", req, json);
 
-            instance.initParams(req, resp, json, token);
-
-            //Here do token check
+            instance.initParams(req, resp, json, myToken);
 
             return instance.execute();
         } catch (Exception e) {

@@ -76,20 +76,19 @@ input{
 	 function domValById(id){return document.getElementById(id).value;}
 	 
 	  function doLogin(){ 
-		var token =syncData$myServJson(`BackendPublic$Login`
-		            , domValById("username"), domValById("password"));
-		if(token){
-			localStorage.setItem("token", token);  //token放cookie或localStorage两个都支持，cookie更安全一些
-			//document.cookie = 'token='+token+";SameSite=Lax";
-		    window.location.href="/welcome.html";
+		var result =syncData$myServJson(`BackendPublic$Login`
+		            , domValById("userId"), domValById("password"));
+		if("success"==result){
+			//localStorage.setItem("myToken", myToken);  //token也可以放localStorage里，两个都支持，但缺省用cookie方式，更安全一些
+		   window.location.href="/welcome.html";
 		} else
-			document.getElementById("msg").innerHTML="Wrong username or password.";
+			document.getElementById("msg").innerHTML="Wrong userId or password.";
 	 } 
 	</script>
 	
 	
 	<form id="loginForm" name="loginForm" onsubmit="return false" action="##" method="post">
-		  <input id="username" type="text" required="required" placeholder="username" name=""username"" value="admin"></input> <br/>
+		  <input id="userId" type="text" required="required" placeholder="userId" name="userId" value="admin"></input> <br/>
 		  <input id="password" type="password" required="required" placeholder="password" name="password" value="123"></input>
 		  <button class="but" name="submit" onclick="doLogin()">Login</button>
 	</form>

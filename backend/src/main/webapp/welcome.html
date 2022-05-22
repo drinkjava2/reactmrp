@@ -33,7 +33,9 @@ section header {
  <script>
       var result=syncData$myServJson(`BackendPublic$CheckLogin`);
       if(!(result===true))
-    	  window.location.href="/login.html";
+		  window.location.href="/login.html";
+	  let myToken=getMyToken();
+	  console.log("the myToken="+myToken);	  
 </script>
     
 	
@@ -45,12 +47,12 @@ section header {
 	 
 	 
 	 <script>
-	  $qryMapList(`#UserRead select userName from users order by userName`).then(json=>{
+	  $qryMapList(`#UserRead select userId from users order by userId`).then(json=>{
 	      if(json.code==200){
 		     let users=json.data;
 		     let html="User List:<br/>";
   		     for(let i=0;i<users.length;i++) 
-			 html+="userName:" +  users[i].userName+"<br/>"; 
+			 html+="userId:" +  users[i].userId+"<br/>"; 
 			 document.getElementById("Users").innerHTML=html;
 	      }  
 	  });

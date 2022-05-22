@@ -10,23 +10,23 @@ public class User implements ActiveEntity<User> {
 
     @Id
     @COLUMN(length = 32)
-    private String userName; //本项目数据库列命名和实体属性完全一致,即数据库中也是userName这种列名
+    private String userId; //本项目数据库列命名和实体属性完全一致,即数据库中也是userId这种列名
 
     @COLUMN(length = 32)
     private String password;
 
     @COLUMN(length = 200)
-    private String token; //每登录一次就生成一个随机token
+    private String myToken; //每登录一次就生成一个随机myToken
 
     @COLUMN(length = 20)
     private String mobilePhone;
 
-    public String getUserName() {
-        return userName;
+    public String getUserId() {
+        return userId;
     }
 
-    public User setUserName(String userName) {
-        this.userName = userName;
+    public User setUserId(String userId) {
+        this.userId = userId;
         return this;
     }
 
@@ -39,12 +39,12 @@ public class User implements ActiveEntity<User> {
         return this;
     }
 
-    public String getToken() {
-        return token;
+    public String getMyToken() {
+        return myToken;
     }
 
-    public User setToken(String token) {
-        this.token = token;
+    public User setMyToken(String myToken) {
+        this.myToken = myToken;
         return this;
     }
 

@@ -7,33 +7,58 @@
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="react-antd-admin-template" />
     <title>react-mrp</title>
-    <script src="/js/myserverless-4.0.js"></script>
+    <script src="./js/myserverless-4.0.js"></script>
   </head>
   <body>
-    <p id="Users"></p>
+    <p id="Users1"></p>
+    <p id="Users2"></p>
+    <p id="Users3"></p>
+    <p id="Users4"></p>
 
 	 <script>
-          console.log("==========");
-	  let json=sync$qryMapList(`#public select userName from users order by userName`);
-          console.log(json);
-	      if(json.code==200){
-		     let users=json.data;
-		     let html="User List:<br/>";
-  		     for(let i=0;i<users.length;i++) 
-			 html+="userName:" +  users[i].userName+"<br/>"; 
-			 document.getElementById("Users").innerHTML=html;
-	      }  
+	//    let token = getMyServToken();
+	//    if(token==null)
+	//      {
+	// 		token =syncData$myServJson(`BackendPublic$Login`
+	// 						, "admin", "123");
+	// 			if(token){
+	// 				console.log("will set token="+token);
+	// 				//localStorage.setItem("token", token);  //token放cookie或localStorage两个都支持，cookie更安全一些
+	// 				document.cookie = 'token='+token+";SameSite=Lax";
+	// 			} else console("login fail");  
+	// 	}
+	 	      
+    //    console.log("token="+token);
+	//   let json=sync$qryMapList(`#UserUpdate select userId from users order by userId`);
+    //       if(json.code==200){
+  	// 	  let users=json.data;
+	// 	  let html="User List:<br/>";
+	//   	  for(let i=0;i<users.length;i++) 
+	// 		html+="userId:" +  users[i].userId+"<br/>"; 
+	// 	  document.getElementById("Users1").innerHTML=html;
+	//    }
 
-	  $qryMapList(`#public select userName from users order by userName`).then(json=>{
-          console.log(json);
-	      if(json.code==200){
-		     let users=json.data;
-		     let html="User List:<br/>";
-  		     for(let i=0;i<users.length;i++) 
-			 html+="userName:" +  users[i].userName+"<br/>"; 
-			 document.getElementById("Users").innerHTML=html;
-	      }  
-          })
+	//   let users=syncData$qryMapList(`#public select userId from users where age>? order by userId`,  5);
+	//   let html="User List:<br/>";
+  	//   for(let i=0;i<users.length;i++) 
+	// 	html+="userId:" +  users[i].userId+"<br/>"; 
+	//   document.getElementById("Users2").innerHTML=html;
+
+	//   $qryMapList(`#public select userId from users order  by userId`).then(json=>{
+	//       if(json.code!=200) return;
+	//       let users=json.data;
+	//       let html="User List:<br/>";
+  	//       for(let i=0;i<users.length;i++) 
+	// 	    html+="userId:" +  users[i].userId+"<br/>"; 
+	//       document.getElementById("Users3").innerHTML=html;
+    //       })
+
+	//   data$qryMapList(`#public select userId from users order by userId`).then(users=>{
+	//       let html="User List:<br/>";
+  	//       for(let i=0;i<users.length;i++) 
+	// 	    html+="userId:" +  users[i].userId+"<br/>"; 
+	//       document.getElementById("Users4").innerHTML=html;
+    //       })
 	</script>
 	
     <div id="root"></div>

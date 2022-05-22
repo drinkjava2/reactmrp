@@ -7,21 +7,21 @@ import com.github.drinkjava2.jsqlbox.ActiveEntity;
 
 public class UserRole implements ActiveEntity<UserRole> {
     @Id
-    @SingleFKey(refs = {"users", "userName"})
+    @SingleFKey(refs = {"users", "userId"})
     @COLUMN(length = 32)
-    private String userName;
+    private String userId;
 
     @Id
     @SingleFKey(refs = {"roles", "roleName"})
     @COLUMN(length = 32)
     private String roleName;
 
-    public String getUserName() {
-        return userName;
+    public String getUserId() {
+        return userId;
     }
 
-    public UserRole setUserName(String userName) {
-        this.userName = userName;
+    public UserRole setUserId(String userId) {
+        this.userId = userId;
         return this;
     }
 

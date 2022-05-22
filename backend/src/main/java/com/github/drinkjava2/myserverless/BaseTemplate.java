@@ -47,7 +47,7 @@ public abstract class BaseTemplate {
 
     protected JSONObject json; // json instance
     
-    protected String token; // current token
+    protected String myToken; // current myToken
 
     protected String $0;
     protected String $1;
@@ -71,11 +71,11 @@ public abstract class BaseTemplate {
     protected String $19;
     protected String $20;
 
-    public void initParams(HttpServletRequest request, HttpServletResponse response, JSONObject json, String token) {
+    public void initParams(HttpServletRequest request, HttpServletResponse response, JSONObject json, String myToken) {
         this.request = request;
         this.response = response;
         this.json = json;
-        this.token = token;
+        this.myToken = myToken;
 
         $0 = json.getString("$0");
         $1 = json.getString("$1");

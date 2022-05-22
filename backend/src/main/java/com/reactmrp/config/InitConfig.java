@@ -103,10 +103,10 @@ public class InitConfig extends HttpServlet {
 
     public static void insertUserAndPowers() {//插入用户、角色、权限
         //新建用户 
-        new User().setUserName("developer").setPassword(ProjectSecurity.encodePassword("123")).insert();
-        new User().setUserName("admin").setPassword(ProjectSecurity.encodePassword("123")).insert();
-        new User().setUserName("manager").setPassword(ProjectSecurity.encodePassword("123")).insert();
-        new User().setUserName("user").setPassword(ProjectSecurity.encodePassword("123")).insert();
+        new User().setUserId("developer").setPassword(ProjectSecurity.encodePassword("123")).insert();
+        new User().setUserId("admin").setPassword(ProjectSecurity.encodePassword("123")).insert();
+        new User().setUserId("manager").setPassword(ProjectSecurity.encodePassword("123")).insert();
+        new User().setUserId("user").setPassword(ProjectSecurity.encodePassword("123")).insert();
 
         //新建角色
         new Role().setRoleName("developerRole").insert();
@@ -124,11 +124,11 @@ public class InitConfig extends HttpServlet {
         new Power().setPowerName("OrderRead").insert();
 
         //给用户添加角色
-        UserRole ur = new UserRole().setUserName("developer").setRoleName("developerRole").insert() //
+        UserRole ur = new UserRole().setUserId("developer").setRoleName("developerRole").insert() //
                 .setRoleName("adminRole").insert(); //developer用户通常同时具有developerRole和adminRole两个角色
-        ur.setUserName("admin").setRoleName("adminRole").insert();
-        ur.setUserName("manager").setRoleName("managerRole").insert();
-        ur.setUserName("user").setRoleName("userRole").insert();
+        ur.setUserId("admin").setRoleName("adminRole").insert();
+        ur.setUserId("manager").setRoleName("managerRole").insert();
+        ur.setUserId("user").setRoleName("userRole").insert();
 
         //给角色添加行为权限
         RolePower ra = new RolePower().setRoleName("developerRole").setPowerName("DevelopDynamicCompile").insert();//developerRole本身只需要一个权限，就是允许动态编译前端代码
@@ -157,11 +157,11 @@ public class InitConfig extends HttpServlet {
         initDataBase();
         insertUserAndPowers();
         List<String> powers = DB.qryList("select p.* from users u ", //
-                " left join userrole ur on u.userName=ur.userName ", //
+                " left join userrole ur on u.userId=ur.userId ", //
                 " left join roles r on ur.roleName=r.roleName ", //
                 " left join rolepower rp on rp.roleName=r.roleName ", //
                 " left join powers p on p.powerName=rp.powerName ", //
-                " where u.userName=", DB.que("admin"));
+                " where u.userId=", DB.que("admin"));
         for (String p : powers) {
             System.out.println(p);
         }
