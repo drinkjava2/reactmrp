@@ -57,7 +57,7 @@ public class Deploy {
             String s = MyFileUtils.readFile(fp, "utf-8");
             if ((fp.endsWith(".js") || fp.endsWith(".jsx")) && s.contains(" from \"@/")) {
                 s = MyStrUtils.replace(s, " from \"@/", " from \"E:/react-mrp/frontend/src/");
-                MyFileUtils.writeFile(file.getAbsolutePath(), s, "utf-8");
+                MyFileUtils.writeAndPrintFilename(file.getAbsolutePath(), s, "utf-8");
                 System.out.println(file.getAbsolutePath());
             }
         }
@@ -70,7 +70,7 @@ public class Deploy {
             String s = MyFileUtils.readFile(fp, "utf-8");
             if ((fp.endsWith(".js") || fp.endsWith(".jsx")) && s.contains(" from \"E:/react-mrp/frontend/src/")) {
                 s = MyStrUtils.replace(s, " from \"E:/react-mrp/frontend/src/", " from \"@/");
-                MyFileUtils.writeFile(file.getAbsolutePath(), s, "utf-8");
+                MyFileUtils.writeAndPrintFilename(file.getAbsolutePath(), s, "utf-8");
                 System.out.println(file.getAbsolutePath());
             }
         }

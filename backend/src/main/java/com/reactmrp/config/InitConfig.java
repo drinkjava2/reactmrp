@@ -31,17 +31,18 @@ import com.reactmrp.entity.Role;
 import com.reactmrp.entity.RolePower;
 import com.reactmrp.entity.User;
 import com.reactmrp.entity.UserRole;
-import com.reactmrp.template.JavaTemplate;
-import com.reactmrp.template.JavaTxTemplate;
-import com.reactmrp.template.QryArrayListTemplate;
-import com.reactmrp.template.QryArrayTemplate;
-import com.reactmrp.template.QryEntityListTemplate;
-import com.reactmrp.template.QryEntityTemplate;
-import com.reactmrp.template.QryListTemplate;
-import com.reactmrp.template.QryMapListTemplate;
-import com.reactmrp.template.QryMapTemplate;
-import com.reactmrp.template.QryObjectTemplate;
-import com.reactmrp.template.QryTitleArrayListTemplate;
+
+import template.JavaTemplate;
+import template.JavaTxTemplate;
+import template.QryArrayListTemplate;
+import template.QryArrayTemplate;
+import template.QryEntityListTemplate;
+import template.QryEntityTemplate;
+import template.QryListTemplate;
+import template.QryMapListTemplate;
+import template.QryMapTemplate;
+import template.QryObjectTemplate;
+import template.QryTitleArrayListTemplate;
 
 /**
  * InitConfig is a servlet, but the static method can also be called directly

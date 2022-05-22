@@ -61,7 +61,7 @@ public class DeployToolUtils {
                 
                 changed = true; 
                 String src = SrcBuilder.createSourceCode(templateClass, PieceType.byRemoteMethodName(remoteMethod), piece);
-                MyFileUtils.writeFile(MyServerlessEnv.getSrcDeployFolder() + "/" + className + ".java", src, "UTF-8");
+                MyFileUtils.writeAndPrintFilename(MyServerlessEnv.getSrcDeployFolder() + "/" + className + ".java", src, "UTF-8");
                 formated = MyStrUtils.replaceFirst(formated, key, "$"+MyServerlessEnv.call_server_method+"(`" + className + "`");
                 
                 piece.setLocation(frontFile.getAbsolutePath());
@@ -70,7 +70,7 @@ public class DeployToolUtils {
 		}
 
 		if (changed) {
-			MyFileUtils.writeFile(frontFile.getAbsolutePath(), formated, "UTF-8");
+			MyFileUtils.writeAndPrintFilename(frontFile.getAbsolutePath(), formated, "UTF-8");
 		}
 	}
 
@@ -158,7 +158,7 @@ public class DeployToolUtils {
         }
 		map.clear();
 		if (changed) {
-			MyFileUtils.writeFile(frontFile.getAbsolutePath(), formated, "UTF-8");
+			MyFileUtils.writeAndPrintFilename(frontFile.getAbsolutePath(), formated, "UTF-8");
 		}
 	}
 

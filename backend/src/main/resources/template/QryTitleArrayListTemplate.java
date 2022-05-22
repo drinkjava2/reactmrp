@@ -1,14 +1,15 @@
-package com.reactmrp.template;
+package template;
 
 import static com.github.drinkjava2.jsqlbox.DB.par;
 import static com.github.drinkjava2.jsqlbox.DB.qry;
-import com.github.drinkjava2.jsqlbox.*;
+import com.github.drinkjava2.myserverless.BaseTemplate;
+import com.github.drinkjava2.jdbpro.handler.TitleArrayListHandler;
+import com.github.drinkjava2.jsqlbox.DB;
 import com.github.drinkjava2.myserverless.BaseTemplate;
 
-import org.apache.commons.dbutils.handlers.ArrayHandler;
 
 @SuppressWarnings("unused")
-public class QryArrayTemplate extends BaseTemplate {
+public class QryTitleArrayListTemplate extends BaseTemplate {
     
 	@Override
 	public Object executeBody() {
@@ -17,9 +18,9 @@ public class QryArrayTemplate extends BaseTemplate {
 		/* MYSERVERLESS BODY END */
 		String[] paramArray = getParamArray();
 		if (paramArray.length == 0)
-			return qry(new ArrayHandler(), sql);
+			return qry(new TitleArrayListHandler(), sql);
 		else
-			return qry(new ArrayHandler(), sql, par((Object[]) paramArray));
+			return qry(new TitleArrayListHandler(), sql, par((Object[]) paramArray));
 	}
 
 }

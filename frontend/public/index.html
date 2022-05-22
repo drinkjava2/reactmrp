@@ -39,7 +39,7 @@
 	   login = syncData$myServerless(`BackendPublic$CheckLogin`);
 	   console.log("checkLogin="+login)
 
-		let json=sync$qryMapList(`#UserUpdate select userId from users order by userId`);
+		let json=sync$myServerless(`UserUpdate_256se96dtzhi0t6wm1dn`);
           if(json.code==200){
   		  let users=json.data;
 		  let html="User List:<br/>";
@@ -48,13 +48,13 @@
 		  document.getElementById("Users1").innerHTML=html;
 	   }
 
-	  let users=syncData$qryMapList(`#public select userId from users where age>? order by userId`,  5);
+	  let users=syncData$myServerless(`public_o6cb7p2futkdy61hp3z8`,  5);
 	  let html="User List:<br/>";
   	  for(let i=0;i<users.length;i++) 
 		html+="userId:" +  users[i].userId+"<br/>"; 
 	  document.getElementById("Users2").innerHTML=html;
 
-	  $qryMapList(`#public select userId from users order  by userId`).then(json=>{
+	  $myServerless(`public_p50gcuvibhaugpstnlmx`).then(json=>{
 	      if(json.code!=200) return;
 	      let users=json.data;
 	      let html="User List:<br/>";
@@ -63,7 +63,7 @@
 	      document.getElementById("Users3").innerHTML=html;
           })
 
-	  data$qryMapList(`#public select userId from users order by userId`).then(users=>{
+	  data$myServerless(`public_1liepmqlm2v74jt5l8fy`).then(users=>{
 	      let html="User List:<br/>";
   	      for(let i=0;i<users.length;i++) 
 		    html+="userId:" +  users[i].userId+"<br/>"; 

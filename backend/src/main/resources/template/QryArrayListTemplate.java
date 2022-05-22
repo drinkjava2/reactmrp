@@ -1,4 +1,4 @@
-package com.reactmrp.template;
+package template;
 
 import static com.github.drinkjava2.jsqlbox.DB.par;
 import static com.github.drinkjava2.jsqlbox.DB.qry;

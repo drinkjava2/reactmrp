@@ -1,4 +1,6 @@
-package com.reactmrp.template;
+package com.reactmrp.deploy;
+
+
 
 import static com.github.drinkjava2.jsqlbox.DB.par;
 import static com.github.drinkjava2.jsqlbox.DB.qryMapList;
@@ -7,12 +9,12 @@ import com.github.drinkjava2.jsqlbox.*;
 import com.github.drinkjava2.myserverless.BaseTemplate;
 
 @SuppressWarnings("unused")
-public class QryMapListTemplate extends BaseTemplate {
+public class public_1liepmqlm2v74jt5l8fy extends template.QryMapListTemplate{
     
 	@Override
 	public Object executeBody() {
 		/* MYSERVERLESS BODY BEGIN */
-		String sql = null;
+		String sql = "select userId from users order by userId";
 		/* MYSERVERLESS BODY END */
 		String[] paramArray = getParamArray();
 		if (paramArray.length == 0)

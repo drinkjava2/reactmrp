@@ -116,7 +116,7 @@ public class DeployTool {
         apiHtml.append("</table>\n" + //
                 "</body>\n" + //
                 "</html>");
-        MyFileUtils.writeFile(MyServerlessEnv.api_export_file, apiHtml.toString(), "UTF-8");
+        MyFileUtils.writeAndPrintFilename(MyServerlessEnv.api_export_file, apiHtml.toString(), "UTF-8");
     }
 
     // ============static methods=============================

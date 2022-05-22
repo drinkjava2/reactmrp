@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * File Utilities usually used inside of compiler
+ * File Utilities usually used inside of of this project
  * 
  * @author Yong Zhu
  * @since 1.0.0
@@ -55,9 +55,13 @@ public class MyFileUtils {
 			}
 		}
 	}
-
-	public static void writeFile(String fileFullPath, String text, String encoding) {
+	
+	public static void writeAndPrintFilename(String fileFullPath, String text, String encoding) {
 	    System.out.println("Write file:"+fileFullPath);
+	    writeFile(fileFullPath, text, encoding);
+	}
+
+	public static void writeFile(String fileFullPath, String text, String encoding) { 
 		File file = new File(fileFullPath);
 		if (!file.getParentFile().exists())
 			file.getParentFile().mkdirs();
