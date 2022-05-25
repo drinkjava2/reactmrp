@@ -45,7 +45,7 @@ section header {
 	 
 	 
 	 <script>
-	  $myServerless(`UserRead_ojoz6b40uk4fc9l5ncd1`).then(json=>{
+	  $qryMapList(`#UserRead select userId from users order by userId`).then(json=>{
 	      if(json.code==200){
 		     let users=json.data;
 		     let html="User List:<br/>";

@@ -5,80 +5,12 @@
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
-    <meta name="description" content="react-antd-admin-template" />
-    <title>react-mrp</title>
-    <script src="./js/myserverless-4.0.js"></script>
+    <meta name="description" content="ReactMRP" />
+    <title>ReactMRP</title>
   </head>
   <body>
-    <p id="Users1"></p>
-    <p id="Users2"></p>
-    <p id="Users3"></p>
-    <p id="Users4"></p>
- 
-	 <script>
-	   let login = syncData$myServerless(`BackendPublic$CheckLogin`);
-	   console.log("checkLogin="+login)
-	   if(!login){
-		// let myToken =  syncData$myServerless(`BackendPublic$CookieLogin`, "admin", "123");
-		// 		if(myToken){
-		// 			console.log("Login success");
-		// 			//location.reload(true);
-		// 		}
-		// 		else 
-		// 		    console.log("Login fail");  
 
-		 let myToken =  syncData$myServerless(`BackendPublic$TokenLogin`, "admin", "123");
-				if(myToken){
-					localStorage.setItem("myToken", myToken); 
-					console.log("Login success");
-				}
-				else 
-				    console.log("Login fail");  
-		}
-
-	   login = syncData$myServerless(`BackendPublic$CheckLogin`);
-	   console.log("checkLogin="+login)
-
-		let json=sync$myServerless(`UserUpdate_256se96dtzhi0t6wm1dn`);
-          if(json.code==200){
-  		  let users=json.data;
-		  let html="User List:<br/>";
-	  	  for(let i=0;i<users.length;i++) 
-			html+="userId:" +  users[i].userId+"<br/>"; 
-		  document.getElementById("Users1").innerHTML=html;
-	   }
-
-	  let users=syncData$myServerless(`public_o6cb7p2futkdy61hp3z8`,  5);
-	  let html="User List:<br/>";
-  	  for(let i=0;i<users.length;i++) 
-		html+="userId:" +  users[i].userId+"<br/>"; 
-	  document.getElementById("Users2").innerHTML=html;
-
-	  $myServerless(`public_p50gcuvibhaugpstnlmx`).then(json=>{
-	      if(json.code!=200) return;
-	      let users=json.data;
-	      let html="User List:<br/>";
-  	      for(let i=0;i<users.length;i++) 
-		    html+="userId:" +  users[i].userId+"<br/>"; 
-	      document.getElementById("Users3").innerHTML=html;
-          })
-
-	  data$myServerless(`public_1liepmqlm2v74jt5l8fy`).then(users=>{
-	      let html="User List:<br/>";
-  	      for(let i=0;i<users.length;i++) 
-		    html+="userId:" +  users[i].userId+"<br/>"; 
-	      document.getElementById("Users4").innerHTML=html;
-          })
-
-      function doLogout(){
-		sync$myServerless(`BackendPublic$Logout`);
-		window.location.href="/";
-	  }		  
-	</script>
-	<a href="javascript:doLogout()">Logout</a>
-
-    <div id="root"></div>
-   	
+	<div id="root"></div>
    
   </body>
 </html>

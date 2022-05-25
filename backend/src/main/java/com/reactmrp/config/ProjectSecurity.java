@@ -76,7 +76,6 @@ public class ProjectSecurity implements TokenSecurity {
     }
     
     public static boolean ifAllow(String myToken, String methodId) {
-        System.out.println("methodId="+methodId);
         //只要方法id里包含public（不分大小写)都允许执行，通常是固定放在后端的方法，即BackendPublicxxx之类的。  在部署时要检查，所有的public方法都必须是允许不登录就允许执行的
         if (MyStrUtils.containsIgnoreCase(methodId, "public"))
             return true;
