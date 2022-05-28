@@ -7,12 +7,6 @@ import Router from "./router";
 
 class App extends Component {
   render() { 
-    console.log("Debug_APP_state:"+JSON.stringify(this.state));
-    console.log("Debug_APP_props:"+JSON.stringify(this.props));
-    console.log("Debug_APP_store:"+JSON.stringify(store));
-    console.log("==store====");
-    console.log(store); 
-    
     return (
       <ConfigProvider locale={zhCN}>
         <Provider store={store}>

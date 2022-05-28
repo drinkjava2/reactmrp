@@ -2,9 +2,7 @@ import * as types from "../action-types";
 import { reqUserInfo } from "E:/react-mrp/frontend/src/api/user";
 
 export const getUserInfo = (token) => (dispatch) => {
-  console.log("Debug_getUserInfo1:"+JSON.stringify(token));
   return new Promise((resolve, reject) => {
- console.log("Debug_getUserInfo2:"+JSON.stringify(token));
     reqUserInfo(token)
       .then((response) => {
         const { data } = response;

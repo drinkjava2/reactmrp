@@ -6,9 +6,6 @@ import Layout from "E:/react-mrp/frontend/src/views/layout";
 import Login from "E:/react-mrp/frontend/src/views/login";
 class Router extends React.Component {
   render() {
-    console.log("======Debug_Router_state====");
-    console.log("Debug_Router_state:"+JSON.stringify(this.state));
-    console.log("Debug_Router_props:"+JSON.stringify(this.props));
     const { token, role, getUserInfo } = this.props;
     return (
       <HashRouter>
@@ -34,6 +31,5 @@ class Router extends React.Component {
   }
 }
 
-    console.log("getUserInfo:"+getUserInfo); 
 export default connect((state) => state.user, { getUserInfo })(Router);
  
