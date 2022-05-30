@@ -32,6 +32,7 @@ import com.reactmrp.entity.RolePower;
 import com.reactmrp.entity.User;
 import com.reactmrp.entity.UserRole;
 
+import template.ExecuteSqlTemplate;
 import template.JavaTemplate;
 import template.JavaTxTemplate;
 import template.QryArrayListTemplate;
@@ -73,6 +74,7 @@ public class InitConfig extends HttpServlet {
         MyServerlessEnv.registerMethodTemplate("qryList", QryListTemplate.class);
         MyServerlessEnv.registerMethodTemplate("qryEntity", QryEntityTemplate.class);
         MyServerlessEnv.registerMethodTemplate("qryEntityList", QryEntityListTemplate.class);
+        MyServerlessEnv.registerMethodTemplate("executeSql", ExecuteSqlTemplate.class);
     }
 
     @SuppressWarnings("all")

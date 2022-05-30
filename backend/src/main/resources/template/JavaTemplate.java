@@ -16,9 +16,12 @@ public class JavaTemplate extends BaseTemplate {
 
     @Override
 	public Object executeBody() {
+        if(1>0) {
 		/* MYSERVERLESS BODY BEGIN */
         return null;
         /* MYSERVERLESS BODY END */
+        } 
+        return null;
 	}
 
 }

@@ -85,6 +85,7 @@ async function $qryList(text) {				return await fetchJSon("qryList", text, argum
 async function $qryMapList(text) {			return await fetchJSon("qryMapList", text, arguments);} 
 async function $qryEntity(text) {			return await fetchJSon("qryEntity", text, arguments);}
 async function $qryEntityList(text) {		return await fetchJSon("qryEntityList", text, arguments);}
+async function $executeSql(text) {			return await fetchJSon("executeSql", text, arguments);}
 
 async function data$java(text) {			let json= await fetchJSon("java", text, arguments);	return json.data;}  
 async function data$javaTx(text) {			let json= await fetchJSon("javaTx", text, arguments);	return json.data;}
@@ -97,6 +98,7 @@ async function data$qryList(text) {			let json= await fetchJSon("qryList", text,
 async function data$qryMapList(text) {		let json= await fetchJSon("qryMapList", text, arguments); return json.data;}
 async function data$qryEntity(text) {		let json= await fetchJSon("qryEntity", text, arguments); return json.data;}
 async function data$qryEntityList(text) {	let json= await fetchJSon("qryEntityList", text, arguments); return json.data;}
+async function data$executeSql(text) {		let json= await fetchJSon("executeSql", text, arguments); return json.data;}
 
 //同步方法
 function sync$myServerless(text){			return  syncXhrJSon("", text, arguments); }
@@ -113,6 +115,7 @@ function sync$qryList(text) {			return syncXhrJSon("qryList", text, arguments);}
 function sync$qryMapList(text) {		return syncXhrJSon("qryMapList", text, arguments);} 
 function sync$qryEntity(text) {			return syncXhrJSon("qryEntity", text, arguments);}
 function sync$qryEntityList(text) {		return syncXhrJSon("qryEntityList", text, arguments);}
+function sync$executeSql(text) {		return syncXhrJSon("executeSql", text, arguments);}
 
 function syncData$java(text) { 				let json= syncXhrJSon("java", text, arguments); return json.data; } 
 function syncData$javaTx(text){ 			let json= syncXhrJSon("javaTx", text, arguments); return json.data;} 
@@ -125,6 +128,7 @@ function syncData$qryList(text) {			let json= syncXhrJSon("qryList", text, argum
 function syncData$qryMapList(text) {		let json= syncXhrJSon("qryMapList", text, arguments); return json.data;}
 function syncData$qryEntity(text) {			let json= syncXhrJSon("qryEntity", text, arguments); return json.data;}
 function syncData$qryEntityList(text) {		let json= syncXhrJSon("qryEntityList", text, arguments); return json.data;}
+function syncData$executeSql(text) {		let json= syncXhrJSon("executeSql", text, arguments); return json.data;}
 
  
  
