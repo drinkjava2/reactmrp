@@ -92,7 +92,7 @@ public abstract class SrcBuilder { // NOSONAR
         if (!MyStrUtils.isEmpty(piece.getId()))
             sb.append("#").append(piece.getId()).append(" ");
         if (!MyStrUtils.isEmpty(piece.getImports()))
-            sb.append(piece.getImports()).append(" ");
+            sb.append(piece.getImports()).append("\n");
         return sb.toString();
     }
 
