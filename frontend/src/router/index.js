@@ -6,6 +6,8 @@ import Layout from "E:/react-mrp/frontend/src/views/layout";
 import Login from "E:/react-mrp/frontend/src/views/login";
 class Router extends React.Component {
   render() {
+    console.log("debug Router",this.props);
+    console.log("debug Router state",this.state);
     const { token, role, getUserInfo } = this.props;
     return (
       <HashRouter>
