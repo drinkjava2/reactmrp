@@ -7,7 +7,6 @@ const initUserInfo = {
   token: getToken(),
 };
 export default function user(state = initUserInfo, action) {
-  console.log("debug user reducer", action);
   switch (action.type) {
     case types.USER_SET_USER_TOKEN:
       return {

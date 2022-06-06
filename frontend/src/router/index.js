@@ -1,14 +1,15 @@
 import React from "react";
 import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
-import { connect } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { getUserInfo } from "E:/react-mrp/frontend/src/store/actions";
 import Layout from "E:/react-mrp/frontend/src/views/layout";
 import Login from "E:/react-mrp/frontend/src/views/login";
-class Router extends React.Component {
-  render() {
-    console.log("debug Router",this.props);
-    console.log("debug Router state",this.state);
-    const { token, role, getUserInfo } = this.props;
+
+const Router =()=> { //原版是class，这里改成Hooks写法
+    const user = useSelector(state => state.user);
+    const token=user.token;
+    const role = user.role; 
+    const dispatch=useDispatch(); 
     return (
       <HashRouter>
         <Switch>
@@ -22,7 +23,7 @@ class Router extends React.Component {
                 if (role) {
                   return <Layout />;
                 } else {
-                  getUserInfo(token).then(() => <Layout />);
+                  getUserInfo(token)(dispatch).then(() => <Layout />);
                 }
               }
             }}
@@ -30,8 +31,7 @@ class Router extends React.Component {
         </Switch>
       </HashRouter>
     );
-  }
-}
+  } 
 
-export default connect((state) => state.user, { getUserInfo })(Router);
+export default Router;
  

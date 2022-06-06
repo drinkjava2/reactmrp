@@ -7,6 +7,7 @@ import "./index.less";
 import { login, getUserInfo } from "E:/react-mrp/frontend/src/store/actions";
 
 const Login = (props) => {
+  
   const { form, token, login, getUserInfo } = props;
   const { getFieldDecorator } = form;
 
@@ -14,12 +15,11 @@ const Login = (props) => {
 
   const handleLogin = (username, password) => {
     // 登录完成后 发送请求 调用接口获取用户信息
-    console.log("debug login",props);
     setLoading(true);
     login(username, password)
       .then((data) => {
         message.success("登录成功");
-        //handleUserInfo(data.token);
+        handleUserInfo(data.token);
       })
       .catch((error) => {
         setLoading(false);

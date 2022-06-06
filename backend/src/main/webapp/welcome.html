@@ -56,8 +56,8 @@ section header {
 	  });
 
 	  function doLogout(){
-		sync$myServerless(`BackendPublic$Logout`);
-		window.location.href="/login.html";
+		if(true===syncData$myServerless(`BackendPublic$Logout`))
+			window.location.href="/login.html";
 	  }
 	</script>
 
