@@ -1,5 +1,5 @@
 import * as types from "../action-types";
-import defaultSettings from "E:/react-mrp/frontend/src/defaultSettings";
+import defaultSettings from "E:/reactmrp/frontend/src/defaultSettings";
 const { showSettings, sidebarLogo, fixedHeader, tagsView } = defaultSettings;
 
 const initState = {

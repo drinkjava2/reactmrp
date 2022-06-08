@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Row, Col } from "antd";
-import errImg from "E:/react-mrp/frontend/src/assets/images/404.png";
+import errImg from "E:/reactmrp/frontend/src/assets/images/404.png";
 import "./index.less";
 
 const NotFound = (props) => {

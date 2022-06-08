@@ -11,7 +11,7 @@ import {
   message,
   Select
 } from "antd";
-import { tableList, deleteItem,editItem } from "E:/react-mrp/frontend/src/api/table";
+import { tableList, deleteItem,editItem } from "E:/reactmrp/frontend/src/api/table";
 import EditForm from "./forms/editForm"
 const { Column } = Table;
 const { Panel } = Collapse;

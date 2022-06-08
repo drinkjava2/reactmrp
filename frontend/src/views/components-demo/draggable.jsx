@@ -1,6 +1,6 @@
 import React from "react";
-import TypingCard from "E:/react-mrp/frontend/src/components/TypingCard";
-import draggable from "E:/react-mrp/frontend/src/assets/images/draggable.gif";
+import TypingCard from "E:/reactmrp/frontend/src/components/TypingCard";
+import draggable from "E:/reactmrp/frontend/src/assets/images/draggable.gif";
 const Draggable = () => {
   const cardContent = `
     你可以试着拖拽一下左侧导航菜单栏的某一项，它是可以拖拽的哦。

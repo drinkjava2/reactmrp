@@ -1,5 +1,5 @@
 import React from "react";
-import TypingCard from "E:/react-mrp/frontend/src/components/TypingCard";
+import TypingCard from "E:/reactmrp/frontend/src/components/TypingCard";
 export default () => {
   const cardContent = `
     本项目中的菜单权限和路由权限都是基于用户所属角色来分配的，本项目中内置了三种角色，分别是：

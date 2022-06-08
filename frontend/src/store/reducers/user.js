@@ -1,5 +1,5 @@
 import * as types from "../action-types";
-import { getToken } from "E:/react-mrp/frontend/src/utils/auth";
+import { getToken } from "E:/reactmrp/frontend/src/utils/auth";
 const initUserInfo = {
   name: "",
   role: "",

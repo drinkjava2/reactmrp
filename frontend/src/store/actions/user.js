@@ -1,5 +1,5 @@
 import * as types from "../action-types";
-import { reqUserInfo } from "E:/react-mrp/frontend/src/api/user";
+import { reqUserInfo } from "E:/reactmrp/frontend/src/api/user";
 
 export const getUserInfo = (token) => (dispatch) => {
   return new Promise((resolve, reject) => {

@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Icon } from "antd";
-import { toggleSiderBar } from "E:/react-mrp/frontend/src/store/actions";
+import { toggleSiderBar } from "E:/reactmrp/frontend/src/store/actions";
 import "./index.less";
 const Hamburger = (props) => {
   const { sidebarCollapsed, toggleSiderBar } = props;

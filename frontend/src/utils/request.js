@@ -1,8 +1,8 @@
 import axios from "axios";
-import store from "E:/react-mrp/frontend/src/store";
+import store from "E:/reactmrp/frontend/src/store";
 import { Modal } from "antd";
-import { getToken } from "E:/react-mrp/frontend/src/utils/auth";
-import { logout } from "E:/react-mrp/frontend/src/store/actions";
+import { getToken } from "E:/reactmrp/frontend/src/utils/auth";
+import { logout } from "E:/reactmrp/frontend/src/store/actions";
 
 //创建一个axios示例
 const service = axios.create({

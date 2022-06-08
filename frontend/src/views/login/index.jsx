@@ -1,25 +1,36 @@
-import React, { useState, setState } from "react";
+import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import { Form, Icon, Input, Button, message, Spin } from "antd";
-import { connect } from "react-redux";
+import { useSelector, useDispatch, shallowEqual, useStore } from "react-redux";
 import DocumentTitle from "react-document-title";
 import "./index.less";
-import { login, getUserInfo } from "E:/react-mrp/frontend/src/store/actions";
+import { login, getUserInfo } from "E:/reactmrp/frontend/src/store/actions";
 
 const Login = (props) => {
-  
-  const { form, token, login, getUserInfo } = props;
-  const { getFieldDecorator } = form;
+  const store = useStore();
+  const user = useSelector(state => state.user, shallowEqual);
+  const token=user.token; 
+  const disp=useDispatch();
 
+  const { form } = props;
+  const { getFieldDecorator } = form;
   const [loading, setLoading] = useState(false);
+
+   console.log("stateA", store.getState());
+  
+
+
+
+
 
   const handleLogin = (username, password) => {
     // 登录完成后 发送请求 调用接口获取用户信息
     setLoading(true);
-    login(username, password)
+    login(username, password)(disp)
       .then((data) => {
         message.success("登录成功");
         handleUserInfo(data.token);
+        console.log("stateB", store.getState());
       })
       .catch((error) => {
         setLoading(false);
@@ -29,7 +40,7 @@ const Login = (props) => {
 
   // 获取用户信息
   const handleUserInfo = (token) => {
-    getUserInfo(token)
+    getUserInfo(token)(disp)
       .then((data) => {})
       .catch((error) => {
         message.error(error);
@@ -123,10 +134,6 @@ const Login = (props) => {
       </div>
     </DocumentTitle>
   );
-};
+}; 
 
-const WrapLogin = Form.create()(Login);
-
-export default connect((state) => state.user, { login, getUserInfo })(
-  WrapLogin
-);
+export default Form.create()(Login); 

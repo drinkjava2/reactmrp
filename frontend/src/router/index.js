@@ -1,9 +1,9 @@
 import React from "react";
 import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getUserInfo } from "E:/react-mrp/frontend/src/store/actions";
-import Layout from "E:/react-mrp/frontend/src/views/layout";
-import Login from "E:/react-mrp/frontend/src/views/login";
+import { getUserInfo } from "E:/reactmrp/frontend/src/store/actions";
+import Layout from "E:/reactmrp/frontend/src/views/layout";
+import Login from "E:/reactmrp/frontend/src/views/login";
 
 const Router =()=> { //原版是class，这里改成Hooks写法
     const user = useSelector(state => state.user);

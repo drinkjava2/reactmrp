@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { Card } from "antd";
 import { PropTypes } from "prop-types";
-import Typing from "E:/react-mrp/frontend/src/utils/typing";
+import Typing from "E:/reactmrp/frontend/src/utils/typing";
 
 const TypingCard = (props) => {
   const { title, source } = props;

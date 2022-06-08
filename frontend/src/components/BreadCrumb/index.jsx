@@ -1,7 +1,7 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 import { Breadcrumb } from "antd";
-import menuList from "E:/react-mrp/frontend/src/config/menuConfig";
+import menuList from "E:/reactmrp/frontend/src/config/menuConfig";
 import "./index.less";
 /**
  * 根据当前浏览器地址栏的路由地址，在menuConfig中查找路由跳转的路径

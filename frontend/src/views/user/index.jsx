@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Card, Button, Table, message, Divider } from "antd";
-import { getUsers, deleteUser, editUser, addUser } from "E:/react-mrp/frontend/src/api/user";
+import { getUsers, deleteUser, editUser, addUser } from "E:/reactmrp/frontend/src/api/user";
 import TypingCard from '@/components/TypingCard'
 import EditUserForm from "./forms/edit-user-form"
 import AddUserForm from "./forms/add-user-form"

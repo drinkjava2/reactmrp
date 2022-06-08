@@ -1,7 +1,7 @@
-import { tracker } from "E:/react-mrp/frontend/src/api/monitor";
+import { tracker } from "E:/reactmrp/frontend/src/api/monitor";
 import userAgent from "user-agent";
-import store from "E:/react-mrp/frontend/src/store";
-import { addBug } from "E:/react-mrp/frontend/src/store/actions"
+import store from "E:/reactmrp/frontend/src/store";
+import { addBug } from "E:/reactmrp/frontend/src/store/actions"
 
 function getExtraData() {
   return {

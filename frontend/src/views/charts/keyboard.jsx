@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import echarts from "E:/react-mrp/frontend/src/lib/echarts";
-import { debounce } from "E:/react-mrp/frontend/src/utils";
+import echarts from "E:/reactmrp/frontend/src/lib/echarts";
+import { debounce } from "E:/reactmrp/frontend/src/utils";
 class KeyboardChart extends Component {
   state = {
     chart: null,

@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Scrollbars } from "react-custom-scrollbars";
 import { Tag } from "antd";
-import { deleteTag, emptyTaglist, closeOtherTags } from "E:/react-mrp/frontend/src/store/actions";
+import { deleteTag, emptyTaglist, closeOtherTags } from "E:/reactmrp/frontend/src/store/actions";
 class TagList extends Component {
   tagListContainer = React.createRef();
   contextMenuContainer = React.createRef();

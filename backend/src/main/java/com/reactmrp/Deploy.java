@@ -52,11 +52,11 @@ public class Deploy {
 
     @Test
     public void replaceAtToAbolutePath() {//切换@符号到绝对路径以方便IDE跳转，临时使用，不提交到git
-        for (File file : DeployTool.searchSupportedWebFilesInOnePath("E:\\react-mrp\\frontend\\src", null)) {
+        for (File file : DeployTool.searchSupportedWebFilesInOnePath("E:\\reactmrp\\frontend\\src", null)) {
             String fp = file.getAbsolutePath();
             String s = MyFileUtils.readFile(fp, "utf-8");
             if ((fp.endsWith(".js") || fp.endsWith(".jsx")) && s.contains(" from \"@/")) {
-                s = MyStrUtils.replace(s, " from \"@/", " from \"E:/react-mrp/frontend/src/");
+                s = MyStrUtils.replace(s, " from \"@/", " from \"E:/reactmrp/frontend/src/");
                 MyFileUtils.writeAndPrintFilename(file.getAbsolutePath(), s, "utf-8");
                 System.out.println(file.getAbsolutePath());
             }
@@ -65,11 +65,11 @@ public class Deploy {
 
     @Test
     public void replaceAbolutePathToAt() {//切换回绝对路径为@符号
-        for (File file : DeployTool.searchSupportedWebFilesInOnePath("E:\\react-mrp\\frontend\\src", null)) {
+        for (File file : DeployTool.searchSupportedWebFilesInOnePath("E:\\reactmrp\\frontend\\src", null)) {
             String fp = file.getAbsolutePath();
             String s = MyFileUtils.readFile(fp, "utf-8");
-            if ((fp.endsWith(".js") || fp.endsWith(".jsx")) && s.contains(" from \"E:/react-mrp/frontend/src/")) {
-                s = MyStrUtils.replace(s, " from \"E:/react-mrp/frontend/src/", " from \"@/");
+            if ((fp.endsWith(".js") || fp.endsWith(".jsx")) && s.contains(" from \"E:/reactmrp/frontend/src/")) {
+                s = MyStrUtils.replace(s, " from \"E:/reactmrp/frontend/src/", " from \"@/");
                 MyFileUtils.writeAndPrintFilename(file.getAbsolutePath(), s, "utf-8");
                 System.out.println(file.getAbsolutePath());
             }
