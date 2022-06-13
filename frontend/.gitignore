@@ -13,8 +13,7 @@
 /src/bin
 
 # misc
-/src/.vscode
-settings.json
+/src/.vscode/
 .DS_Store
 .env.local
 .env.development.local
