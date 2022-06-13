@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, setState } from "react";
 import { Redirect } from "react-router-dom";
 import { Form, Icon, Input, Button, message, Spin } from "antd";
 import { useSelector, useDispatch, shallowEqual, useStore } from "react-redux";
@@ -6,31 +6,25 @@ import DocumentTitle from "react-document-title";
 import "./index.less";
 import { login, getUserInfo } from "E:/reactmrp/frontend/src/store/actions";
 
-const Login = (props) => {
-  const store = useStore();
+const Login = (props) => {  
+  console.log("In login");
+  const store=useStore();
+  console.log("store", store.getState());
   const user = useSelector(state => state.user, shallowEqual);
   const token=user.token; 
   const disp=useDispatch();
 
   const { form } = props;
   const { getFieldDecorator } = form;
-  const [loading, setLoading] = useState(false);
-
-   console.log("stateA", store.getState());
-  
-
-
-
-
+  const [loading, setLoading] = useState(false);   
 
   const handleLogin = (username, password) => {
-    // 登录完成后 发送请求 调用接口获取用户信息
-    setLoading(true);
-    login(username, password)(disp)
+    //登录完成后 发送请求 调用接口获取用户信息
+    setLoading(true); 
+    login(username, password)(disp) 
       .then((data) => {
         message.success("登录成功");
         handleUserInfo(data.token);
-        console.log("stateB", store.getState());
       })
       .catch((error) => {
         setLoading(false);
@@ -49,18 +43,22 @@ const Login = (props) => {
 
   const handleSubmit = (event) => {
     // 阻止事件的默认行为
-    event.preventDefault();
-
+    event.preventDefault(); 
+    disp({
+        type: "testtoken",
+        token:"thetesttoken"
+      });
     // 对所有表单字段进行检验
-    form.validateFields((err, values) => {
-      // 检验成功
-      if (!err) {
-        const { username, password } = values;
-        handleLogin(username, password);
-      } else {
-        console.log("检验失败!");
-      }
-    });
+//    form.validateFields((err, values) => {
+//      // 检验成功
+//      if (!err) {
+//        const { username, password } = values;
+//        handleLogin(username, password);
+//      } else {
+//        console.log("检验失败!");
+//      }
+//    });
+    
   };
 
   if (token) {
