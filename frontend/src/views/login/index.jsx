@@ -7,10 +7,10 @@ import "./index.less";
 import { login, getUserInfo } from "E:/reactmrp/frontend/src/store/actions";
 
 const Login = (props) => {  
-  console.log("In login");
   const store=useStore();
-  console.log("store", store.getState());
-  const user = useSelector(state => state.user, shallowEqual);
+  console.log("store in login", store.getState());
+  console.log("user=", store.getState().user);
+  const user = store.getState().user; //useSelector(state => state.user, shallowEqual);
   const token=user.token; 
   const disp=useDispatch();
 
