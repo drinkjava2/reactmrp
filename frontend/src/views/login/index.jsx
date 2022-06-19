@@ -1,27 +1,21 @@
-import React, { useState, setState } from "react";
+import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import { Form, Icon, Input, Button, message, Spin } from "antd";
-import { useSelector, useDispatch, shallowEqual, useStore } from "react-redux";
+import { connect } from "react-redux";
 import DocumentTitle from "react-document-title";
 import "./index.less";
 import { login, getUserInfo } from "E:/reactmrp/frontend/src/store/actions";
 
-const Login = (props) => {  
-  const store=useStore();
-  console.log("store in login", store.getState());
-  console.log("user=", store.getState().user);
-  const user = store.getState().user; //useSelector(state => state.user, shallowEqual);
-  const token=user.token; 
-  const disp=useDispatch();
-
-  const { form } = props;
+const Login = (props) => {
+  const { form, token, login, getUserInfo } = props;
   const { getFieldDecorator } = form;
-  const [loading, setLoading] = useState(false);   
+
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = (username, password) => {
-    //登录完成后 发送请求 调用接口获取用户信息
-    setLoading(true); 
-    login(username, password)(disp) 
+    // 登录完成后 发送请求 调用接口获取用户信息
+    setLoading(true);
+    login(username, password)
       .then((data) => {
         message.success("登录成功");
         handleUserInfo(data.token);
@@ -34,7 +28,7 @@ const Login = (props) => {
 
   // 获取用户信息
   const handleUserInfo = (token) => {
-    getUserInfo(token)(disp)
+    getUserInfo(token)
       .then((data) => {})
       .catch((error) => {
         message.error(error);
@@ -43,22 +37,18 @@ const Login = (props) => {
 
   const handleSubmit = (event) => {
     // 阻止事件的默认行为
-    event.preventDefault(); 
-    disp({
-        type: "testtoken",
-        token:"thetesttoken"
-      });
+    event.preventDefault();
+
     // 对所有表单字段进行检验
-//    form.validateFields((err, values) => {
-//      // 检验成功
-//      if (!err) {
-//        const { username, password } = values;
-//        handleLogin(username, password);
-//      } else {
-//        console.log("检验失败!");
-//      }
-//    });
-    
+    form.validateFields((err, values) => {
+      // 检验成功
+      if (!err) {
+        const { username, password } = values;
+        handleLogin(username, password);
+      } else {
+        console.log("检验失败!");
+      }
+    });
   };
 
   if (token) {
@@ -132,6 +122,10 @@ const Login = (props) => {
       </div>
     </DocumentTitle>
   );
-}; 
+};
 
-export default Form.create()(Login); 
+const WrapLogin = Form.create()(Login);
+
+export default connect((state) => state.user, { login, getUserInfo })(
+  WrapLogin
+);

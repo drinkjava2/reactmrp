@@ -7,18 +7,7 @@ const initUserInfo = {
   token: getToken(),
 };
 export default function user(state = initUserInfo, action) {
-  console.log("in user reducer:", action); 
   switch (action.type) {
-    case "testtoken":{
-      console.log("in testtoken"); 	
-      return {
-        ...state,
-        name: "tester",
-        role: "admina",
-        token: "admina-token",
-        avatar: "https://s1.ax1x.com/2020/04/28/J5hUaT.jpg",
-      };
-    }
     case types.USER_SET_USER_TOKEN:
       return {
         ...state,

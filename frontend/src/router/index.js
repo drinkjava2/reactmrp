@@ -1,17 +1,12 @@
 import React from "react";
 import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
-import { useSelector, useDispatch, useStore } from "react-redux";
+import { connect } from "react-redux";
 import { getUserInfo } from "E:/reactmrp/frontend/src/store/actions";
 import Layout from "E:/reactmrp/frontend/src/views/layout";
 import Login from "E:/reactmrp/frontend/src/views/login";
-
-const Router =()=> { //原版是class，这里改成函数写法
-	const store=useStore();
-	console.log("store in router", store.getState());
-    const user = useSelector(state => state.user);
-    const token=user.token;
-    const role = user.role; 
-    const dispatch=useDispatch(); 
+class Router extends React.Component {
+  render() {
+    const { token, role, getUserInfo } = this.props;
     return (
       <HashRouter>
         <Switch>
@@ -25,7 +20,7 @@ const Router =()=> { //原版是class，这里改成函数写法
                 if (role) {
                   return <Layout />;
                 } else {
-                  getUserInfo(token)(dispatch).then(() => <Layout />);
+                  getUserInfo(token).then(() => <Layout />);
                 }
               }
             }}
@@ -33,7 +28,7 @@ const Router =()=> { //原版是class，这里改成函数写法
         </Switch>
       </HashRouter>
     );
-  } 
+  }
+}
 
-export default Router;
- 
+export default connect((state) => state.user, { getUserInfo })(Router);
