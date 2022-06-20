@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from 'E:/reactmrp/frontend/src/utils/request'
 
 export function reqLogin(data) {
   return request({

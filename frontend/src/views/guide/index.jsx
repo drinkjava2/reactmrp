@@ -2,7 +2,7 @@ import React from "react";
 import Driver from "driver.js"; // import driver.js
 import "driver.js/dist/driver.min.css"; // import driver.js css
 import { Button } from "antd";
-import TypingCard from '@/components/TypingCard'
+import TypingCard from 'E:/reactmrp/frontend/src/components/TypingCard'
 import steps from "./steps";
 const driver = new Driver({
   animate: true, // 在更改突出显示的元素时是否设置动画，

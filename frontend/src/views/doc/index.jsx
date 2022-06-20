@@ -1,5 +1,5 @@
 import React from 'react';
-import TypingCard from '@/components/TypingCard'
+import TypingCard from 'E:/reactmrp/frontend/src/components/TypingCard'
 const Doc = () => {
   const cardContent = `
     作者博客请戳这里 <a href="https://nlrx-wjc.github.io/Blog/" target="_blank">难凉热血的博客</a>。
