@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import DocumentTitle from "react-document-title";
 import "./index.less";
 import { login, getUserInfo } from "E:/reactmrp/frontend/src/store/actions";
+import * as serv from "E:/reactmrp/frontend/src/myserverless/index.js";
 
 const Login = (props) => {
   const { form, token, login, getUserInfo } = props;
@@ -13,18 +14,32 @@ const Login = (props) => {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = (username, password) => {
-    // 登录完成后 发送请求 调用接口获取用户信息
     setLoading(true);
-    login(username, password)
-      .then((data) => {
-        message.success("登录成功");
-        handleUserInfo(data.token);
-      })
-      .catch((error) => {
-        setLoading(false);
-        message.error(error);
+    serv.data$myServerless(`BackendPublic$TokenLogin`, username, password)
+      .then((token) => {
+        if(token){  
+            message.success("登录成功");
+            handleUserInfo(token);
+        } else{
+          setLoading(false);
+          message.error(error);   
+        }
       });
   };
+      
+      
+//  const handleLogin = (username, password) => {
+//    setLoading(true);
+//    login(username, password)
+//      .then((data) => {
+//        message.success("登录成功");
+//        handleUserInfo(data.token);
+//      })
+//      .catch((error) => {
+//        setLoading(false);
+//        message.error(error);
+//      });
+//  };
 
   // 获取用户信息
   const handleUserInfo = (token) => {
