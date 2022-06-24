@@ -83,7 +83,7 @@ public class InitConfig extends HttpServlet {
         DataSource ds = JBEANBOX.getBean(DataSourceBox.class);
 
         //本项目使用jSqlBox作为DAO工具，以下是jSqlBox的配置
-        DbContext.setGlobalNextAllowShowSql(false); //允许输出SQL日志到控制台
+        DbContext.setGlobalNextAllowShowSql(true); //允许输出SQL日志到控制台
         Dialect.setGlobalNamingConversion(new ProjectNamingRule()); //全局表和字段名映射，表名列名为一对一关系，不作变换
         DbContext ctx = new DbContext(ds); //ctx是全局单例
         ctx.setConnectionManager(TinyTxConnectionManager.instance());// 事务配置
@@ -106,68 +106,61 @@ public class InitConfig extends HttpServlet {
 
     public static void insertUserAndPowers() {//插入用户、角色、权限
         //新建用户 
-        new User().setUserId("developer").setPassword(ProjectSecurity.encodePassword("123")).insert();
-        new User().setUserId("admin").setPassword(ProjectSecurity.encodePassword("123")).insert();
-        new User().setUserId("manager").setPassword(ProjectSecurity.encodePassword("123")).insert();
-        new User().setUserId("user").setPassword(ProjectSecurity.encodePassword("123")).insert();
+        User u = new User();
+        u.setUserId("developer").setAvatar("https://s1.ax1x.com/2020/04/28/J5hUaT.jpg").setPassword(ProjectSecurity.encodePassword("123")).insert();
+        u.setUserId("admin").setAvatar("https://s1.ax1x.com/2020/04/28/J5hUaT.jpg").setPassword(ProjectSecurity.encodePassword("123")).insert();
+        u.setUserId("editor").setAvatar("https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png").setPassword(ProjectSecurity.encodePassword("123")).insert();
+        u.setUserId("guest").setAvatar("https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png").setPassword(ProjectSecurity.encodePassword("123")).insert();
 
         //新建角色
-        new Role().setRoleName("developerRole").insert();
-        new Role().setRoleName("adminRole").insert();
-        new Role().setRoleName("managerRole").insert();
-        new Role().setRoleName("userRole").insert();
-
-        //新建权限名
-        new Power().setPowerName("DevelopDynamicCompile").insert();
-        new Power().setPowerName("UserCreate").insert();
-        new Power().setPowerName("UserUpdate").insert();
-        new Power().setPowerName("UserRead").insert();
-        new Power().setPowerName("OrderCreate").insert();
-        new Power().setPowerName("OrderUpdate").insert();
-        new Power().setPowerName("OrderRead").insert();
+        new Role().setRoleName("developer").setRoleLevel(4).insert();
+        new Role().setRoleName("admin").setRoleLevel(3).insert();
+        new Role().setRoleName("editor").setRoleLevel(2).insert();
+        new Role().setRoleName("guest").setRoleLevel(1).insert();
 
         //给用户添加角色
-        UserRole ur = new UserRole().setUserId("developer").setRoleName("developerRole").insert() //
-                .setRoleName("adminRole").insert(); //developer用户通常同时具有developerRole和adminRole两个角色
-        ur.setUserId("admin").setRoleName("adminRole").insert();
-        ur.setUserId("manager").setRoleName("managerRole").insert();
-        ur.setUserId("user").setRoleName("userRole").insert();
+        UserRole ur = new UserRole();
+        ur.setUserId("developer").setRoleName("developer").insert();
+        ur.setUserId("developer").setRoleName("admin").insert(); //developer用户通常同时具有developer和admin两个角色
+        ur.setUserId("admin").setRoleName("admin").insert();
+        ur.setUserId("editor").setRoleName("editor").insert();
+        ur.setUserId("guest").setRoleName("guest").insert();
 
-        //给角色添加行为权限
-        RolePower ra = new RolePower().setRoleName("developerRole").setPowerName("DevelopDynamicCompile").insert();//developerRole本身只需要一个权限，就是允许动态编译前端代码
+        //新建权限名
+        new Power().setPowerName("developer").insert();
+        new Power().setPowerName("admin").insert();
+        new Power().setPowerName("editor").insert();
+        new Power().setPowerName("guest").insert();
 
-        ra.setRoleName("adminRole"); //admin通常具有所有业务相关权限
-        ra.setPowerName("UserCreate").insert();
-        ra.setPowerName("UserUpdate").insert();
-        ra.setPowerName("UserRead").insert();
-        ra.setPowerName("OrderCreate").insert();
-        ra.setPowerName("OrderUpdate").insert();
-        ra.setPowerName("OrderRead").insert();
-
-        ra.setRoleName("managerRole"); //manager
-        ra.setPowerName("UserRead").insert();
-        ra.setPowerName("OrderCreate").insert();
-        ra.setPowerName("OrderUpdate").insert();
-        ra.setPowerName("OrderRead").insert();
-
-        ra.setRoleName("userRole"); //普通用户
-        ra.setPowerName("OrderRead").insert();
+        //给角色添加权限
+        RolePower ra = new RolePower();
+        ra.setRoleName("developer").setPowerName("developer").insert();//developer权限允许动态编译前端代码
+        ra.setRoleName("admin").setPowerName("admin").insert();
+        ra.setRoleName("editor").setPowerName("editor").insert();
+        ra.setRoleName("guest").setPowerName("guest").insert();
     }
 
     @Test
     public void testInitDataBase() { //测试数据库
         Dialect.setGlobalAllowReservedWords(false);
         initDataBase();
+        //DbContext.gctx().setAllowShowSQL(true);
         insertUserAndPowers();
         List<String> powers = DB.qryList("select p.* from users u ", //
                 " left join userrole ur on u.userId=ur.userId ", //
                 " left join roles r on ur.roleName=r.roleName ", //
                 " left join rolepower rp on rp.roleName=r.roleName ", //
                 " left join powers p on p.powerName=rp.powerName ", //
-                " where u.userId=", DB.que("admin"));
+                " where u.userId=", DB.que("developer"));
         for (String p : powers) {
             System.out.println(p);
         }
+
+        List<Object> roles = DB.qryList("select r.roleName from users u ", //
+                " left join userrole ur on u.userId=ur.userId ", //
+                " left join roles r on ur.roleName=r.roleName ", //
+                " where u.userId=", DB.que("developer"), " and r.roleName<>'developer' order by roleLevel");
+        System.out.println(roles);
     }
 
 }

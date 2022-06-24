@@ -28,7 +28,7 @@ function syncXhrJSon(methodName, text, args){//同步ajax
 	//xhr.withCredentials = true;
 	try {
 	  xhr.send(bodyJsonStr);
-	  if (xhr.status != 200) {
+	  if (xhr.status !== 200) {
 		  return {"code":403, "msg":"Request failed", "data":null};
 	  } else {
 		  return JSON.parse(xhr.responseText);
@@ -53,9 +53,9 @@ function methodInfo(methodName, text){ //methodInfo参数加在url中，这个�
 	  let rs = "";	 
 	  for (var i = 0; i < text.length; i++) {
 	      let c = text.substr(i, 1);	 
-	      if( "a"<=c && c<="z" || "A"<=c && c<="Z" || "0"<=c && c<="9" || c=="_" || c=="$"){
+	      if( ("a"<=c && c<="z") || ("A"<=c && c<="Z") || ("0"<=c && c<="9") || (c==="_" || c==="$")){
 	          rs += c;
-	      } else if (c==" "){
+	      } else if (c===" "){
 	    	  rs += "+";
 	      } 
 	      if(rs.length>50){
@@ -63,12 +63,14 @@ function methodInfo(methodName, text){ //methodInfo参数加在url中，这个�
 	       	 break;
 	      }
 	   }	  
-	  if(methodName!="")
+	  if(methodName!=="")
 		  rs= methodName+"+"+rs;
 	  return rs;
 };
 	 
-		
+export function getMyToken(){
+    return window.localStorage?localStorage.getItem("myToken"):null;  
+}		
 
 //异步方法
 export async function $myServerless(text){return await fetchJSon("", text, arguments); }

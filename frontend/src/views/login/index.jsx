@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import DocumentTitle from "react-document-title";
 import "./index.less";
 import { login, getUserInfo } from "E:/reactmrp/frontend/src/store/actions";
+import * as my from "E:/reactmrp/frontend/src/myserverless/myserverless.js";
 
 const Login = (props) => {
   const { form, token, login, getUserInfo } = props;
@@ -12,19 +13,35 @@ const Login = (props) => {
 
   const [loading, setLoading] = useState(false);
 
+  //这个是使用myServerless的登录方法
   const handleLogin = (username, password) => {
-    // 登录完成后 发送请求 调用接口获取用户信息
     setLoading(true);
-    login(username, password)
-      .then((data) => {
-        message.success("登录成功");
-        handleUserInfo(data.token);
-      })
-      .catch((error) => {
-        setLoading(false);
-        message.error(error);
+    my.data$myServerless(`BackendPublic$TokenLogin`, username, password)
+      .then((token) => {
+        if(token){  
+            localStorage.setItem("myToken", token); 
+            message.success("登录成功");
+            handleUserInfo(token);
+        } else{
+          setLoading(false);
+          message.error("登录失败");   
+        }
       });
   };
+      
+//  //这个是原来使用mock的登录方法
+//  const handleLogin = (username, password) => {
+//    setLoading(true);
+//    login(username, password)
+//      .then((data) => {
+//        message.success("登录成功");
+//        handleUserInfo(data.token);
+//      })
+//      .catch((error) => {
+//        setLoading(false);
+//        message.error(error);
+//      });
+//  };
 
   // 获取用户信息
   const handleUserInfo = (token) => {
@@ -90,7 +107,7 @@ const Login = (props) => {
                     message: "请输入密码",
                   },
                 ],
-                initialValue: "123456", // 初始值
+                initialValue: "123", // 初始值
               })(
                 <Input
                   prefix={
@@ -111,11 +128,11 @@ const Login = (props) => {
               </Button>
             </Form.Item>
             <Form.Item>
-              <span>账号 : admin 密码 : 随便填</span>
+              <span>账号 : admin 密码 : 123</span>
               <br />
-              <span>账号 : editor 密码 : 随便填</span>
+              <span>账号 : editor 密码 : 123</span>
               <br />
-              <span>账号 : guest 密码 : 随便填</span>
+              <span>账号 : guest 密码 : 123</span>
             </Form.Item>
           </Spin>
         </Form>

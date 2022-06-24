@@ -45,7 +45,7 @@ section header {
 	 
 	 
 	 <script>
-	  $qryMapList(`#UserRead select userId from users order by userId`).then(json=>{
+	  $qryMapList(`#admin select userId from users order by userId`).then(json=>{
 	      if(json.code==200){
 		     let users=json.data;
 		     let html="User List:<br/>";

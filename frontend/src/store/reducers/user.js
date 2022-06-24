@@ -1,10 +1,12 @@
 import * as types from "../action-types";
-import { getToken } from "E:/reactmrp/frontend/src/utils/auth";
+//import { getToken } from "E:/reactmrp/frontend/src/utils/auth";
+import * as my from "E:/reactmrp/frontend/src/myserverless/myserverless.js";
+
 const initUserInfo = {
   name: "",
   role: "",
   avatar:"",
-  token: getToken(),
+  token: my.getMyToken(),
 };
 export default function user(state = initUserInfo, action) {
   switch (action.type) {
@@ -19,6 +21,7 @@ export default function user(state = initUserInfo, action) {
         name: action.name,
         role: action.role,
         avatar: action.avatar,
+        token:action.token,
       };
     case types.USER_RESET_USER:
       return {};

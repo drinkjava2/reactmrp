@@ -5,7 +5,7 @@ import com.github.drinkjava2.jdialects.annotation.jpa.Id;
 import com.github.drinkjava2.jdialects.annotation.jpa.Table;
 import com.github.drinkjava2.jsqlbox.ActiveEntity;
 
-@Table(name="users")
+@Table(name = "users")
 public class User implements ActiveEntity<User> {
 
     @Id
@@ -20,8 +20,11 @@ public class User implements ActiveEntity<User> {
 
     @COLUMN(length = 20)
     private String mobilePhone;
-    
-    private Integer age=10;
+
+    @COLUMN(length = 80)
+    private String avatar;
+
+    private Integer age = 10;
 
     public String getUserId() {
         return userId;
@@ -65,6 +68,15 @@ public class User implements ActiveEntity<User> {
 
     public User setAge(Integer age) {
         this.age = age;
+        return this;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public User setAvatar(String avatar) {
+        this.avatar = avatar;
         return this;
     }
 

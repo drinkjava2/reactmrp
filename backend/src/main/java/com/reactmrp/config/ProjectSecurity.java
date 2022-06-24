@@ -29,10 +29,7 @@ import com.reactmrp.entity.User;
 public class ProjectSecurity implements TokenSecurity {
     //重要： 每当有人员、角色、权限变动时，都要调用userPowerCache.clearCache()清空缓存防止脏数据
     private static SimpleCacheHandler userPowerCache = new SimpleCacheHandler(300, 100 * 24 * 60 * 60);//缺省最多同时保存300个用户的权限表, 100天过期
-    
-    //重要： 每当有user登录、注销时，都要调用userTokenCache.clearCache()清空缓存防止脏数据
-    private static SimpleCacheHandler userTokenCache = new SimpleCacheHandler(300, 100 * 24 * 60 * 60);//缺省最多同时保存300个用户的token, 100天过期
-
+    private static SimpleCacheHandler userRoleCache = new SimpleCacheHandler(300, 100 * 24 * 60 * 60);//缺省最多同时保存300个用户的权限表, 100天过期    
     
     public static String encodePassword(String password) {
         return MD5Util.encryptMD5("theSalt" + password);
@@ -45,18 +42,11 @@ public class ProjectSecurity implements TokenSecurity {
         List<User> users = DB.entityFindBySample(new User().setUserId(userId).setPassword(encodePassword(password)));
         if (users.size() != 1)
             return null;
-        String myToken = userId+ "_" + StrUtils.getRandomString(50);
-        userTokenCache.clearCache();
+        String myToken = userId+ "_" + StrUtils.getRandomString(50); 
         new User().setUserId(userId).setMyToken(myToken).update(DB.IGNORE_EMPTY);
         return myToken;
     }
-
-
-    /** clearCache  */
-    public static void clearUserPowerCache() {
-        userPowerCache.clearCache();
-    }
-
+ 
     @Override
     public boolean allow(String myToken, String methodId) {
         return ifAllow(myToken, methodId);
@@ -66,13 +56,12 @@ public class ProjectSecurity implements TokenSecurity {
         myToken=MyStrUtils.trimAllWhitespace(myToken);
         if(MyStrUtils.isEmpty(myToken) || myToken.length()<10)
             return false;
-        String userId = DB.qryString(userTokenCache, "select userId from users where myToken=", DB.que(myToken));
+        String userId = DB.qryString("select userId from users where myToken=", DB.que(myToken));
         return !(MyStrUtils.isEmpty(userId));
     }
     
     public static void logout(String myToken) {
         DB.exe("update users set myToken=null where myToken=", DB.que(myToken));
-        userTokenCache.clearCache();
     }
     
     public static boolean ifAllow(String myToken, String methodId) {
@@ -81,7 +70,7 @@ public class ProjectSecurity implements TokenSecurity {
             return true;
 
         //检查是否token存在
-        String userId = DB.qryString(userTokenCache, "select userId from users where myToken=", DB.que(myToken));
+        String userId = DB.qryString("select userId from users where myToken=", DB.que(myToken));
         if (MyStrUtils.isEmpty(userId))
             return false;
 
@@ -111,4 +100,21 @@ public class ProjectSecurity implements TokenSecurity {
         return false;
     }
 
+    public static String getHighestRole(String myToken) {
+        //检查是否token存在
+        String userId = DB.qryString("select userId from users where myToken=", DB.que(myToken));
+        if (MyStrUtils.isEmpty(userId))
+            return null;
+
+        //获取用户除developer之外的所有role
+        List<String> roles =  DB.qryList(userRoleCache, "select r.roleName from users u ", //
+                " left join userrole ur on u.userId=ur.userId ", //
+                " left join roles r on ur.roleName=r.roleName ", //
+                " where u.userId=", DB.que(userId), " and r.roleName<>'developer' order by roleLevel");
+        if (roles.isEmpty()) //如果什么权限都没有
+            return null;
+        return roles.get(0); //返回等级最高的role
+    }
+
+    
 }
