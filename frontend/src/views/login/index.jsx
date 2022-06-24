@@ -5,7 +5,11 @@ import { connect } from "react-redux";
 import DocumentTitle from "react-document-title";
 import "./index.less";
 import { login, getUserInfo } from "E:/reactmrp/frontend/src/store/actions";
+<<<<<<< HEAD
 import * as my from "E:/reactmrp/frontend/src/myserverless/myserverless.js";
+=======
+import * as serv from "E:/reactmrp/frontend/src/myserverless/index.js";
+>>>>>>> 24eca7fbcee53e79aed9aaef3fb3a09d9b7c9299
 
 const Login = (props) => {
   const { form, token, login, getUserInfo } = props;
@@ -16,20 +20,34 @@ const Login = (props) => {
   //这个是使用myServerless的登录方法
   const handleLogin = (username, password) => {
     setLoading(true);
+<<<<<<< HEAD
     my.data$myServerless(`BackendPublic$TokenLogin`, username, password)
       .then((token) => {
         if(token){  
             localStorage.setItem("myToken", token); 
+=======
+    serv.data$myServerless(`BackendPublic$TokenLogin`, username, password)
+      .then((token) => {
+        if(token){  
+>>>>>>> 24eca7fbcee53e79aed9aaef3fb3a09d9b7c9299
             message.success("登录成功");
             handleUserInfo(token);
         } else{
           setLoading(false);
+<<<<<<< HEAD
           message.error("登录失败");   
+=======
+          message.error(error);   
+>>>>>>> 24eca7fbcee53e79aed9aaef3fb3a09d9b7c9299
         }
       });
   };
       
+<<<<<<< HEAD
 //  //这个是原来使用mock的登录方法
+=======
+      
+>>>>>>> 24eca7fbcee53e79aed9aaef3fb3a09d9b7c9299
 //  const handleLogin = (username, password) => {
 //    setLoading(true);
 //    login(username, password)

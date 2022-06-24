@@ -106,6 +106,7 @@ public class InitConfig extends HttpServlet {
 
     public static void insertUserAndPowers() {//插入用户、角色、权限
         //新建用户 
+<<<<<<< HEAD
         User u = new User();
         u.setUserId("developer").setAvatar("https://s1.ax1x.com/2020/04/28/J5hUaT.jpg").setPassword(ProjectSecurity.encodePassword("123")).insert();
         u.setUserId("admin").setAvatar("https://s1.ax1x.com/2020/04/28/J5hUaT.jpg").setPassword(ProjectSecurity.encodePassword("123")).insert();
@@ -122,10 +123,36 @@ public class InitConfig extends HttpServlet {
         UserRole ur = new UserRole();
         ur.setUserId("developer").setRoleName("developer").insert();
         ur.setUserId("developer").setRoleName("admin").insert(); //developer用户通常同时具有developer和admin两个角色
+=======
+        new User().setUserId("developer").setPassword(ProjectSecurity.encodePassword("123")).insert();
+        new User().setUserId("admin").setPassword(ProjectSecurity.encodePassword("123")).insert();
+        new User().setUserId("editor").setPassword(ProjectSecurity.encodePassword("123")).insert();
+        new User().setUserId("guest").setPassword(ProjectSecurity.encodePassword("123")).insert();
+
+        //新建角色
+        new Role().setRoleName("developer").insert();
+        new Role().setRoleName("admin").insert();
+        new Role().setRoleName("editor").insert();
+        new Role().setRoleName("user").insert();
+
+        //新建权限名
+        new Power().setPowerName("DevelopDynamicCompile").insert();
+        new Power().setPowerName("UserCreate").insert();
+        new Power().setPowerName("UserUpdate").insert();
+        new Power().setPowerName("UserRead").insert();
+        new Power().setPowerName("OrderCreate").insert();
+        new Power().setPowerName("OrderUpdate").insert();
+        new Power().setPowerName("OrderRead").insert();
+
+        //给用户添加角色
+        UserRole ur = new UserRole().setUserId("developer").setRoleName("developer").insert() //
+                .setRoleName("admin").insert(); //developer用户通常同时具有developer和admin两个角色
+>>>>>>> 24eca7fbcee53e79aed9aaef3fb3a09d9b7c9299
         ur.setUserId("admin").setRoleName("admin").insert();
         ur.setUserId("editor").setRoleName("editor").insert();
         ur.setUserId("guest").setRoleName("guest").insert();
 
+<<<<<<< HEAD
         //新建权限名
         new Power().setPowerName("developer").insert();
         new Power().setPowerName("admin").insert();
@@ -138,6 +165,27 @@ public class InitConfig extends HttpServlet {
         ra.setRoleName("admin").setPowerName("admin").insert();
         ra.setRoleName("editor").setPowerName("editor").insert();
         ra.setRoleName("guest").setPowerName("guest").insert();
+=======
+        //给角色添加行为权限
+        RolePower ra = new RolePower().setRoleName("developer").setPowerName("DevelopDynamicCompile").insert();//developer本身只需要一个权限，就是允许动态编译前端代码
+
+        ra.setRoleName("admin"); //admin通常具有所有业务相关权限
+        ra.setPowerName("UserCreate").insert();
+        ra.setPowerName("UserUpdate").insert();
+        ra.setPowerName("UserRead").insert();
+        ra.setPowerName("OrderCreate").insert();
+        ra.setPowerName("OrderUpdate").insert();
+        ra.setPowerName("OrderRead").insert();
+
+        ra.setRoleName("editor"); //editor
+        ra.setPowerName("UserRead").insert();
+        ra.setPowerName("OrderCreate").insert();
+        ra.setPowerName("OrderUpdate").insert();
+        ra.setPowerName("OrderRead").insert();
+
+        ra.setRoleName("guest"); //普通用户
+        ra.setPowerName("OrderRead").insert();
+>>>>>>> 24eca7fbcee53e79aed9aaef3fb3a09d9b7c9299
     }
 
     @Test
