@@ -41,10 +41,12 @@ public class ProjectSecurity implements TokenSecurity {
         if (MyStrUtils.isEmpty(userId) || MyStrUtils.isEmpty(password))
             return null;
         List<User> users = DB.entityFindBySample(new User().setUserId(userId).setPassword(encodePassword(password)));
-        if (users.size() != 1)
+        if(users.isEmpty())
+            users = DB.entityFindBySample(new User().setName(userId).setPassword(encodePassword(password)));
+        if (users.size()!=1)
             return null;
-        String myToken = userId+ "_" + StrUtils.getRandomString(50); 
-        new User().setUserId(userId).setMyToken(myToken).update(DB.IGNORE_EMPTY);
+        String myToken = users.get(0).getUserId() + "_" + StrUtils.getRandomString(50); 
+        users.get(0).setMyToken(myToken).update(DB.IGNORE_EMPTY);
         return myToken;
     }
  

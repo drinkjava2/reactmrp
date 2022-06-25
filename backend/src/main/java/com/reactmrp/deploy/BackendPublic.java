@@ -60,7 +60,7 @@ public class BackendPublic { //本项目在ProjectSecurity里设定为 只有类
      */
     public static class GetUserInfo extends template.JavaTemplate {
         public Object executeBody() {
-            Map<String, Object> user = DB.qryMap("select userId as id, userId as name, myToken as token, avatar from users where myToken=", DB.que(myToken));
+            Map<String, Object> user = DB.qryMap("select userId as id, name, myToken as token, avatar from users where myToken=", DB.que(myToken));
             if (!user.isEmpty()) {
                 Role role = ProjectSecurity.getHighestRole(myToken);
                 if (role != null) {

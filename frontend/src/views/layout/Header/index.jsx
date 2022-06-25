@@ -46,15 +46,41 @@ const LayoutHeader = (props) => {
       <Menu.Item key="dashboard">
         <Link to="/dashboard">首页</Link>
       </Menu.Item>
-      <Menu.Item key="project">
+        
+      <Menu.Item key="project1">
         <a
           target="_blank"
-          href="https://github.com/NLRX-WJC/react-antd-admin-template"
+          href="https://gitee.com/drinkjava2/reactmrp"
           rel="noopener noreferrer"
         >
-          项目地址
+         ReactMRP项目
         </a>
       </Menu.Item>
+      
+      <Menu.Item key="project2">
+        <a
+          target="_blank"
+          href="https://gitee.com/drinkjava2/myserverless"
+          rel="noopener noreferrer"
+        >
+         MyServerless项目
+        </a>
+      </Menu.Item>
+ 
+       
+      <Menu.Item key="project3">
+              <a
+                target="_blank"
+                href="https://github.com/NLRX-WJC/react-antd-admin-template"
+                rel="noopener noreferrer"
+              >
+                             难凉热血原前端项目
+              </a>
+       </Menu.Item>
+
+                     
+              
+              
       <Menu.Divider />
       <Menu.Item key="logout">注销</Menu.Item>
     </Menu>

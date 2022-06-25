@@ -13,6 +13,9 @@ public class User implements ActiveEntity<User> {
     private String userId; //本项目数据库列命名和实体属性完全一致,即数据库中也是userId这种列名
 
     @COLUMN(length = 32)
+    private String name;
+
+    @COLUMN(length = 32)
     private String password;
 
     @COLUMN(length = 200)
@@ -32,6 +35,15 @@ public class User implements ActiveEntity<User> {
 
     public User setUserId(String userId) {
         this.userId = userId;
+        return this;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public User setName(String name) {
+        this.name = name;
         return this;
     }
 

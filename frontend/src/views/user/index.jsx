@@ -4,6 +4,8 @@ import { getUsers, deleteUser, editUser, addUser } from "E:/reactmrp/frontend/sr
 import TypingCard from 'E:/reactmrp/frontend/src/components/TypingCard'
 import EditUserForm from "./forms/edit-user-form"
 import AddUserForm from "./forms/add-user-form"
+import * as my from "E:/reactmrp/frontend/src/myserverless/myserverless.js";
+
 const { Column } = Table;
 class User extends Component {
   state = {
@@ -14,15 +16,30 @@ class User extends Component {
     addUserModalVisible: false,
     addUserModalLoading: false,
   };
-  getUsers = async () => {
-    const result = await getUsers()
-    const { users, status } = result.data
-    if (status === 0) {
+  
+  getUsers = async () => { 
+    let json=await my.$qryMapList(`#admin select u.userId as id, u.name, ur.roleName as role, r.roleDescription as description  from users u left join userrole ur on ur.userId=u.userId left join roles r on r.roleName=ur.roleName where not (ur.roleName='admin' and ur.userId='developer') order by r.roleLevel`);  
+    const { data: users, code: status } = json; 
+    if (status === 200) {
       this.setState({
-        users
+          users
       })
     }
   }
+  
+//  这是原版使用mock的getUsers方法  
+//  getUsers = async () => { 
+//      const result = await getUsers()
+//      console.log("users",result);
+//      const { users, status } = result.data
+//      if (status === 0) {
+//        this.setState({
+//          users
+//        })
+//      }
+//    }
+  
+  
   handleEditUser = (row) => {
     this.setState({
       currentRowData:Object.assign({}, row),
@@ -31,16 +48,34 @@ class User extends Component {
   };
 
   handleDeleteUser = (row) => {
-    const { id } = row
-    if (id === "admin") {
-      message.error("不能删除管理员用户！")
-      return
+      const { id } = row;
+      let result=my.syncData$javaTx(`#admin 
+                  if("admin".equals($1) || "developer".equals($1))
+                      return "不能删除开发者或管理员用户!";
+                  DB.exe("delete from userrole where userId=", DB.que($1));                      
+                  DB.exe("delete from users where userId=", DB.que($1));
+                  return true;
+              `, id);
+      if(result===true){
+        message.success("删除成功")
+        this.getUsers();
+      } else {
+          message.error(result);
+      }
     }
-    deleteUser({id}).then(res => {
-      message.success("删除成功")
-      this.getUsers();
-    })
-  }
+  
+//  这是原版使用Mock的handleDeleteUser方法
+//  handleDeleteUser = (row) => {
+//    const { id } = row
+//    if (id === "admin") {
+//      message.error("不能删除管理员用户！")
+//      return
+//    }
+//    deleteUser({id}).then(res => {
+//      message.success("删除成功")
+//      this.getUsers();
+//    })
+//  }
   
   handleEditUserOk = _ => {
     const { form } = this.editUserFormRef.props;

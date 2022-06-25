@@ -9,20 +9,11 @@ export function reqUserInfo(data) {
 }
 
 export function getUsers() {
-return request({
-url: '/user/list',
-method: 'get'
-})
+  return request({
+    url: '/user/list',
+    method: 'get'
+  })
 }
-
-
-// //这是原版使用mock的getUsers方法
-//export function getUsers() {
-//  return request({
-//    url: '/user/list',
-//    method: 'get'
-//  })
-//}
 
 export function deleteUser(data) {
   return request({

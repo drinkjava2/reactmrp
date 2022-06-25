@@ -107,15 +107,15 @@ public class InitConfig extends HttpServlet {
     public static void insertUserAndPowers() {//插入种子用户、角色、权限
         //新建用户 
         User u = new User();
-        u.setUserId("developer").setAvatar("https://s1.ax1x.com/2020/04/28/J5hUaT.jpg").setPassword(ProjectSecurity.encodePassword("123")).insert();
-        u.setUserId("admin").setAvatar("https://s1.ax1x.com/2020/04/28/J5hUaT.jpg").setPassword(ProjectSecurity.encodePassword("123")).insert();
-        u.setUserId("editor").setAvatar("https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png").setPassword(ProjectSecurity.encodePassword("123")).insert();
-        u.setUserId("guest").setAvatar("https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png").setPassword(ProjectSecurity.encodePassword("123")).insert();
+        u.setUserId("developer").setName("张三").setAvatar("https://s1.ax1x.com/2020/04/28/J5hUaT.jpg").setPassword(ProjectSecurity.encodePassword("123")).insert();
+        u.setUserId("admin").setName("李四").setAvatar("https://s1.ax1x.com/2020/04/28/J5hUaT.jpg").setPassword(ProjectSecurity.encodePassword("123")).insert();
+        u.setUserId("editor").setName("王二麻").setAvatar("https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png").setPassword(ProjectSecurity.encodePassword("123")).insert();
+        u.setUserId("guest").setName("孙小狗").setAvatar("https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png").setPassword(ProjectSecurity.encodePassword("123")).insert();
 
         //新建角色Role
         new Role().setRoleName("developer").setRoleLevel(1).setRoleDescription("开发者，拥有系统内所有业务权限, 并允许动态执行前端发来的SQL和Java").insert();
         new Role().setRoleName("admin").setRoleLevel(2).setRoleDescription("管理员，拥有系统内除开发者权限外的所有业务权限").insert();
-        new Role().setRoleName("editor").setRoleLevel(3).setRoleDescription("编辑者，可以看到除用 户管理页面之外的所有页面").insert();
+        new Role().setRoleName("editor").setRoleLevel(3).setRoleDescription("编辑者，可以看到除用户管理页面之外的所有页面").insert();
         new Role().setRoleName("guest").setRoleLevel(4).setRoleDescription("普通用户，仅能看到主版、作者博客、权限测试和关于作者四个页面").insert();
 
         //给用户添加角色
@@ -141,7 +141,7 @@ public class InitConfig extends HttpServlet {
     }
 
     @Test
-    public void testInitDataBase() { //测试数据库
+    public void testInitDataBase() { //临时测试，也可用来在不重启后端的情况下重置数据库以供前端调试
         Dialect.setGlobalAllowReservedWords(false);
         initDataBase();
         //DbContext.gctx().setAllowShowSQL(true);

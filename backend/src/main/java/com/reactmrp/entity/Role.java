@@ -6,8 +6,8 @@ import com.github.drinkjava2.jdialects.annotation.jpa.Table;
 import com.github.drinkjava2.jsqlbox.ActiveEntity;
 
 /**
- * 简单的系统，只要给每个用户设一个或多个role就可以了，复杂的系统，每个role还可以设定它的细节权限（Power)，具体是通过定制TokenSecurity的实现类来检查methodId是否包含Power名来控制。
- * 本演示因为每个Role只分配了单个与Role重名的Power，所以看起来好象就控制到Role一级。
+ * 简单的系统，只要给每个用户设一个或多个role就可以了，复杂的系统，每个role还可以设定它的细节权限（Power)，具体是通过定制TokenSecurity的实现类来检查methodId是否包含Power字符串来控制权限。
+ * 本演示因为每个Role只分配了单个与Role重名的Power，所以看起来好象就控制到Role一级似的，实际上它可以精确控制到每个前端方法
  * 
  * @author Yong
  */
