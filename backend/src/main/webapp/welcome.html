@@ -45,12 +45,14 @@ section header {
 	 
 	 
 	 <script>
-	  $qryMapList(`#admin select userId from users order by userId`).then(json=>{
+	  $qryMapList(`#admin select * from users order by userId`).then(json=>{
 	      if(json.code==200){
 		     let users=json.data;
-		     let html="User List:<br/>";
-  		     for(let i=0;i<users.length;i++) 
-			 html+="userId:" +  users[i].userId+"<br/>"; 
+		     let html=`User List:<br/> <table border="1" cellspacing="0"><tr><th>userId</th> <th>myToken</th> </tr>`;
+  		     for(let i=0;i<users.length;i++) { 
+			 	html+= "<tr><td>"+users[i].userId+"</td> <td>"+(!users[i].myToken?" ":users[i].myToken)+"</td> </tr>";
+  		     }
+  		     html+="</table>";
 			 document.getElementById("Users").innerHTML=html;
 	      }  
 	  });

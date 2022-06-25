@@ -16,7 +16,7 @@ public class DataSourceConfig {
 	// H2Database memory database connection URL
 	public static class H2DataSourceBox extends HikariCPBox {
 		{
-			injectValue("jdbcUrl", "jdbc:h2:mem:reactmrp;MODE=MYSQL;DB_CLOSE_DELAY=-1;TRACE_LEVEL_SYSTEM_OUT=0;DATABASE_TO_UPPER=false");
+			injectValue("jdbcUrl", "jdbc:h2:mem:reactmrp;MODE=MYSQL;DB_CLOSE_DELAY=-1;TRACE_LEVEL_SYSTEM_OUT=0;DATABASE_TO_UPPER=false&characterEncoding=utf8");
 			injectValue("driverClassName", "org.h2.Driver");
 			injectValue("username", "sa");
 			injectValue("password", "");
@@ -27,7 +27,7 @@ public class DataSourceConfig {
 	public static class MySqlDataSourceUtcTimeBox extends MySqlDataSourceBox {
 		{
 			injectValue("jdbcUrl",
-					"jdbc:mysql://127.0.0.1:3306/reactmrp?rewriteBatchedStatements=true&useSSL=false&serverTimezone=UTC");
+					"jdbc:mysql://127.0.0.1:3306/reactmrp?rewriteBatchedStatements=true&useSSL=false&serverTimezone=UTC&characterEncoding=utf8");
 		}
 	}
 
@@ -35,7 +35,7 @@ public class DataSourceConfig {
     public static class MySqlDataSourceBox extends HikariCPBox {
         {
             injectValue("jdbcUrl",
-                    "jdbc:mysql://127.0.0.1:3306/reactmrp?rewriteBatchedStatements=true&useSSL=false");
+                    "jdbc:mysql://127.0.0.1:3306/reactmrp?rewriteBatchedStatements=true&useSSL=false&characterEncoding=utf8");
             injectValue("driverClassName", "com.mysql.cj.jdbc.Driver"); //for MySQL connection6 and above
             injectValue("username", "root");// change to your user & password
             injectValue("password", "root888");

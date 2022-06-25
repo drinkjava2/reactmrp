@@ -18,6 +18,7 @@ import com.github.drinkjava2.jsqlbox.DB;
 import com.github.drinkjava2.myserverless.TokenSecurity;
 import com.github.drinkjava2.myserverless.util.MD5Util;
 import com.github.drinkjava2.myserverless.util.MyStrUtils;
+import com.reactmrp.entity.Role;
 import com.reactmrp.entity.User;
 
 /**
@@ -100,20 +101,20 @@ public class ProjectSecurity implements TokenSecurity {
         return false;
     }
 
-    public static String getHighestRole(String myToken) {
+    public static Role getHighestRole(String myToken) {
         //检查是否token存在
         String userId = DB.qryString("select userId from users where myToken=", DB.que(myToken));
         if (MyStrUtils.isEmpty(userId))
             return null;
 
         //获取用户除developer之外的所有role
-        List<String> roles =  DB.qryList(userRoleCache, "select r.roleName from users u ", //
+        List<String> ids =  DB.qryList(userRoleCache, "select r.roleName from users u ", //
                 " left join userrole ur on u.userId=ur.userId ", //
                 " left join roles r on ur.roleName=r.roleName ", //
                 " where u.userId=", DB.que(userId), " and r.roleName<>'developer' order by roleLevel");
-        if (roles.isEmpty()) //如果什么权限都没有
+        if (ids.isEmpty()) //如果什么权限都没有
             return null;
-        return roles.get(0); //返回等级最高的role
+        return new Role().loadById(ids.get(0)); //loadbyId, 只返回等级最高的role
     }
 
     

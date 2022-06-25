@@ -104,7 +104,7 @@ public class InitConfig extends HttpServlet {
 
     }
 
-    public static void insertUserAndPowers() {//插入用户、角色、权限
+    public static void insertUserAndPowers() {//插入种子用户、角色、权限
         //新建用户 
         User u = new User();
         u.setUserId("developer").setAvatar("https://s1.ax1x.com/2020/04/28/J5hUaT.jpg").setPassword(ProjectSecurity.encodePassword("123")).insert();
@@ -112,11 +112,11 @@ public class InitConfig extends HttpServlet {
         u.setUserId("editor").setAvatar("https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png").setPassword(ProjectSecurity.encodePassword("123")).insert();
         u.setUserId("guest").setAvatar("https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png").setPassword(ProjectSecurity.encodePassword("123")).insert();
 
-        //新建角色
-        new Role().setRoleName("developer").setRoleLevel(4).insert();
-        new Role().setRoleName("admin").setRoleLevel(3).insert();
-        new Role().setRoleName("editor").setRoleLevel(2).insert();
-        new Role().setRoleName("guest").setRoleLevel(1).insert();
+        //新建角色Role
+        new Role().setRoleName("developer").setRoleLevel(1).setRoleDescription("开发者，拥有系统内所有业务权限, 并允许动态执行前端发来的SQL和Java").insert();
+        new Role().setRoleName("admin").setRoleLevel(2).setRoleDescription("管理员，拥有系统内除开发者权限外的所有业务权限").insert();
+        new Role().setRoleName("editor").setRoleLevel(3).setRoleDescription("编辑者，可以看到除用 户管理页面之外的所有页面").insert();
+        new Role().setRoleName("guest").setRoleLevel(4).setRoleDescription("普通用户，仅能看到主版、作者博客、权限测试和关于作者四个页面").insert();
 
         //给用户添加角色
         UserRole ur = new UserRole();
@@ -126,7 +126,7 @@ public class InitConfig extends HttpServlet {
         ur.setUserId("editor").setRoleName("editor").insert();
         ur.setUserId("guest").setRoleName("guest").insert();
 
-        //新建权限名
+        //新建权限名Power
         new Power().setPowerName("developer").insert();
         new Power().setPowerName("admin").insert();
         new Power().setPowerName("editor").insert();
@@ -156,7 +156,7 @@ public class InitConfig extends HttpServlet {
             System.out.println(p);
         }
 
-        List<Object> roles = DB.qryList("select r.roleName from users u ", //
+        List<Object> roles = DB.qryList("select r.* from users u ", //
                 " left join userrole ur on u.userId=ur.userId ", //
                 " left join roles r on ur.roleName=r.roleName ", //
                 " where u.userId=", DB.que("developer"), " and r.roleName<>'developer' order by roleLevel");

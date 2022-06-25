@@ -5,6 +5,7 @@ import java.util.Map;
 import com.github.drinkjava2.jsqlbox.DB;
 import com.github.drinkjava2.myserverless.MyServerlessEnv;
 import com.reactmrp.config.ProjectSecurity;
+import com.reactmrp.entity.Role;
 
 public class BackendPublic { //本项目在ProjectSecurity里设定为 只有类名中有public字样就允许执行，所以只这个类里只存放不需要登录就能公开访问的方法
 
@@ -55,14 +56,20 @@ public class BackendPublic { //本项目在ProjectSecurity里设定为 只有类
     }
 
     /**
-     * 返回当前登录用户信息，因为要适配原有前端，返回名称有转义，并且原前端 一个用户只能有1个角色（role），所以这个方法中返回的role只取除developer之外最高等级的role 
+     * 返回当前登录用户信息，因为原前端 一个用户只能有1个角色（role），所以这个方法中返回的role只取一个除developer之外最高等级的role 
      */
     public static class GetUserInfo extends template.JavaTemplate {
         public Object executeBody() {
-            Map<String, Object> user = DB.qryMap("select userId as id, userId as name, myToken as token, avatar, '' as role, '' as description from users where myToken=", DB.que(myToken));
+            Map<String, Object> user = DB.qryMap("select userId as id, userId as name, myToken as token, avatar from users where myToken=", DB.que(myToken));
             if (!user.isEmpty()) {
-                String highestRole = ProjectSecurity.getHighestRole(myToken);
-                user.put("role", highestRole);
+                Role role = ProjectSecurity.getHighestRole(myToken);
+                if (role != null) {
+                    user.put("role", role.getRoleName());
+                    user.put("description", role.getRoleDescription());
+                } else {
+                    user.put("role", "");
+                    user.put("description", "");
+                }
             }
             return user;
         }
