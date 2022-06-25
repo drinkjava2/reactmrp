@@ -56,7 +56,7 @@ public class MainApp {
         server.start();
 
         try { 
-            Runtime.getRuntime().exec("cmd /c start http://127.0.0.1:"+port+"/"); //如果在windows下调用缺省browser
+            Runtime.getRuntime().exec("cmd /c start http://localhost:"+port+"/"); //如果在windows下调用缺省browser
         } catch (Exception e) {
         }
         System.out.println("Undertow server started at port "+port);
