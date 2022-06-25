@@ -57,6 +57,7 @@ section header {
 
 	  function doLogout(){
 		if(true===syncData$myServerless(`BackendPublic$Logout`))
+			localStorage.setItem("myToken", null); 
 			window.location.href="/login.html";
 	  }
 	</script>
