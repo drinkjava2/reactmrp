@@ -15,7 +15,7 @@ import java.util.Enumeration;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import com.alibaba.fastjson.JSONObject;
+import org.json.JSONObject;
 
 /**
  * JsonResult used to return a JSON to front end 
@@ -50,7 +50,7 @@ public class JsonResult {
         this.data = data;
     }
 
-    public static JsonResult json403(String msg, HttpServletRequest request, JSONObject json ) {
+    public static JsonResult json403(String msg, HttpServletRequest request, String json ) {
         JsonResult result = new JsonResult(403, msg).setStatus(403);
         if (MyServerlessEnv.allow_debug_info)
             result.setDebugInfo(getDebugInfo(request, json));
@@ -58,7 +58,7 @@ public class JsonResult {
     }
 
     /**  Get debug info of request   */
-    public static String getDebugInfo(HttpServletRequest request, JSONObject json) {
+    public static String getDebugInfo(HttpServletRequest request, String json) {
         if (request == null || !MyServerlessEnv.allow_debug_info)
             return "";
         StringBuilder sb = new StringBuilder("\n");
@@ -91,7 +91,7 @@ public class JsonResult {
          }     
         sb.append("\n");
 
-        sb.append("JSON: ").append(json.toString()).append("\n");
+        sb.append("JSON: ").append(json).append("\n");
         return sb.toString();
     }
 

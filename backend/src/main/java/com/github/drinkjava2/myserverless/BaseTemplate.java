@@ -10,24 +10,16 @@
  */
 package com.github.drinkjava2.myserverless;
 
-import java.io.BufferedWriter;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import com.alibaba.fastjson.JSONObject;
-import com.github.drinkjava2.myserverless.util.MyFileUtils;
+import org.json.JSONObject;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import static com.github.drinkjava2.myserverless.util.MyJsonUtil.*;
 
 /**
  * This is the base environment servlet store environment info
@@ -45,11 +37,11 @@ public abstract class BaseTemplate {
 
     protected HttpServletResponse response; // response instance
 
-    protected JSONObject json; // json instance
+    protected String myToken; // current myToken 
     
-    protected String myToken; // current myToken
+    JsonNode jsonNode; //root node of json input
 
-    protected String $0;
+    protected String $0; //shortcut of paramArrays
     protected String $1;
     protected String $2;
     protected String $3;
@@ -60,41 +52,30 @@ public abstract class BaseTemplate {
     protected String $8;
     protected String $9;
     protected String $10;
-    protected String $11;
-    protected String $12;
-    protected String $13;
-    protected String $14;
-    protected String $15;
-    protected String $16;
-    protected String $17;
-    protected String $18;
-    protected String $19;
-    protected String $20;
 
-    public void initParams(HttpServletRequest request, HttpServletResponse response, JSONObject json, String myToken) {
+    public void initParams(HttpServletRequest request, HttpServletResponse response, JsonNode jsonNode, String myToken) {
         this.request = request;
         this.response = response;
-        this.json = json;
         this.myToken = myToken;
-
-        $0 = json.getString("$0");
-        $1 = json.getString("$1");
-        $2 = json.getString("$2");
-        $3 = json.getString("$3");
-        $4 = json.getString("$4");
-        $5 = json.getString("$5");
-        $6 = json.getString("$6");
-        $7 = json.getString("$7");
-        $8 = json.getString("$8");
-        $9 = json.getString("$9");
-        $10 = json.getString("$10"); 
+        this.jsonNode =jsonNode; 
+        $0 = getAsText(jsonNode, "$0");
+        $1 = getAsText(jsonNode, "$1"); 
+        $2 = getAsText(jsonNode, "$2"); 
+        $3 = getAsText(jsonNode, "$3"); 
+        $4 = getAsText(jsonNode, "$4"); 
+        $5 = getAsText(jsonNode, "$5"); 
+        $6 = getAsText(jsonNode, "$6"); 
+        $7 = getAsText(jsonNode, "$7"); 
+        $8 = getAsText(jsonNode, "$8"); 
+        $9 = getAsText(jsonNode, "$9"); 
+        $10 = getAsText(jsonNode, "$10"); 
     }
 
-    /** Pack all $1 , $2,... to $10 parameters into a String[] */
-    public String[] getParamArray() {
+    /** Pack all $1 , $2,... parameters into a String[] */
+    public String[] getParamArray() {  
         List<String> paramList = new ArrayList<String>();
         for (int i = 1; i <= 100; i++) {
-            String parameter = json.getString("$" + i);
+            String parameter = getAsText(jsonNode, "$" + i);
             if (parameter != null)
                 paramList.add(parameter);
             else
@@ -102,7 +83,7 @@ public abstract class BaseTemplate {
         }
         return paramList.toArray(new String[paramList.size()]);
     }
-    
+
     /**
      * The body method for template
      * @return Object
@@ -137,14 +118,6 @@ public abstract class BaseTemplate {
 
     public HttpServletResponse getResponse() {
         return response;
-    }
-
-    public JSONObject getJson() {
-        return json;
-    }
-
-    public void setJson(JSONObject json) {
-        this.json = json;
-    }
+    } 
 
 }

@@ -21,10 +21,16 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import org.json.JSONObject;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.drinkjava2.myserverless.compile.DynamicCompileEngine;
+import com.github.drinkjava2.myserverless.util.MyJsonUtil;
 import com.github.drinkjava2.myserverless.util.MyStrUtils;
+import static com.github.drinkjava2.myserverless.util.MyJsonUtil.*;
 
 /**
  * Dispatch call to local java classes and return a JSON
@@ -77,11 +83,11 @@ public class MyServerlessServlet extends HttpServlet {
             return;
 
         resp.setHeader("Content-Type", "application/json;charset:utf-8");
-        String json = JSON.toJSONString(jsonResult);
+        String jsonStr = MyJsonUtil.toJSON(jsonResult);
         PrintWriter out = null;
         try {
             out = resp.getWriter();
-            out.println(json);
+            out.println(jsonStr);
             out.flush();
         } catch (IOException e) {
             e.printStackTrace();
@@ -93,12 +99,11 @@ public class MyServerlessServlet extends HttpServlet {
 
     /** Dispatch remote call to related classes, and return a json */
     public static JsonResult doActionBody(HttpServletRequest req, HttpServletResponse resp) {
-        JSONObject json = null;
         String jsonString = null;
         try {
             req.setCharacterEncoding("utf-8");
         } catch (UnsupportedEncodingException e1) {
-            return JsonResult.json403("Error: Unsupported utf-8 encoding on server side.", req, null);
+            return JsonResult.json403("Error: unsupported utf-8 encoding on server side.", req, null);
         }
 
         try {
@@ -107,15 +112,24 @@ public class MyServerlessServlet extends HttpServlet {
         } catch (IOException e1) {
             return JsonResult.json403("Error: can not read json on server side.", req, null);
         }
-        json = JSON.parseObject(jsonString);
-        if (json == null)
-            return JsonResult.json403("Error: unknow request", req, null);
-
-        String sqlOrJavaPiece = json.getString("$0");
-        String remoteMethod = json.getString("remoteMethod");
+        
+        JsonNode jsonnode=null;
+        try {
+            jsonnode = new ObjectMapper().readTree(jsonString);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (jsonnode == null)
+            return JsonResult.json403("Error: unsupport json format on server side.", req, null);
+        
+        System.out.println("jsonnode="+jsonnode);
+        System.out.println("jsonnode0="+jsonnode.get("$0"));
+        
+        String sqlOrJavaPiece = getAsText(jsonnode,"$0");
+        String remoteMethod = getAsText(jsonnode,"remoteMethod");
         if(remoteMethod==null)
             remoteMethod="";
-        String myToken = json.getString("myToken");
+        String myToken = getAsText(jsonnode,"myToken");   
 
         if (MyStrUtils.isEmpty(myToken) || myToken.length() < 10) {//if myToken is empty or wrong, get from cookie
             Cookie[] cookies = req.getCookies();
@@ -127,47 +141,47 @@ public class MyServerlessServlet extends HttpServlet {
         }
 
         if (MyStrUtils.isEmpty(sqlOrJavaPiece))
-            return JsonResult.json403("Error: request body is empty.", req, json);
+            return JsonResult.json403("Error: request body is empty.", req, jsonString);
 
         Class<?> childClass = null;
         try {
             childClass = MyServerlessEnv.findCachedClass(sqlOrJavaPiece);
             if (childClass == null) {
                 if (MyServerlessEnv.is_product_stage)
-                    return JsonResult.json403("Error: in product stage but not found class on server.", req, json);
+                    return JsonResult.json403("Error: in product stage but not found class on server.", req, jsonString);
 
                 PieceType pieceType = PieceType.byRemoteMethodName(remoteMethod);
                 Class<?> templateClass = MyServerlessEnv.methodTemplates.get(remoteMethod);
                 if (templateClass == null)
-                    return JsonResult.json403("Error: server method '" + remoteMethod + "' not found.", req, json);
+                    return JsonResult.json403("Error: server method '" + remoteMethod + "' not found.", req, jsonString);
                 SqlJavaPiece piece = SqlJavaPiece.parseFromFrontText(remoteMethod, sqlOrJavaPiece);
                 String classSrc = SrcBuilder.createSourceCode(templateClass, pieceType, piece);
                 childClass = DynamicCompileEngine.instance.javaCodeToClass(MyServerlessEnv.deploy_package + "." + piece.getClassName(), classSrc);
             }
             if (childClass == null) //still is null
-                return JsonResult.json403("Error: compile failed on server side.", req, json);
+                return JsonResult.json403("Error: compile failed on server side.", req, jsonString);
 
             String methodId = MyStrUtils.substringBefore(childClass.getName(), "_");
             methodId = MyStrUtils.substringAfterLast(methodId, ".");
 
             if (!MyServerlessEnv.tokenSecurity.allow(myToken, methodId)) //重要，在这里调用系统配置的TokenSecurity进行权限检查
-                return JsonResult.json403("Error: no privilege to execute '" + methodId + "' method", req, json);
+                return JsonResult.json403("Error: no privilege to execute '" + methodId + "' method", req, jsonString);
 
             BaseTemplate instance = null;
             if (BaseTemplate.class.isAssignableFrom(childClass)) {
                     instance = (BaseTemplate) childClass.newInstance(); //这里只能用newInstance生成多例，如果要采用单例模式虽然可以节省一点内存，但是req、rep、json只能放在线程变量里传递太麻烦
             } else
-                return JsonResult.json403("Error: incorrect MyServerless child template error.", req, json);
+                return JsonResult.json403("Error: incorrect MyServerless child template error.", req, jsonString);
 
-            instance.initParams(req, resp, json, myToken);
+            instance.initParams(req, resp, jsonnode, myToken);
 
             return instance.execute();
         } catch (Exception e) {
             e.printStackTrace();
             if (MyServerlessEnv.allow_debug_info) //if debugInfo is true, will put exception message and debug info in JSON
-                return new JsonResult(403, "Error: server internal error.").setStatus(403).setDebugInfo(JsonResult.getDebugInfo(req, json) + "\n" + e.getMessage());
+                return new JsonResult(403, "Error: server internal error.").setStatus(403).setDebugInfo(JsonResult.getDebugInfo(req, jsonString) + "\n" + e.getMessage());
             else
-                return JsonResult.json403("Error: server internal error.", req, json);
+                return JsonResult.json403("Error: server internal error.", req, jsonString);
         }
     }
 

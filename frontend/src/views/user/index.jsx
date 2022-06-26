@@ -110,22 +110,55 @@ class User extends Component {
   };
 
   handleAddUserOk = _ => {
-    const { form } = this.addUserFormRef.props;
-    form.validateFields((err, values) => {
-      if (err) {
-        return;
-      }
-      this.setState({ addUserModalLoading: true, });
-      addUser(values).then((response) => {
-        form.resetFields();
-        this.setState({ addUserModalVisible: false, addUserModalLoading: false });
-        message.success("添加成功!")
-        this.getUsers()
-      }).catch(e => {
-        message.success("添加失败,请重试!")
-      })
-    });
+      const { form } = this.addUserFormRef.props;
+      form.validateFields(( err, values ) => {
+          if ( err ) {
+              return;
+          }
+          console.log("values",values);
+          this.setState( { addUserModalLoading: true, } );
+          my.data$javaTx( `#admin 
+          import com.alibaba.fastjson.JSON;
+          import com.alibaba.fastjson.TypeReference;
+          System.out.println("$1="+$1);
+          Map<String, String> values=  JSON.parseObject($1, new TypeReference<Map<String, String>>() {});
+          
+
+          System.out.println(values);
+          return true;
+          `,values ).then(( result ) => {
+              console.log(result);
+              if ( result ) {
+                  this.setState( { addUserModalVisible: false, addUserModalLoading: false } );
+                  message.success( "添加成功!" )
+              } else {
+                  message.success( "添加失败,请重试!" )
+              }
+          }
+          );
+      } );
   };
+  
+//  这是原版使用mock的handleAddUserOk方法
+//  handleAddUserOk = _ => {
+//    const { form } = this.addUserFormRef.props;
+//    form.validateFields((err, values) => {
+//      if (err) {
+//        return;
+//      }
+//      this.setState({ addUserModalLoading: true, });
+//      addUser(values).then((response) => {
+//        form.resetFields();
+//        this.setState({ addUserModalVisible: false, addUserModalLoading: false });
+//        message.success("添加成功!")
+//        this.getUsers()
+//      }).catch(e => {
+//        message.success("添加失败,请重试!")
+//      })
+//    });
+//  };
+  
+  
   componentDidMount() {
     this.getUsers()
   }
