@@ -29,22 +29,22 @@ import com.fasterxml.jackson.databind.ObjectWriter;
  *  
  * @author Yong
  */
-public class MyJsonUtil { 
+public class JacksonUtil {
     //为了避免每次 new ObjectMapper()，这里全局使用单例。如果有不同配置就生成多个不同配置的单例
-    private static ObjectMapper singleTonObjectMapper = new ObjectMapper();
-    private static ObjectMapper singleTonObjectMapper_NONEMPTY = new ObjectMapper();
-    private static ObjectMapper singleTonObjectMapper_NONNULL = new ObjectMapper();
+    public static final ObjectMapper singleTonObjectMapper = new ObjectMapper();
+    public static final ObjectMapper singleTonObjectMapper_NONEMPTY = new ObjectMapper();
+    public static final ObjectMapper singleTonObjectMapper_NONNULL = new ObjectMapper();
 
-    static{
+    static {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        
+
         singleTonObjectMapper_NONEMPTY.setSerializationInclusion(Include.NON_EMPTY);
         singleTonObjectMapper_NONEMPTY.setDateFormat(dateFormat);
-         
+
         singleTonObjectMapper_NONNULL.setSerializationInclusion(Include.NON_NULL);
         singleTonObjectMapper_NONNULL.setDateFormat(dateFormat);
     }
-    
+
     /**
      * 从json字符串中直接取指定的节点解析为对象实例, ，通常是整数或字符串，使用示例如下：
      * Object obj = JsonUtil.get(json,"node1.node2.x.node4"); //x表示列表下标序号
@@ -104,19 +104,19 @@ public class MyJsonUtil {
     }
 
     /** 把object转为json, 如失败返回null  */
-    public static String toJSON(Object object) { 
+    public static String toJSON(Object object) {
         ObjectWriter objectWriter = singleTonObjectMapper_NONEMPTY.writer();
         return toJSON(object, objectWriter);
     }
 
     /** 把object转为格式化json, 如失败返回null  */
-    public static String toJSONFormatted(Object object) { 
+    public static String toJSONFormatted(Object object) {
         ObjectWriter objectWriter = singleTonObjectMapper_NONNULL.writer().withDefaultPrettyPrinter();
         return toJSON(object, objectWriter);
     }
 
     /** 把json字符串格式化, 如失败返回null  */
-    public static String formatJSON(String input) { 
+    public static String formatJSON(String input) {
         Object json;
         String indented = "";
         try {
@@ -130,18 +130,22 @@ public class MyJsonUtil {
     }
 
     /** 私有方法，以指定的ObjectWriter转object为json字符串 , 如失败返回null */
-    private static String toJSON(Object object, ObjectWriter objectWriter) { 
-            try {
-                return objectWriter.writeValueAsString(object);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-                return null;
-            } 
+    private static String toJSON(Object object, ObjectWriter objectWriter) {
+        try {
+            return objectWriter.writeValueAsString(object);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static String getAsText(JsonNode node, String field) {
-        JsonNode n=node.get(field);
-        if(n==null)return null;
-        return n.asText();
+        JsonNode n = node.get(field);
+        if (n == null)
+            return null;
+        String s = n.asText();
+        if (MyStrUtils.isEmpty(s))
+            s = n.toString();
+        return s;
     }
 }

@@ -115,27 +115,35 @@ class User extends Component {
           if ( err ) {
               return;
           }
-          console.log("values",values);
+          console.log( "values", values );
           this.setState( { addUserModalLoading: true, } );
-          my.data$javaTx( `#admin 
-          import com.alibaba.fastjson.JSON;
-          import com.alibaba.fastjson.TypeReference;
-          System.out.println("$1="+$1);
-          Map<String, String> values=  JSON.parseObject($1, new TypeReference<Map<String, String>>() {});
-          
 
-          System.out.println(values);
+          my.data$javaTx( `#admin 
+          import static com.github.drinkjava2.myserverless.util.JacksonUtil.*;
+          System.out.println("jsonNode="+jsonNode);
+          System.out.println(jsonNode.get("$1").getClass());
+          System.out.println("$0="+$0);
+          System.out.println("$1="+$1);
+          System.out.println("$2="+$2);
+          System.out.println("$3="+$3);
+          System.out.println("$4="+$4);
+          System.out.println("$5="+$5);
+          System.out.println("$6="+$6);
+          //Map<String, String> values=  JSON.parseObject($1, new TypeReference<Map<String, String>>() {}); 
+         // System.out.println(values);
           return true;
-          `,values ).then(( result ) => {
-              console.log(result);
-              if ( result ) {
-                  this.setState( { addUserModalVisible: false, addUserModalLoading: false } );
-                  message.success( "添加成功!" )
-              } else {
-                  message.success( "添加失败,请重试!" )
+          `, values, 1,2,"3",4,5.5)
+
+              .then(( result ) => {
+                  console.log( result );
+                  if ( result ) {
+                      this.setState( { addUserModalVisible: false, addUserModalLoading: false } );
+                      message.success( "添加成功!" );
+                  } else {
+                      message.success( "添加失败,请重试!" );
+                  }
               }
-          }
-          );
+              );
       } );
   };
   

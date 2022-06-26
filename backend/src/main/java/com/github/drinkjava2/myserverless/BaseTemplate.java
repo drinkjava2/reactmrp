@@ -10,16 +10,15 @@
  */
 package com.github.drinkjava2.myserverless;
 
+import static com.github.drinkjava2.myserverless.util.JacksonUtil.getAsText;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONObject;
-
 import com.fasterxml.jackson.databind.JsonNode;
-import static com.github.drinkjava2.myserverless.util.MyJsonUtil.*;
 
 /**
  * This is the base environment servlet store environment info
@@ -39,7 +38,7 @@ public abstract class BaseTemplate {
 
     protected String myToken; // current myToken 
     
-    JsonNode jsonNode; //root node of json input
+    protected JsonNode jsonNode; //root node of json input
 
     protected String $0; //shortcut of paramArrays
     protected String $1;

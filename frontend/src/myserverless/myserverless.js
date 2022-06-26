@@ -12,7 +12,9 @@ async function fetchJSon(methodName, text, args){//异步ajax
 				//credentials: 'include',
 				body : bodyJsonStr
 		      });
-		  return await response.json();
+          let obj= await response.json();
+          if(obj.debugInfo)alert(obj.debugInfo);
+          return obj;
 	  }catch(e){
 		  console.log("Request failed ", e);
 		  return {"code":403, "msg":"Request failed", "data":null};
@@ -31,7 +33,9 @@ function syncXhrJSon(methodName, text, args){//同步ajax
 	  if (xhr.status !== 200) {
 		  return {"code":403, "msg":"Request failed", "data":null};
 	  } else {
-		  return JSON.parse(xhr.responseText);
+		  let obj= JSON.parse(xhr.responseText);
+		  if(obj.debugInfo)alert(obj.debugInfo);
+		  return obj;
 	  }
 	} catch(err) {
 		return {"code":403, "msg":"Request failed", "data":null};

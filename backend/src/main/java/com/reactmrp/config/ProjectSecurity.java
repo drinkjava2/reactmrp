@@ -28,7 +28,7 @@ import com.reactmrp.entity.User;
  * @since 1.0.0
  */
 public class ProjectSecurity implements TokenSecurity {
-    //重要： 每当有人员、角色、权限变动时，都要调用userPowerCache.clearCache()清空缓存防止脏数据
+    //重要：这里为了提高性能采用了缓存，所以 每当有人员、角色、权限变动时，都要调用userPowerCache.clearCache()清空缓存
     private static SimpleCacheHandler userPowerCache = new SimpleCacheHandler(300, 100 * 24 * 60 * 60);//缺省最多同时保存300个用户的权限表, 100天过期
     private static SimpleCacheHandler userRoleCache = new SimpleCacheHandler(300, 100 * 24 * 60 * 60);//缺省最多同时保存300个用户的权限表, 100天过期    
     

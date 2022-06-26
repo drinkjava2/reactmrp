@@ -10,22 +10,67 @@
  */
 package text;
 
+import org.json.JSONObject;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.drinkjava2.myserverless.util.JacksonUtil;
 import com.github.drinkjava2.myserverless.util.Txt;
 
 /**
  * Store multiple line Strings for unit test
  */
 
-public class Texts { 
- 
-	public static class DemoTxt extends Txt {
-		/*-  
-		 public class A {
-		  public String name="a"; 
-		 } 
-		 */
-	}
-	 
-	  
+public class Texts {
+
+    public static class DemoTxt extends Txt {
+        /*-  
+         public class A {
+          public String name="a"; 
+         } 
+         */
+    }
+
+    public static class t2 extends Txt {
+        /*-  
+        {"a":"1",
+         "b": "a",
+          "c":{"ab\"cd":"1",
+            "b":1 
+          },
+         "d":{"a":"1",
+               "b":1,
+               "c":{"a":"1",
+                       "b":2 
+                      },
+                "e":[1,{"a":5},3]       
+            } 
+            
+        }
+         */
+    }
+
+    public static void main(String[] args) {
+        String s = new t2().toString();
+        System.out.println(s);
+        JsonNode jn = null;
+        try {
+            jn = new ObjectMapper().readTree(s);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(jn);
+        System.out.println(JacksonUtil.get(s, "d.e.1.a"));
+
+        try {
+            Object result = JacksonUtil.singleTonObjectMapper.readValue(s, Object.class);
+            System.out.println(result);
+            System.out.println(result.getClass());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

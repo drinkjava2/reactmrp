@@ -10,6 +10,8 @@
  */
 package com.github.drinkjava2.myserverless;
 
+import static com.github.drinkjava2.myserverless.util.JacksonUtil.getAsText;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,16 +23,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.json.JSONObject;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.drinkjava2.myserverless.compile.DynamicCompileEngine;
-import com.github.drinkjava2.myserverless.util.MyJsonUtil;
+import com.github.drinkjava2.myserverless.util.JacksonUtil;
 import com.github.drinkjava2.myserverless.util.MyStrUtils;
-import static com.github.drinkjava2.myserverless.util.MyJsonUtil.*;
 
 /**
  * Dispatch call to local java classes and return a JSON
@@ -83,7 +80,7 @@ public class MyServerlessServlet extends HttpServlet {
             return;
 
         resp.setHeader("Content-Type", "application/json;charset:utf-8");
-        String jsonStr = MyJsonUtil.toJSON(jsonResult);
+        String jsonStr = JacksonUtil.toJSON(jsonResult);
         PrintWriter out = null;
         try {
             out = resp.getWriter();
@@ -113,23 +110,21 @@ public class MyServerlessServlet extends HttpServlet {
             return JsonResult.json403("Error: can not read json on server side.", req, null);
         }
         
-        JsonNode jsonnode=null;
+        JsonNode jsonNode=null;
         try {
-            jsonnode = new ObjectMapper().readTree(jsonString);
+            jsonNode = new ObjectMapper().readTree(jsonString);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (jsonnode == null)
+        if (jsonNode == null)
             return JsonResult.json403("Error: unsupport json format on server side.", req, null);
         
-        System.out.println("jsonnode="+jsonnode);
-        System.out.println("jsonnode0="+jsonnode.get("$0"));
-        
-        String sqlOrJavaPiece = getAsText(jsonnode,"$0");
-        String remoteMethod = getAsText(jsonnode,"remoteMethod");
+      
+        String sqlOrJavaPiece = getAsText(jsonNode,"$0");
+        String remoteMethod = getAsText(jsonNode,"remoteMethod");
         if(remoteMethod==null)
             remoteMethod="";
-        String myToken = getAsText(jsonnode,"myToken");   
+        String myToken = getAsText(jsonNode,"myToken");   
 
         if (MyStrUtils.isEmpty(myToken) || myToken.length() < 10) {//if myToken is empty or wrong, get from cookie
             Cookie[] cookies = req.getCookies();
@@ -173,7 +168,7 @@ public class MyServerlessServlet extends HttpServlet {
             } else
                 return JsonResult.json403("Error: incorrect MyServerless child template error.", req, jsonString);
 
-            instance.initParams(req, resp, jsonnode, myToken);
+            instance.initParams(req, resp, jsonNode, myToken);
 
             return instance.execute();
         } catch (Exception e) {
