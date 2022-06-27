@@ -18,15 +18,13 @@ class User extends Component {
   };
   
   getUsers = async () => { 
-    let json=await my.$java(`#admin 
-        List<Map<String, Object>> users = DB.qryMapList("select userId as id,  name, description from users order by userId");
+    let json=await my.$java(`#admin List<Map<String, Object>> users = DB.qryMapList("select userId as id,  name, description from users order by userId");
             for (Map<String, Object> m : users) {
                 List<Object> roles = DB.qryList("select roleName from userRole where userId=", que(m.get("id"))," order by roleName desc");
                 if(!roles.isEmpty())
                       m.put("role", roles.get(0));
             }
-            return users; 
-    `);  
+            return users;`);  
     const { data: users, code: status } = json; 
     if (status === 200) {
       this.setState({
@@ -57,15 +55,13 @@ class User extends Component {
 
   
     doDeleteUser  = (id) => {
-      let result=my.syncData$javaTx(`#admin
-                  if("1".equals( DB.qryString("select 1 from userrole where roleName='developer' and userId=?", par($1)) ))
+      let result=my.syncData$javaTx(`#admin if("1".equals( DB.qryString("select 1 from userrole where roleName='developer' and userId=?", par($1)) ))
                       return "不能删除开发者用户!";
                   if("1".equals( DB.qryString("select 1 from users where myToken=",DB.que(myToken), " and userId=?", par($1)) ))
                       return "不能删除自身用户!";
                   DB.exe("delete from userrole where userId=", DB.que($1));                      
                   DB.exe("delete from users where userId=", DB.que($1));
-                  return true;
-              `, id);
+                  return true;`, id);
       if(result===true){
         message.success("删除成功")
         this.getUsers();
@@ -108,9 +104,9 @@ class User extends Component {
       }
       this.setState({ editModalLoading: true, });
       
-      my.data$javaTx( `#admin 
-              import com.github.drinkjava2.myserverless.util.MyStrUtils;
-              Map<String,String> v= (Map<String,String>)$1;
+      my.data$javaTx(`#admin 
+import com.github.drinkjava2.myserverless.util.MyStrUtils;
+Map<String,String> v= (Map<String,String>)$1;
               String role=DB.qryString("select roleName from userRole where roleName='developer' and userId=", que(v.get("id")));
               if("developer".equals(role))
                  return "编辑失败， developer不允许被编辑";
@@ -119,8 +115,7 @@ class User extends Component {
                DB.exe("update users set name=?, description=? where userId=?", par(v.get("name"), v.get("description"), v.get("id")));
                DB.exe("delete from userRole where userId=",que(v.get("id")));
                DB.exe("insert into userRole (userId, roleName) ", par(v.get("id"), v.get("role")), DB.VQ );    
-               return "编辑成功!";
-            `, values).then(( msg ) => {
+               return "编辑成功!";`, values).then(( msg ) => {
                     this.setState( { editModalLoading: false } ); 
                     if ( msg==="编辑成功!" ) {
                         this.setState( { editUserModalVisible: false } ); 
@@ -177,15 +172,14 @@ class User extends Component {
               return;
           }
           this.setState( { addUserModalLoading: true, } );
-          my.data$javaTx( `#admin 
-            import com.github.drinkjava2.myserverless.util.MyStrUtils;
-            Map<String,String> v= (Map<String,String>)$1;
+          my.data$javaTx(`#admin 
+import com.github.drinkjava2.myserverless.util.MyStrUtils;
+Map<String,String> v= (Map<String,String>)$1;
             if(MyStrUtils.isEmpty(v.get("name"))) //只查name, 不检查userId，因为主键为空不可能插入
                  return null;
              DB.exe("insert into users (userId, name, description) ", par(v.get("id"), v.get("name"), v.get("description")), DB.VQ ); 
              DB.exe("insert into userRole (userId, roleName) ", par(v.get("id"), v.get("role")), DB.VQ );    
-             return true;
-          `, values).then(( result ) => {
+             return true;`, values).then(( result ) => {
                   this.setState( { addUserModalLoading: false } );
                   if ( result ) {
                       this.setState( { addUserModalVisible: false } );

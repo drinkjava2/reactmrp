@@ -64,7 +64,9 @@ section header {
 	  }
 	  
 	  function resetDatabase(){
-		   sync$java(`#admin import static com.reactmrp.config.InitConfig.*; initDataBase();  insertUserAndPowers();`);
+		   sync$java(`#admin 
+import static com.reactmrp.config.InitConfig.*;
+initDataBase();  insertUserAndPowers();`);
 		   window.location.href="/login.html";
 		  }
 	</script>

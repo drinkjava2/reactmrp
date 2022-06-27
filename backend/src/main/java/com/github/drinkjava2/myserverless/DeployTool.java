@@ -80,8 +80,10 @@ public class DeployTool {
         List<File> frontWebFiles = searchSupportedWebFilesInMultiplePaths(MyServerlessEnv.getSrcWebappFolders());
         System.out.println("Found " + frontWebFiles.size() + " files, start transfer...");
         List<SqlJavaPiece> sqlJavaPieces = new ArrayList<>();
-        for (File file : frontWebFiles)
+        for (File file : frontWebFiles) {
+            System.out.println(file.getAbsolutePath());
             DeployToolUtils.oneFileToServ(sqlJavaPieces, file, true);
+        }
         for (SqlJavaPiece sqlJavaPiece : sqlJavaPieces) {
             System.out.println(sqlJavaPiece.getDebugInfo());
         }
