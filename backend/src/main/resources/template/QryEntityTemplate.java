@@ -22,7 +22,7 @@ public class QryEntityTemplate extends BaseTemplate {
 		Class<?> entityClass = ClassCacheUtils.checkClassExist(entityClassName);
 		DbException.assureNotNull(entityClass, "Entity class parameter can not be null");
 		sql = MyStrUtils.substringAfter(sql, ",");
-		String[] paramArray = getParamArray();
+		Object[] paramArray = getParamArray();
 		List<Object> result;
 		if (paramArray.length == 0)
 			result = qryEntityList(entityClass, sql);

@@ -10,12 +10,13 @@
  */
 package com.github.drinkjava2.myserverless;
 
-import static com.github.drinkjava2.myserverless.util.JacksonUtil.getAsText;
+import static com.github.drinkjava2.myserverless.util.JsonUtil.getAsText;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -23,10 +24,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.drinkjava2.myserverless.compile.DynamicCompileEngine;
-import com.github.drinkjava2.myserverless.util.JacksonUtil;
+import com.github.drinkjava2.myserverless.util.JsonUtil;
 import com.github.drinkjava2.myserverless.util.MyStrUtils;
 
 /**
@@ -76,11 +76,11 @@ public class MyServerlessServlet extends HttpServlet {
             resp.setStatus(200);
         jsonResult.setStatus(null); //no need put status in json
 
-        if (BaseTemplate.NONE.equals(jsonResult.getData())) // if return NONE, do nothing
+        if (BaseTemplate.NONE.equals(jsonResult.getData())) // if return NONE, do nothing, user can write to req themself
             return;
 
         resp.setHeader("Content-Type", "application/json;charset:utf-8");
-        String jsonStr = JacksonUtil.toJSON(jsonResult);
+        String jsonStr = JsonUtil.toJSON(jsonResult);
         PrintWriter out = null;
         try {
             out = resp.getWriter();
@@ -110,21 +110,21 @@ public class MyServerlessServlet extends HttpServlet {
             return JsonResult.json403("Error: can not read json on server side.", req, null);
         }
         
-        JsonNode jsonNode=null;
+        Map<String, Object> params=null;
         try {
-            jsonNode = new ObjectMapper().readTree(jsonString);
+            params = (Map<String, Object>) new ObjectMapper().readValue(jsonString, Object.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (jsonNode == null)
+        if (params == null)
             return JsonResult.json403("Error: unsupport json format on server side.", req, null);
         
       
-        String sqlOrJavaPiece = getAsText(jsonNode,"$0");
-        String remoteMethod = getAsText(jsonNode,"remoteMethod");
+        String sqlOrJavaPiece =(String) params.get("$0");
+        String remoteMethod = (String) params.get("remoteMethod");
         if(remoteMethod==null)
             remoteMethod="";
-        String myToken = getAsText(jsonNode,"myToken");   
+        String myToken =(String) params.get("myToken");
 
         if (MyStrUtils.isEmpty(myToken) || myToken.length() < 10) {//if myToken is empty or wrong, get from cookie
             Cookie[] cookies = req.getCookies();
@@ -168,7 +168,7 @@ public class MyServerlessServlet extends HttpServlet {
             } else
                 return JsonResult.json403("Error: incorrect MyServerless child template error.", req, jsonString);
 
-            instance.initParams(req, resp, jsonNode, myToken);
+            instance.initParams(req, resp, params, myToken);
 
             return instance.execute();
         } catch (Exception e) {

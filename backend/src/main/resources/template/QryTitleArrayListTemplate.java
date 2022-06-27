@@ -16,7 +16,7 @@ public class QryTitleArrayListTemplate extends BaseTemplate {
 		/* MYSERVERLESS BODY BEGIN */
 		String sql = null;
 		/* MYSERVERLESS BODY END */
-		String[] paramArray = getParamArray();
+		Object[] paramArray = getParamArray();
 		if (paramArray.length == 0)
 			return qry(new TitleArrayListHandler(), sql);
 		else

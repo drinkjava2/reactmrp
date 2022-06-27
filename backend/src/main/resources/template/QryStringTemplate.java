@@ -1,14 +1,14 @@
 package template;
 
 import static com.github.drinkjava2.jsqlbox.DB.par;
-import static com.github.drinkjava2.jsqlbox.DB.qryList;
+import static com.github.drinkjava2.jsqlbox.DB.qryString;
 import static com.github.drinkjava2.jsqlbox.DB.qry;
 import com.github.drinkjava2.jsqlbox.*;
 import com.github.drinkjava2.myserverless.BaseTemplate;
 
 @SuppressWarnings("unused")
-public class QryListTemplate extends BaseTemplate {
-    
+public class QryStringTemplate extends BaseTemplate {
+
 	@Override
 	public Object executeBody() {
 		/* MYSERVERLESS BODY BEGIN */
@@ -16,9 +16,9 @@ public class QryListTemplate extends BaseTemplate {
 		/* MYSERVERLESS BODY END */
 		Object[] paramArray = getParamArray();
 		if (paramArray.length == 0)
-			return qryList(sql);
+			return qryString(sql);
 		else
-			return qryList(sql, par((Object[]) paramArray));
+			return qryString(sql, par((Object[])paramArray));
 	}
 
 }

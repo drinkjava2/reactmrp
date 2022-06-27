@@ -10,13 +10,11 @@
  */
 package text;
 
-import org.json.JSONObject;
+import org.junit.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.drinkjava2.myserverless.util.JacksonUtil;
+import com.github.drinkjava2.myserverless.util.JsonUtil;
 import com.github.drinkjava2.myserverless.util.Txt;
 
 /**
@@ -47,12 +45,12 @@ public class Texts {
                       },
                 "e":[1,{"a":5},3]       
             } 
-            
         }
          */
     }
 
-    public static void main(String[] args) {
+    @Test
+    public void testJson() {
         String s = new t2().toString();
         System.out.println(s);
         JsonNode jn = null;
@@ -62,15 +60,8 @@ public class Texts {
             e.printStackTrace();
         }
         System.out.println(jn);
-        System.out.println(JacksonUtil.get(s, "d.e.1.a"));
-
-        try {
-            Object result = JacksonUtil.singleTonObjectMapper.readValue(s, Object.class);
-            System.out.println(result);
-            System.out.println(result.getClass());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        System.out.println(JsonUtil.get(s, "d.e.1.a")); 
+        System.out.println(JsonUtil.get(JsonUtil.toObj(s, Object.class), "d.e.1.a"));
     }
 
 }

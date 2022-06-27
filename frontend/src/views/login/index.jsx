@@ -128,6 +128,8 @@ const Login = (props) => {
               </Button>
             </Form.Item>
             <Form.Item>
+              <span>账号 : developer 密码 : 123</span>
+              <br />
               <span>账号 : admin 密码 : 123</span>
               <br />
               <span>账号 : editor 密码 : 123</span>

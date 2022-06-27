@@ -42,14 +42,15 @@ function syncXhrJSon(methodName, text, args){//同步ajax
     }
 }
 
-function getBodyJsonStr(methodName, text, args){
-    let bodyJson= {"$0": text};
-    if(methodName)
-       bodyJson= {"remoteMethod":methodName,"$0": text};
+function getBodyJsonStr(method, text, args){ 
+    if(!method)
+        method="";
+    let bodyJson= {"remoteMethod":method,"$0": text};
     for (let i = 1; i < args.length; i++) 
            bodyJson["$"+i]=args[i]; 
+    bodyJson["myToken"]="";
     if (window.localStorage && localStorage.getItem("myToken"))  
-           bodyJson["myToken"]=localStorage.getItem("myToken");  
+           bodyJson["myToken"]=localStorage.getItem("myToken"); 
     return JSON.stringify(bodyJson);
 }
 
@@ -82,6 +83,7 @@ async function data$myServerless(text){let json= await fetchJSon("", text, argum
 
 async function $java(text) {                 return await fetchJSon("java", text, arguments); } 
 async function $javaTx(text) {               return await fetchJSon("javaTx", text, arguments);} 
+async function $qryString(text) {            return await fetchJSon("qryString", text, arguments);}
 async function $qryObject(text) {            return await fetchJSon("qryObject", text, arguments);}  
 async function $qryArray(text) {             return await fetchJSon("qryArray", text, arguments);}
 async function $qryArrayList(text) {         return await fetchJSon("qryArrayList", text, arguments);}
@@ -95,6 +97,7 @@ async function $executeSql(text) {           return await fetchJSon("executeSql"
 
 async function data$java(text) {             let json= await fetchJSon("java", text, arguments); return json.data;}  
 async function data$javaTx(text) {           let json= await fetchJSon("javaTx", text, arguments);   return json.data;}
+async function data$qryString(text) {        let json= await fetchJSon("qryString", text, arguments); return json.data;}
 async function data$qryObject(text) {        let json= await fetchJSon("qryObject", text, arguments); return json.data;}  
 async function data$qryArray(text) {         let json= await fetchJSon("qryArray", text, arguments); return json.data;}
 async function data$qryArrayList(text) {     let json= await fetchJSon("qryArrayList", text, arguments); return json.data;}
@@ -112,6 +115,7 @@ function syncData$myServerless(text){        return  syncXhrJSon("", text, argum
 
 function sync$java(text) {               return syncXhrJSon("java", text, arguments); }
 function sync$javaTx(text) {             return syncXhrJSon("javaTx", text, arguments); }
+function sync$qryString(text) {          return syncXhrJSon("qryString", text, arguments);}
 function sync$qryObject(text) {          return syncXhrJSon("qryObject", text, arguments);}  
 function sync$qryArray(text) {           return syncXhrJSon("qryArray", text, arguments);}
 function sync$qryArrayList(text) {       return syncXhrJSon("qryArrayList", text, arguments);}
@@ -125,6 +129,7 @@ function sync$executeSql(text) {         return syncXhrJSon("executeSql", text, 
 
 function syncData$java(text) {               let json= syncXhrJSon("java", text, arguments); return json.data; } 
 function syncData$javaTx(text){              let json= syncXhrJSon("javaTx", text, arguments); return json.data;} 
+function syncData$qryString(text) {          let json= syncXhrJSon("qryString", text, arguments); return json.data;}
 function syncData$qryObject(text) {          let json= syncXhrJSon("qryObject", text, arguments); return json.data;}  
 function syncData$qryArray(text) {           let json= syncXhrJSon("qryArray", text, arguments); return json.data;}
 function syncData$qryArrayList(text) {       let json= syncXhrJSon("qryArrayList", text, arguments); return json.data;}

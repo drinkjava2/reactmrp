@@ -1,5 +1,8 @@
 package com.reactmrp.deploy;
 
+import static com.github.drinkjava2.jsqlbox.DB.que;
+
+import java.util.List;
 import java.util.Map;
 
 import com.github.drinkjava2.jsqlbox.DB;
@@ -16,7 +19,7 @@ public class BackendPublic { //本项目在ProjectSecurity里设定为 只有类
      */
     public static class CookieLogin extends template.JavaTemplate {
         public Object executeBody() {
-            String myToken = MyServerlessEnv.tokenSecurity.login($1, $2);
+            String myToken = MyServerlessEnv.tokenSecurity.login($1.toString(), $2.toString());
             if (myToken == null)
                 return false;
             //这个只暂时适用Firefox, 在Chrome浏览器上不工作，Chrome上必须是同域，或采用HTTPS并且用SameSite=None;Secure;HttpOnly
@@ -31,7 +34,7 @@ public class BackendPublic { //本项目在ProjectSecurity里设定为 只有类
      */
     public static class TokenLogin extends template.JavaTemplate {
         public Object executeBody() {
-            String token = MyServerlessEnv.tokenSecurity.login($1, $2);
+            String token = MyServerlessEnv.tokenSecurity.login($1.toString(), $2.toString());
             return token;
         }
     }
@@ -54,25 +57,33 @@ public class BackendPublic { //本项目在ProjectSecurity里设定为 只有类
             return ProjectSecurity.isValidToken(myToken);
         }
     }
+    
+    static Role getHighestBussinessRole(String userId) {//role只返回一个排除developer之后的最高级角色，通常是admin/editor/guest等
+        List<String> ids =  DB.qryList("select r.roleName from users u ", //
+                " left join userrole ur on u.userId=ur.userId ", //
+                " left join roles r on ur.roleName=r.roleName ", //
+                " where u.userId=", DB.que(userId), " and r.roleName<>'developer' order by roleLevel"); //排除developer角色
+        if (ids.isEmpty()) //如果什么权限都没有
+            return null;
+        return new Role().loadById(ids.get(0)); //loadbyId, 只返回等级最高的role
+    }
+    
 
     /**
-     * 返回当前登录用户信息，因为原前端 一个用户只能有1个角色（role），所以这个方法中返回的role只取一个除developer之外最高等级的role 
+     * 返回当前登录用户信息，因为原前端GetUserInfo方法 一个用户只能有1个角色（role），所以这个方法中如果用户有多个角色，也只取一个除developer之外最高等级的角色以兼容原前端代码 
      */
     public static class GetUserInfo extends template.JavaTemplate {
         public Object executeBody() {
-            Map<String, Object> user = DB.qryMap("select userId as id, name, myToken as token, avatar from users where myToken=", DB.que(myToken));
+            Map<String, Object> user = DB.qryMap("select userId as id, name, description, myToken as token, avatar, '' as role from users where myToken=", que(myToken));
             if (!user.isEmpty()) {
-                Role role = ProjectSecurity.getHighestRole(myToken);
-                if (role != null) {
-                    user.put("role", role.getRoleName());
-                    user.put("description", role.getRoleDescription());
-                } else {
-                    user.put("role", "");
-                    user.put("description", "");
-                }
+                List<String> roles =  DB.qryList("select r.roleName from users u ", //
+                        " left join userrole ur on u.userId=ur.userId ", //
+                        " left join roles r on ur.roleName=r.roleName ", //
+                        " where u.userId=", DB.que(user.get("id")), " and r.roleName<>'developer' order by roleLevel"); //排除developer角色
+                if (!roles.isEmpty())
+                    user.put("role", roles.get(0)); //取roleLevel最小的roleName,即最高等级的角色 
             }
             return user;
         }
-    }
-
+    } 
 }

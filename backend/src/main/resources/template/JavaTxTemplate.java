@@ -33,6 +33,7 @@ public class JavaTxTemplate extends BaseTemplate {
             data = executeBody();
             tx.commitTransaction();
         } catch (Exception e) {
+            System.err.println("Transaction roll back...");
             try {
                 tx.rollbackTransaction();
             } catch (Exception e1) {

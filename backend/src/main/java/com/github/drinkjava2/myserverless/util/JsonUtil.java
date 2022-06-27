@@ -29,64 +29,68 @@ import com.fasterxml.jackson.databind.ObjectWriter;
  *  
  * @author Yong
  */
-public class JacksonUtil {
-    //为了避免每次 new ObjectMapper()，这里全局使用单例。如果有不同配置就生成多个不同配置的单例
-    public static final ObjectMapper singleTonObjectMapper = new ObjectMapper();
-    public static final ObjectMapper singleTonObjectMapper_NONEMPTY = new ObjectMapper();
-    public static final ObjectMapper singleTonObjectMapper_NONNULL = new ObjectMapper();
+public class JsonUtil {
+    //为了避免每次 new ObjectMapper()，这里全局使用单例。如果不同方法需要有不同配置的，以后可以用多个不同配置的单例 
+    public static final ObjectMapper singleTonObjectMapper_NON_NULL = new ObjectMapper(); //如果返回json中字段为null，则忽略该字段
 
     static {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        singleTonObjectMapper_NONEMPTY.setSerializationInclusion(Include.NON_EMPTY);
-        singleTonObjectMapper_NONEMPTY.setDateFormat(dateFormat);
-
-        singleTonObjectMapper_NONNULL.setSerializationInclusion(Include.NON_NULL);
-        singleTonObjectMapper_NONNULL.setDateFormat(dateFormat);
+        singleTonObjectMapper_NON_NULL.setSerializationInclusion(Include.NON_NULL);
+        singleTonObjectMapper_NON_NULL.setDateFormat(dateFormat); 
     }
 
     /**
-     * 从json字符串中直接取指定的节点解析为对象实例, ，通常是整数或字符串，使用示例如下：
+     * 从json字符串中直接用下面语法读取节点对象，返回值可能是Map/List/基本类型或它们的组合：
+     * Object obj = JsonUtil.get(json,"node1.node2.x.node4"); //x表示列表下标序号
+     * 如获取失败返回null 
+     */
+    private static Object getFromJsonStr(String json, String nodeKey) {
+        Object obj=null;
+        try {
+             obj = singleTonObjectMapper_NON_NULL.readValue(json, Object.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return get(obj, nodeKey);
+    }
+    
+    /** 如果一个obj是Map/list/基本类型或它们的组合，用下面语法读取节点对象：
      * Object obj = JsonUtil.get(json,"node1.node2.x.node4"); //x表示列表下标序号
      * 如获取失败返回null 
      */
     @SuppressWarnings("unchecked")
-    public static Object get(String json, String nodeKey) {
-        try {
-            Object result = singleTonObjectMapper.readValue(json, Object.class);
+    public static Object get(Object obj, String nodeKey) {
+            if(obj instanceof String)
+                return getFromJsonStr(((String)obj),nodeKey);
             int pos;
             String key = nodeKey;
             do {
                 pos = key.indexOf(".");
                 if (pos >= 0) {
-                    if (result == null)
+                    if (obj == null)
                         throw new RuntimeException("Node key '" + nodeKey + "' does not exist.");
-                    if (result instanceof Map)
-                        result = ((Map<String, Object>) result).get(key.substring(0, pos));
+                    if (obj instanceof Map)
+                        obj = ((Map<String, Object>) obj).get(key.substring(0, pos));
                     else
-                        result = ((List<?>) result).get(Integer.parseInt(key.substring(0, pos)));
+                        obj = ((List<?>) obj).get(Integer.parseInt(key.substring(0, pos)));
                     key = key.substring(pos + 1);
                 } else {
-                    if (result == null)
+                    if (obj == null)
                         throw new RuntimeException("Node key '" + nodeKey + "' does not exist.");
-                    if (result instanceof Map)
-                        result = ((Map<String, Object>) result).get(key);
+                    if (obj instanceof Map)
+                        obj = ((Map<String, Object>) obj).get(key);
                     else
-                        result = ((List<?>) result).get(Integer.parseInt(key));
-                    return result;
+                        obj = ((List<?>) obj).get(Integer.parseInt(key));
+                    return obj;
                 }
-
             } while (true);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     /** 把json字符串转为指定类的实例对象, 如失败返回null  */
     public static <T> T toObj(String json, Class<T> claz) {
         try {
-            return singleTonObjectMapper.readValue(json, claz);
+            return singleTonObjectMapper_NON_NULL.readValue(json, claz);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -96,7 +100,7 @@ public class JacksonUtil {
     /** 把json字符串转为JSONObject, 如失败返回null */
     public static JSONObject toJSONObject(String json) {
         try {
-            return singleTonObjectMapper.readValue(json, JSONObject.class);
+            return singleTonObjectMapper_NON_NULL.readValue(json, JSONObject.class);
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -105,13 +109,13 @@ public class JacksonUtil {
 
     /** 把object转为json, 如失败返回null  */
     public static String toJSON(Object object) {
-        ObjectWriter objectWriter = singleTonObjectMapper_NONEMPTY.writer();
+        ObjectWriter objectWriter = singleTonObjectMapper_NON_NULL.writer();
         return toJSON(object, objectWriter);
     }
 
     /** 把object转为格式化json, 如失败返回null  */
     public static String toJSONFormatted(Object object) {
-        ObjectWriter objectWriter = singleTonObjectMapper_NONNULL.writer().withDefaultPrettyPrinter();
+        ObjectWriter objectWriter = singleTonObjectMapper_NON_NULL.writer().withDefaultPrettyPrinter();
         return toJSON(object, objectWriter);
     }
 
@@ -120,8 +124,8 @@ public class JacksonUtil {
         Object json;
         String indented = "";
         try {
-            json = singleTonObjectMapper.readValue(input, Object.class);
-            indented = singleTonObjectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(json);
+            json = singleTonObjectMapper_NON_NULL.readValue(input, Object.class);
+            indented = singleTonObjectMapper_NON_NULL.writerWithDefaultPrettyPrinter().writeValueAsString(json);
         } catch (IOException e) {
             e.printStackTrace();
             return null;

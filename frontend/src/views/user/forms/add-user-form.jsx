@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Form, Input, Select, Modal } from "antd";
 import { reqValidatUserID } from "E:/reactmrp/frontend/src/api/user";
+import * as my from "E:/reactmrp/frontend/src/myserverless/myserverless.js";
 const { TextArea } = Input;
 class AddUserForm extends Component {
   validatUserID = async (rule, value, callback) => {
@@ -8,9 +9,11 @@ class AddUserForm extends Component {
       if (!/^[a-zA-Z0-9]{1,6}$/.test(value)) {
         callback("用户ID必须为1-6位数字或字母组合");
       }
-      let res = await reqValidatUserID(value);
-      const { status } = res.data;
-      if (status) {
+      let status = await my.data$qryString(`#admin select 1 from users where userId=?`, value);
+//      原版本用Mock是这样写的      
+//      let res = await reqValidatUserID(value);
+//      const { status } = res.data;
+       if (status) {
         callback("该用户ID已存在");
       }
     } else {

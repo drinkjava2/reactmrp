@@ -27,7 +27,7 @@ section header {
 	margin-bottom: 20px;
 }
 </style>
-<script src="/js/myserverless-4.0.js"></script>
+<script src="/js/myserverless-purejs.js"></script>
 </head>
 <body>
  <script>
@@ -45,7 +45,7 @@ section header {
 	 
 	 
 	 <script>
-	  $qryMapList(`#admin select * from users order by userId`).then(json=>{
+	  $qryMapList(`#admin select * from users where 2>? order by userId`, 1).then(json=>{
 	      if(json.code==200){
 		     let users=json.data;
 		     let html=`User List:<br/> <table border="1" cellspacing="0">  <tr>   <th>userId</th>   <th>name</th>   <th>myToken</th>   </tr>`;
@@ -62,9 +62,15 @@ section header {
 			localStorage.setItem("myToken", null); 
 			window.location.href="/login.html";
 	  }
+	  
+	  function resetDatabase(){
+		   sync$java(`#admin import static com.reactmrp.config.InitConfig.*; initDataBase();  insertUserAndPowers();`);
+		   window.location.href="/login.html";
+		  }
 	</script>
 
-	<a href="javascript:doLogout()">Logout</a>
+	<a href="javascript:doLogout()">Logout</a> <br/> <br/>
+	<a href="javascript:resetDatabase()">Reset Database</a>
  
 </body>
 </html>

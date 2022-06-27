@@ -28,9 +28,10 @@ import com.reactmrp.entity.User;
  * @since 1.0.0
  */
 public class ProjectSecurity implements TokenSecurity {
-    //重要：这里为了提高性能采用了缓存，所以 每当有人员、角色、权限变动时，都要调用userPowerCache.clearCache()清空缓存
-    private static SimpleCacheHandler userPowerCache = new SimpleCacheHandler(300, 100 * 24 * 60 * 60);//缺省最多同时保存300个用户的权限表, 100天过期
-    private static SimpleCacheHandler userRoleCache = new SimpleCacheHandler(300, 100 * 24 * 60 * 60);//缺省最多同时保存300个用户的权限表, 100天过期    
+    //为了提高性能也可以采用缓存，所以 每当有人员、角色、权限变动时，都要调用userPowerCache.clearCache()清空缓存
+    //private static SimpleCacheHandler userPowerCache = new SimpleCacheHandler(300, 100 * 24 * 60 * 60);//缺省最多同时保存300个用户的权限表, 100天过期
+    //private static SimpleCacheHandler userRoleCache = new SimpleCacheHandler(300, 100 * 24 * 60 * 60);//缺省最多同时保存300个用户的权限表, 100天过期    
+    
     
     public static String encodePassword(String password) {
         return MD5Util.encryptMD5("theSalt" + password);
@@ -78,7 +79,7 @@ public class ProjectSecurity implements TokenSecurity {
             return false;
 
         //获取用户权限list，注意这里使用了一个缓存，所以每当有人员、角色、权限变动时，都要调用clearCache清空缓存防止脏数据
-        List<String> powers = DB.qryList(userPowerCache, "select p.* from users u ", //
+        List<String> powers = DB.qryList("select p.* from users u ", //userPowerCache如果作参数，可以加快性能
                 " left join userrole ur on u.userId=ur.userId ", //
                 " left join roles r on ur.roleName=r.roleName ", //
                 " left join rolepower rp on rp.roleName=r.roleName ", //
@@ -102,22 +103,6 @@ public class ProjectSecurity implements TokenSecurity {
         
         return false;
     }
-
-    public static Role getHighestRole(String myToken) {
-        //检查是否token存在
-        String userId = DB.qryString("select userId from users where myToken=", DB.que(myToken));
-        if (MyStrUtils.isEmpty(userId))
-            return null;
-
-        //获取用户除developer之外的所有role
-        List<String> ids =  DB.qryList(userRoleCache, "select r.roleName from users u ", //
-                " left join userrole ur on u.userId=ur.userId ", //
-                " left join roles r on ur.roleName=r.roleName ", //
-                " where u.userId=", DB.que(userId), " and r.roleName<>'developer' order by roleLevel");
-        if (ids.isEmpty()) //如果什么权限都没有
-            return null;
-        return new Role().loadById(ids.get(0)); //loadbyId, 只返回等级最高的role
-    }
-
+ 
     
 }

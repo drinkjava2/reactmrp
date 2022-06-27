@@ -10,10 +10,11 @@
  */
 package com.github.drinkjava2.myserverless;
 
-import static com.github.drinkjava2.myserverless.util.JacksonUtil.getAsText;
+import static com.github.drinkjava2.myserverless.util.JsonUtil.getAsText;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,49 +39,46 @@ public abstract class BaseTemplate {
 
     protected String myToken; // current myToken 
     
-    protected JsonNode jsonNode; //root node of json input
+    protected  Map<String, Object> params; //root node of json input
 
-    protected String $0; //shortcut of paramArrays
-    protected String $1;
-    protected String $2;
-    protected String $3;
-    protected String $4;
-    protected String $5;
-    protected String $6;
-    protected String $7;
-    protected String $8;
-    protected String $9;
-    protected String $10;
+    protected String $0; //shortcut of params, only give first 10
+    protected Object $1;
+    protected Object $2;
+    protected Object $3;
+    protected Object $4;
+    protected Object $5;
+    protected Object $6;
+    protected Object $7;
+    protected Object $8;
+    protected Object $9;
+    protected Object $10;
 
-    public void initParams(HttpServletRequest request, HttpServletResponse response, JsonNode jsonNode, String myToken) {
+    public void initParams(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params, String myToken) {
         this.request = request;
         this.response = response;
         this.myToken = myToken;
-        this.jsonNode =jsonNode; 
-        $0 = getAsText(jsonNode, "$0");
-        $1 = getAsText(jsonNode, "$1"); 
-        $2 = getAsText(jsonNode, "$2"); 
-        $3 = getAsText(jsonNode, "$3"); 
-        $4 = getAsText(jsonNode, "$4"); 
-        $5 = getAsText(jsonNode, "$5"); 
-        $6 = getAsText(jsonNode, "$6"); 
-        $7 = getAsText(jsonNode, "$7"); 
-        $8 = getAsText(jsonNode, "$8"); 
-        $9 = getAsText(jsonNode, "$9"); 
-        $10 = getAsText(jsonNode, "$10"); 
+        this.params =params; 
+        $0 = (String) params.get("$0");
+        $1 =  params.get("$1");  
+        $2 =  params.get("$2"); 
+        $3 =  params.get("$3"); 
+        $4 =  params.get("$4"); 
+        $5 =  params.get("$5"); 
+        $6 =  params.get("$6"); 
+        $7 =  params.get("$7"); 
+        $8 =  params.get("$8"); 
+        $9 =  params.get("$9"); 
+        $10 =  params.get("$10");  
     }
 
-    /** Pack all $1 , $2,... parameters into a String[] */
-    public String[] getParamArray() {  
-        List<String> paramList = new ArrayList<String>();
-        for (int i = 1; i <= 100; i++) {
-            String parameter = getAsText(jsonNode, "$" + i);
-            if (parameter != null)
-                paramList.add(parameter);
-            else
-                break;
-        }
-        return paramList.toArray(new String[paramList.size()]);
+    /** Pack all $1 , $2,... parameters into a Object[], usually used for SQL parameters */
+    public Object[] getParamArray() { 
+        if(params.size()<=3) //$0, token, remoteMethod is always existing
+            return new Object[] {};
+        Object[] objs=new Object[params.size()-3];
+        for (int i = 1; i <= params.size()-3; i++)  
+            objs[i-1]=params.get("$"+i);  
+        return objs;
     }
 
     /**

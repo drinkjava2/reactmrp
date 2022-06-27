@@ -3,16 +3,16 @@ import { reqUserInfo } from "E:/reactmrp/frontend/src/api/user";
 import * as my from "E:/reactmrp/frontend/src/myserverless/myserverless.js";
 
 export const getUserInfo = (token) => (dispatch) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       my.data$myServerless(`BackendPublic$GetUserInfo`)
         .then((userInfo) => { 
           if (userInfo) {
             dispatch(setUserInfo(userInfo));
-          }  
-        })
-        .catch((error) => {
-            reject(error);
-          });
+          } else {
+            dispatch(resetUser());
+          } 
+          resolve(); 
+        }) 
     });
   };
  

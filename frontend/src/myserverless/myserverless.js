@@ -13,7 +13,7 @@ async function fetchJSon(methodName, text, args){//异步ajax
 				body : bodyJsonStr
 		      });
           let obj= await response.json();
-          if(obj.debugInfo)alert(obj.debugInfo);
+          if(obj.debugInfo)console.error(obj.debugInfo);
           return obj;
 	  }catch(e){
 		  console.log("Request failed ", e);
@@ -34,7 +34,7 @@ function syncXhrJSon(methodName, text, args){//同步ajax
 		  return {"code":403, "msg":"Request failed", "data":null};
 	  } else {
 		  let obj= JSON.parse(xhr.responseText);
-		  if(obj.debugInfo)alert(obj.debugInfo);
+		  if(obj.debugInfo)console.error(obj.debugInfo);
 		  return obj;
 	  }
 	} catch(err) {
@@ -42,15 +42,16 @@ function syncXhrJSon(methodName, text, args){//同步ajax
 	}
 }
 
-function getBodyJsonStr(methodName, text, args){
-	let bodyJson= {"$0": text};
-	if(methodName)
-	   bodyJson= {"remoteMethod":methodName,"$0": text};
-	for (let i = 1; i < args.length; i++) 
-		   bodyJson["$"+i]=args[i]; 
-	if (window.localStorage && localStorage.getItem("myToken"))  
-		   bodyJson["myToken"]=localStorage.getItem("myToken");  
-	return JSON.stringify(bodyJson);
+function getBodyJsonStr(method, text, args){ 
+    if(!method)
+        method="";
+    let bodyJson= {"remoteMethod":method,"$0": text};
+    for (let i = 1; i < args.length; i++) 
+           bodyJson["$"+i]=args[i]; 
+    bodyJson["myToken"]="";
+    if (window.localStorage && localStorage.getItem("myToken"))  
+           bodyJson["myToken"]=localStorage.getItem("myToken"); 
+    return JSON.stringify(bodyJson);
 }
 
 function methodInfo(methodName, text){ //methodInfo参数加在url中，这个只是用来快速定位API用的，不参与后端逻辑
@@ -82,6 +83,7 @@ export async function data$myServerless(text){let json= await fetchJSon("", text
 
 export async function $java(text) { 				return await fetchJSon("java", text, arguments); } 
 export async function $javaTx(text) {				return await fetchJSon("javaTx", text, arguments);} 
+export async function $qryString(text) {            return await fetchJSon("qryString", text, arguments);}
 export async function $qryObject(text) {			return await fetchJSon("qryObject", text, arguments);}  
 export async function $qryArray(text) {				return await fetchJSon("qryArray", text, arguments);}
 export async function $qryArrayList(text) {			return await fetchJSon("qryArrayList", text, arguments);}
@@ -95,6 +97,7 @@ export async function $executeSql(text) {			return await fetchJSon("executeSql",
 
 export async function data$java(text) {				let json= await fetchJSon("java", text, arguments);	return json.data;}  
 export async function data$javaTx(text) {			let json= await fetchJSon("javaTx", text, arguments);	return json.data;}
+export async function data$qryString(text) {        let json= await fetchJSon("qryString", text, arguments); return json.data;}
 export async function data$qryObject(text) {		let json= await fetchJSon("qryObject", text, arguments); return json.data;}  
 export async function data$qryArray(text) {			let json= await fetchJSon("qryArray", text, arguments); return json.data;}
 export async function data$qryArrayList(text) {		let json= await fetchJSon("qryArrayList", text, arguments); return json.data;}
@@ -112,6 +115,7 @@ export function syncData$myServerless(text){		return  syncXhrJSon("", text, argu
 
 export function sync$java(text) { 				return syncXhrJSon("java", text, arguments); }
 export function sync$javaTx(text) {				return syncXhrJSon("javaTx", text, arguments); }
+export function sync$qryString(text) {          return syncXhrJSon("qryString", text, arguments);}
 export function sync$qryObject(text) {			return syncXhrJSon("qryObject", text, arguments);}  
 export function sync$qryArray(text) {			return syncXhrJSon("qryArray", text, arguments);}
 export function sync$qryArrayList(text) {		return syncXhrJSon("qryArrayList", text, arguments);}
@@ -125,6 +129,7 @@ export function sync$executeSql(text) {			return syncXhrJSon("executeSql", text,
 
 export function syncData$java(text) { 				let json= syncXhrJSon("java", text, arguments); return json.data; } 
 export function syncData$javaTx(text){ 				let json= syncXhrJSon("javaTx", text, arguments); return json.data;} 
+export function syncData$qryString(text) {          let json= syncXhrJSon("qryString", text, arguments); return json.data;}
 export function syncData$qryObject(text) {			let json= syncXhrJSon("qryObject", text, arguments); return json.data;}  
 export function syncData$qryArray(text) {			let json= syncXhrJSon("qryArray", text, arguments); return json.data;}
 export function syncData$qryArrayList(text) {		let json= syncXhrJSon("qryArrayList", text, arguments); return json.data;}

@@ -19,8 +19,6 @@ public class Role implements ActiveEntity<Role> {
 
     private Integer roleLevel; //可选参数。角色等级，数字越小，等级最高，某些情况下，当一个用户有多个role时，可以利用这个字段来快速查找当前用户的最高等级角色
 
-    private String roleDescription;
-
     public String getRoleName() {
         return roleName;
     }
@@ -36,15 +34,6 @@ public class Role implements ActiveEntity<Role> {
 
     public Role setRoleLevel(Integer roleLevel) {
         this.roleLevel = roleLevel;
-        return this;
-    }
-
-    public String getRoleDescription() {
-        return roleDescription;
-    }
-
-    public Role setRoleDescription(String roleDescription) {
-        this.roleDescription = roleDescription;
         return this;
     }
 

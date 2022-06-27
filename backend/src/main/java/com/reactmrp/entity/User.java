@@ -21,6 +21,9 @@ public class User implements ActiveEntity<User> {
     @COLUMN(length = 200)
     private String myToken; //每登录一次就生成一个随机myToken
 
+    @COLUMN(length = 100)
+    private String description;
+
     @COLUMN(length = 20)
     private String mobilePhone;
 
@@ -89,6 +92,15 @@ public class User implements ActiveEntity<User> {
 
     public User setAvatar(String avatar) {
         this.avatar = avatar;
+        return this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public User setDescription(String description) {
+        this.description = description;
         return this;
     }
 

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Card, Button, Table, message, Divider } from "antd";
+import { Card, Button, Modal, Table, message, Divider } from "antd";
 import { getUsers, deleteUser, editUser, addUser } from "E:/reactmrp/frontend/src/api/user";
 import TypingCard from 'E:/reactmrp/frontend/src/components/TypingCard'
 import EditUserForm from "./forms/edit-user-form"
@@ -18,7 +18,15 @@ class User extends Component {
   };
   
   getUsers = async () => { 
-    let json=await my.$qryMapList(`#admin select u.userId as id, u.name, ur.roleName as role, r.roleDescription as description  from users u left join userrole ur on ur.userId=u.userId left join roles r on r.roleName=ur.roleName where not (ur.roleName='admin' and ur.userId='developer') order by r.roleLevel`);  
+    let json=await my.$java(`#admin 
+        List<Map<String, Object>> users = DB.qryMapList("select userId as id,  name, description from users order by userId");
+            for (Map<String, Object> m : users) {
+                List<Object> roles = DB.qryList("select roleName from userRole where userId=", que(m.get("id"))," order by roleName desc");
+                if(!roles.isEmpty())
+                      m.put("role", roles.get(0));
+            }
+            return users; 
+    `);  
     const { data: users, code: status } = json; 
     if (status === 200) {
       this.setState({
@@ -47,11 +55,13 @@ class User extends Component {
     });
   };
 
-  handleDeleteUser = (row) => {
-      const { id } = row;
-      let result=my.syncData$javaTx(`#admin 
-                  if("admin".equals($1) || "developer".equals($1))
-                      return "不能删除开发者或管理员用户!";
+  
+    doDeleteUser  = (id) => {
+      let result=my.syncData$javaTx(`#admin
+                  if("1".equals( DB.qryString("select 1 from userrole where roleName='developer' and userId=?", par($1)) ))
+                      return "不能删除开发者用户!";
+                  if("1".equals( DB.qryString("select 1 from users where myToken=",DB.que(myToken), " and userId=?", par($1)) ))
+                      return "不能删除自身用户!";
                   DB.exe("delete from userrole where userId=", DB.que($1));                      
                   DB.exe("delete from users where userId=", DB.que($1));
                   return true;
@@ -62,8 +72,21 @@ class User extends Component {
       } else {
           message.error(result);
       }
-    }
-  
+    };    
+    
+    handleDeleteUser = (row) => {
+        const { id } = row;
+        Modal.confirm({
+          title: "",
+          content: "确定要删除用户吗?",
+          okText: "确定",
+          cancelText: "取消",
+          onOk: () => {
+             this.doDeleteUser(id);
+          },
+        });
+      };
+      
 //  这是原版使用Mock的handleDeleteUser方法
 //  handleDeleteUser = (row) => {
 //    const { id } = row
@@ -76,7 +99,7 @@ class User extends Component {
 //      this.getUsers();
 //    })
 //  }
-  
+
   handleEditUserOk = _ => {
     const { form } = this.editUserFormRef.props;
     form.validateFields((err, values) => {
@@ -84,17 +107,55 @@ class User extends Component {
         return;
       }
       this.setState({ editModalLoading: true, });
-      editUser(values).then((response) => {
-        form.resetFields();
-        this.setState({ editUserModalVisible: false, editUserModalLoading: false });
-        message.success("编辑成功!")
-        this.getUsers()
-      }).catch(e => {
-        message.success("编辑失败,请重试!")
-      })
+      
+      my.data$javaTx( `#admin 
+              import com.github.drinkjava2.myserverless.util.MyStrUtils;
+              Map<String,String> v= (Map<String,String>)$1;
+              String role=DB.qryString("select roleName from userRole where roleName='developer' and userId=", que(v.get("id")));
+              if("developer".equals(role))
+                 return "编辑失败， developer不允许被编辑";
+              if(MyStrUtils.isEmpty(v.get("name"))) 
+                   return "编辑失败， name不能为空";
+               DB.exe("update users set name=?, description=? where userId=?", par(v.get("name"), v.get("description"), v.get("id")));
+               DB.exe("delete from userRole where userId=",que(v.get("id")));
+               DB.exe("insert into userRole (userId, roleName) ", par(v.get("id"), v.get("role")), DB.VQ );    
+               return "编辑成功!";
+            `, values).then(( msg ) => {
+                    this.setState( { editModalLoading: false } ); 
+                    if ( msg==="编辑成功!" ) {
+                        this.setState( { editUserModalVisible: false } ); 
+                        message.success(msg);
+                        this.getUsers();
+                    } else {
+                        this.setState( { editUserModalVisible: true} ); 
+                        message.error(msg);
+                    }
+                    
+                }
+                ); 
       
     });
   };
+  
+//  这是原版使用Mock的handleEditUserOk方法
+//  handleEditUserOk = _ => {
+//    const { form } = this.editUserFormRef.props;
+//    form.validateFields((err, values) => {
+//      if (err) {
+//        return;
+//      }
+//      this.setState({ editModalLoading: true, });
+//      editUser(values).then((response) => {
+//        form.resetFields();
+//        this.setState({ editUserModalVisible: false, editUserModalLoading: false });
+//        message.success("编辑成功!")
+//        this.getUsers()
+//      }).catch(e => {
+//        message.success("编辑失败,请重试!")
+//      })
+//      
+//    });
+//  };
 
   handleCancel = _ => {
     this.setState({
@@ -115,31 +176,23 @@ class User extends Component {
           if ( err ) {
               return;
           }
-          console.log( "values", values );
           this.setState( { addUserModalLoading: true, } );
-
           my.data$javaTx( `#admin 
-          import static com.github.drinkjava2.myserverless.util.JacksonUtil.*;
-          System.out.println("jsonNode="+jsonNode);
-          System.out.println(jsonNode.get("$1").getClass());
-          System.out.println("$0="+$0);
-          System.out.println("$1="+$1);
-          System.out.println("$2="+$2);
-          System.out.println("$3="+$3);
-          System.out.println("$4="+$4);
-          System.out.println("$5="+$5);
-          System.out.println("$6="+$6);
-          //Map<String, String> values=  JSON.parseObject($1, new TypeReference<Map<String, String>>() {}); 
-         // System.out.println(values);
-          return true;
-          `, values, 1,2,"3",4,5.5)
-
-              .then(( result ) => {
-                  console.log( result );
+            import com.github.drinkjava2.myserverless.util.MyStrUtils;
+            Map<String,String> v= (Map<String,String>)$1;
+            if(MyStrUtils.isEmpty(v.get("name"))) //只查name, 不检查userId，因为主键为空不可能插入
+                 return null;
+             DB.exe("insert into users (userId, name, description) ", par(v.get("id"), v.get("name"), v.get("description")), DB.VQ ); 
+             DB.exe("insert into userRole (userId, roleName) ", par(v.get("id"), v.get("role")), DB.VQ );    
+             return true;
+          `, values).then(( result ) => {
+                  this.setState( { addUserModalLoading: false } );
                   if ( result ) {
-                      this.setState( { addUserModalVisible: false, addUserModalLoading: false } );
+                      this.setState( { addUserModalVisible: false } );
                       message.success( "添加成功!" );
+                      this.getUsers();
                   } else {
+                      this.setState( { addUserModalVisible: true} );
                       message.success( "添加失败,请重试!" );
                   }
               }

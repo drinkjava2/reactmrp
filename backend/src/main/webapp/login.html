@@ -64,8 +64,8 @@ input{
  margin: 0;   
 }
 </style>
-<script src="/js/myserverless-4.0.js"></script>
-<title>ReactMRP Backend V1.0</title>
+<script src="/js/myserverless-purejs.js"></script>
+<title>ReactMRP Backend</title>
 </head>
 <body>
 	<script> localStorage.setItem("develop_token","8888"); </script> 
@@ -76,8 +76,10 @@ input{
 	 function domValById(id){return document.getElementById(id).value;}
 	 
 	 function cookieLogin(){ //cookie登录会在后端response的cookie里返回一个myToken，并且每次访问时myToken会自动加在前端cookie里发送。但是当前后端不在同一域时要解决跨域问题，配置很麻烦
+		localStorage.setItem("myToken", ""); 
 		var result =syncData$myServerless(`BackendPublic$CookieLogin`
 		            , domValById("userId"), domValById("password"));
+	    console.log("result", result);
 		if(result==true){
 		   window.location.href="/welcome.html";
 		} else
@@ -85,6 +87,7 @@ input{
 	 } 
 		 
 	 function tokenLogin(){ //这是另一种登录方式，myToken保存在localStorage里，每次访问时myToken会自动加在json里发送，没有跨域问题，但安全性没有cookie安全
+  	    localStorage.setItem("myToken", ""); 
 		var myToken =syncData$myServerless(`BackendPublic$TokenLogin`
 					, domValById("userId"), domValById("password"));
 		if(myToken){
