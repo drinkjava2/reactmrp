@@ -63,7 +63,7 @@ function methodInfo(methodName, text){ //methodInfo参数加在url中，这个�
 	      } else if (c===" "){
 	    	  rs += "+";
 	      } 
-	      if(rs.length>50){
+	      if(rs.length>100){
 	       	 rs+="...";
 	       	 break;
 	      }

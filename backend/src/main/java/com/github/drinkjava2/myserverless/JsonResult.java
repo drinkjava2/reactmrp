@@ -54,7 +54,11 @@ public class JsonResult {
             result.setDebugInfo(getDebugInfo(request, json));
         return result;
     }
-
+    
+    public static JsonResult json403(String msg) {
+        return new JsonResult(403, msg).setStatus(403);
+    }
+    
     /**  Get debug info of request   */
     public static String getDebugInfo(HttpServletRequest request, String json) {
         if (request == null || !MyServerlessEnv.allow_debug_info)

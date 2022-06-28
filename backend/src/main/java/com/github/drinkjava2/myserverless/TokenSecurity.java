@@ -30,9 +30,9 @@ public interface TokenSecurity {
      * 
      * @param myToken current user's myToken
      * @param methodId cureent method id
-     * @param remoteSQLJava if is remote SQL or Java piece sent from frontend
+     * @param hotCompile require hot compile if it's SQL or Java piece received from frontend
      * @return true if allow execute
      */
-    public boolean allow(String myToken, String methodId, boolean remoteSQLJava);
+    public boolean allow(String myToken, String methodId, boolean hotCompile);
 
 }
