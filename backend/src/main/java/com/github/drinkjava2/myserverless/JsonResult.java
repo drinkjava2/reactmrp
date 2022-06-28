@@ -15,8 +15,6 @@ import java.util.Enumeration;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.JSONObject;
-
 /**
  * JsonResult used to return a JSON to front end 
  */

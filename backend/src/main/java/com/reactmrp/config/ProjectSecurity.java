@@ -12,13 +12,11 @@ package com.reactmrp.config;
 
 import java.util.List;
 
-import com.github.drinkjava2.jdbpro.handler.SimpleCacheHandler;
 import com.github.drinkjava2.jdialects.StrUtils;
 import com.github.drinkjava2.jsqlbox.DB;
 import com.github.drinkjava2.myserverless.TokenSecurity;
 import com.github.drinkjava2.myserverless.util.MD5Util;
 import com.github.drinkjava2.myserverless.util.MyStrUtils;
-import com.reactmrp.entity.Role;
 import com.reactmrp.entity.User;
 
 /**
@@ -52,8 +50,8 @@ public class ProjectSecurity implements TokenSecurity {
     }
  
     @Override
-    public boolean allow(String myToken, String methodId) {
-        return ifAllow(myToken, methodId);
+    public boolean allow(String myToken, String methodId, boolean remoteSQLJava) {
+        return ifAllow(myToken, methodId, remoteSQLJava);
     }
 
     public static boolean isValidToken(String myToken) { 
@@ -68,9 +66,9 @@ public class ProjectSecurity implements TokenSecurity {
         DB.exe("update users set myToken=null where myToken=", DB.que(myToken));
     }
     
-    public static boolean ifAllow(String myToken, String methodId) {
-        //只要方法id里包含public（不分大小写)都允许执行，通常是固定放在后端的方法，即BackendPublicxxx之类的。  在部署时要检查，所有的public方法都必须是允许不登录就允许执行的
-        if (MyStrUtils.containsIgnoreCase(methodId, "public"))
+    public static boolean ifAllow(String myToken, String methodId, boolean remoteSQLJava) {
+        //如果token不存在即用户没登录，只有一种情况才允许执行：不是动态发来的SQLJava片断且方法ID包含public（不分大小写）, 前端直接写#public方法是不能执行的，除非编译到后端，或已用某个developer身分登录
+        if (!remoteSQLJava && MyStrUtils.containsIgnoreCase(methodId, "public"))
             return true;
 
         //检查是否token存在

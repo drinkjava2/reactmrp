@@ -28,10 +28,11 @@ public interface TokenSecurity {
     /**
      * By given myToken and MyServerless methodId, check if allow execute
      * 
-     * @param myToken
-     * @param methodId
+     * @param myToken current user's myToken
+     * @param methodId cureent method id
+     * @param remoteSQLJava if is remote SQL or Java piece sent from frontend
      * @return true if allow execute
      */
-    public boolean allow(String myToken, String methodId);
+    public boolean allow(String myToken, String methodId, boolean remoteSQLJava);
 
 }

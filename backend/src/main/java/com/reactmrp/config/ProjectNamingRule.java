@@ -13,12 +13,12 @@ package com.reactmrp.config;
 import com.github.drinkjava2.jdialects.NamingConversion;
 
 /**
- *  注意本项目POJO映射到数据库字段的规则为表名全变小写，列名不变，与常见的采用下划线的命名方案不同。
- *  H2在jdbcUrl中要加上DATABASE_TO_UPPER=falsec以防止它自动改成全大写。
- *  个别类名要避开关键字，在实体类上用@table来调整。
+ *  注意本项目实体类映射到数据库的规则为表名为类名的小写，列名不作变换，与常见的采用下划线的命名方案不同。
+ *  例如 class MyOrder { String userName} 生成DDL时数据库表名为"myorder", 列名为"userName"。
+ *  这种方案的优点是数据库列名与POJO属性一致，原生SQL查询结果不用再进行列名转换 
  *  
- *  例如 class MyOrder { String userName} 生成DDL为数据库表名"myorder", 列名为"userName"。
- *  这种方案的优点是数据库表列名与POJO属性一致，SQL查询结果不用进行列名转换 
+ *  个别类名与数据库关键字冲突，在实体类上用@table来个别调整，如User类加上@Table(users)，则User类映射到users表格
+ *  H2在jdbcUrl中要加上DATABASE_TO_UPPER=falsec以防止它自动改成全大写。
  */
 public class ProjectNamingRule implements NamingConversion {
 

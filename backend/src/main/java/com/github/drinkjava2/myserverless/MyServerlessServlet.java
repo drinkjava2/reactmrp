@@ -10,8 +10,6 @@
  */
 package com.github.drinkjava2.myserverless;
 
-import static com.github.drinkjava2.myserverless.util.JsonUtil.getAsText;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -121,7 +119,7 @@ public class MyServerlessServlet extends HttpServlet {
         
       
         String sqlOrJavaPiece =(String) params.get("$0");
-        String remoteMethod = (String) params.get("remoteMethod");
+        String remoteMethod = (String) params.get("remoteMethod"); // like java/javaTx/qryMapList...
         if(remoteMethod==null)
             remoteMethod="";
         String myToken =(String) params.get("myToken");
@@ -138,33 +136,45 @@ public class MyServerlessServlet extends HttpServlet {
         if (MyStrUtils.isEmpty(sqlOrJavaPiece))
             return JsonResult.json403("Error: request body is empty.", req, jsonString);
 
+        boolean isRemoteSQLJava=false;
         Class<?> childClass = null;
-        try {
-            childClass = MyServerlessEnv.findCachedClass(sqlOrJavaPiece);
-            if (childClass == null) {
+        try { 
+            childClass = MyServerlessEnv.findCachedClass(sqlOrJavaPiece); //先试着看是不是sqlOrJavaPiece只是一个类名，且这个类已在后端deploy目录下存在
+            if (childClass != null) {
+                String methodId    = MyStrUtils.substringBefore(childClass.getName(), "_");
+                methodId = MyStrUtils.substringAfterLast(methodId, "."); // like public/admin...
+                if (!MyServerlessEnv.tokenSecurity.allow(myToken, methodId, isRemoteSQLJava)) //重要，在这里调用系统配置的TokenSecurity进行权限检查
+                    return JsonResult.json403("Error: no privilege to execute '" + methodId + "' method", req, jsonString);
+            } else {
                 if (MyServerlessEnv.is_product_stage)
                     return JsonResult.json403("Error: in product stage but not found class on server.", req, jsonString);
 
+                if (MyStrUtils.isEmpty(myToken) || myToken.length() < 10) //如果myToken没有，直接报错，不允许动态编译
+                    return JsonResult.json403("Error: hot compile is not allowed.", req, jsonString);
+
+                isRemoteSQLJava = true; //说明sqlOrJavaPiece不是类名，需要动态编译，这个isRemoteSQLJava将传给tokenSecurity的allow方法去，根据token、方法ID、isRemoteSQLJava三个要素来判定是否允许执行
                 PieceType pieceType = PieceType.byRemoteMethodName(remoteMethod);
                 Class<?> templateClass = MyServerlessEnv.methodTemplates.get(remoteMethod);
                 if (templateClass == null)
-                    return JsonResult.json403("Error: server method '" + remoteMethod + "' not found.", req, jsonString);
-                SqlJavaPiece piece = SqlJavaPiece.parseFromFrontText(remoteMethod, sqlOrJavaPiece);
+                    return JsonResult.json403("Error: server method '" + remoteMethod + "' not found.", req, jsonString); 
+                
+                SqlJavaPiece piece = SqlJavaPiece.parseFromFrontText(remoteMethod, sqlOrJavaPiece); 
+                String methodId=piece.getClassName(); 
+                methodId = MyStrUtils.substringBefore(childClass.getName(), "_"); 
+                methodId = MyStrUtils.substringAfterLast(methodId, "."); 
+                if (!MyServerlessEnv.tokenSecurity.allow(myToken, methodId, isRemoteSQLJava)) //重要，在这里调用系统配置的TokenSecurity进行权限检查
+                    return JsonResult.json403("Error: no privilege to execute '" + methodId + "' method", req, jsonString);
+                
                 String classSrc = SrcBuilder.createSourceCode(templateClass, pieceType, piece);
+                //注意下面这个方法动态编译Java源码，但是它自带缓存，如果相同的内容则直接返回缓存中上次编译后获得的类
                 childClass = DynamicCompileEngine.instance.javaCodeToClass(MyServerlessEnv.deploy_package + "." + piece.getClassName(), classSrc);
+                if (childClass == null) //still is null
+                    return JsonResult.json403("Error: compile failed on server side.", req, jsonString);
             }
-            if (childClass == null) //still is null
-                return JsonResult.json403("Error: compile failed on server side.", req, jsonString);
-
-            String methodId = MyStrUtils.substringBefore(childClass.getName(), "_");
-            methodId = MyStrUtils.substringAfterLast(methodId, ".");
-
-            if (!MyServerlessEnv.tokenSecurity.allow(myToken, methodId)) //重要，在这里调用系统配置的TokenSecurity进行权限检查
-                return JsonResult.json403("Error: no privilege to execute '" + methodId + "' method", req, jsonString);
 
             BaseTemplate instance = null;
             if (BaseTemplate.class.isAssignableFrom(childClass)) {
-                    instance = (BaseTemplate) childClass.newInstance(); //这里只能用newInstance生成多例，如果要采用单例模式虽然可以节省一点内存，但是req、rep、json只能放在线程变量里传递太麻烦
+                instance = (BaseTemplate) childClass.newInstance(); //这里只能用newInstance生成多例，如果要采用单例模式虽然可以节省一点内存，但是req、rep、json只能放在线程变量里传递太麻烦
             } else
                 return JsonResult.json403("Error: incorrect MyServerless child template error.", req, jsonString);
 
