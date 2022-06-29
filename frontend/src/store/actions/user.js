@@ -4,7 +4,7 @@ import * as my from "E:/reactmrp/frontend/src/myserverless/myserverless.js";
 
 export const getUserInfo = (token) => (dispatch) => {
     return new Promise((resolve) => {
-      my.data$myServerless(`BackendPublic$GetUserInfo`)
+      my.data$myServerless(`PublicBackend$GetUserInfo`)
         .then((userInfo) => { 
           if (userInfo) {
             dispatch(setUserInfo(userInfo));

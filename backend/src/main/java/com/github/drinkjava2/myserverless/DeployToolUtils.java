@@ -54,8 +54,8 @@ public class DeployToolUtils {
                 SqlJavaPiece piece = item.getValue();
                 String className = piece.getClassName();
                 String methodId=piece.getMethodId();
-                if(MyStrUtils.containsIgnoreCase(methodId, "frontend")) {
-                    formated = restoreKeyToOriginText(formated, key, piece); // 如果方法ID包含frontend字样，则永远保持在前端，不变换到后端。回填占位key
+                if(MyStrUtils.containsIgnoreCase(methodId, "FRONTEND")) { // 如果方法ID包含FRONTEND字样，则永远保持在前端，不变换到后端
+                    formated = restoreKeyToOriginText(formated, key, piece); 
                     continue;
                 }
                 
@@ -140,7 +140,7 @@ public class DeployToolUtils {
             String remoteMethod = MyStrUtils.toLowerCaseFirstOne(template); //xxXxxx
             SqlJavaPiece newPiece = SqlJavaPiece.parseFromJavaSrcFile(javaSrcFileName); 
             String methodId = MyStrUtils.substringBefore(piece.getOriginText(), "_"); //PUBLIC
-            if (MyStrUtils.isEmpty(piece.getOriginText()) || MyStrUtils.containsIgnoreCase(methodId, "backend")) { //如果包含backend就跳过
+            if (MyStrUtils.isEmpty(piece.getOriginText()) || MyStrUtils.containsIgnoreCase(methodId, "BACKEND")) { //如果包含BACKEND就跳过
                 formated = restoreKeyToOriginText(formated, key, piece);
                 continue;
             }

@@ -31,8 +31,8 @@ public interface TokenSecurity {
      * @param myToken current user's myToken
      * @param methodId cureent method id
      * @param hotCompile require hot compile if it's SQL or Java piece received from frontend
-     * @return true if allow execute
+     * @return If check not pass, return message, if check pass, return null.
      */
-    public boolean allow(String myToken, String methodId, boolean hotCompile);
+    public String check(String myToken, String methodId, boolean hotCompile);
 
 }

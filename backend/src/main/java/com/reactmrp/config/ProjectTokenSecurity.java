@@ -25,7 +25,7 @@ import com.reactmrp.entity.User;
  * @author Yong Zhu
  * @since 1.0.0
  */
-public class ProjectSecurity implements TokenSecurity {
+public class ProjectTokenSecurity implements TokenSecurity {
 
     public static String encodePassword(String password) {
         return MD5Util.encryptMD5("theSalt" + password);
@@ -46,7 +46,7 @@ public class ProjectSecurity implements TokenSecurity {
     }
 
     @Override
-    public boolean allow(String myToken, String methodId, boolean hotCompile) {
+    public String check(String myToken, String methodId, boolean hotCompile) {
         return ifAllow(myToken, methodId, hotCompile); //转为调用静态方法，静态方法的优点是可以在任意点发起调用，方便测试
     }
 
@@ -62,23 +62,22 @@ public class ProjectSecurity implements TokenSecurity {
         DB.exe("update users set myToken=null where myToken=", DB.que(myToken));
     }
 
-    //为了提高性能也可以采用缓存，但每当有人员、权限变动时，都要调用userPowerCache.clearCache()清空缓存
+    //为了提高性能也可以采用缓存，但问题是每当有人员、权限变动后，都要清空缓存
     //private static SimpleCacheHandler userPowerCache = new SimpleCacheHandler(300, 100 * 24 * 60 * 60);//缺省最多同时保存300个用户的权限表, 100天过期
 
-    public static boolean ifAllow(String myToken, String methodId, boolean hotCompile) {
-        // 如果没登录只有一种情况可以执行，就是类在后端deploy目录下已存在，且方法名含有public
+    public static String ifAllow(String myToken, String methodId, boolean hotCompile) { // 如果没登录只有一种情况可以执行，就是类在后端deploy目录下已存在，且方法名含有public
         boolean isPublic = MyStrUtils.containsIgnoreCase(methodId, "public");
         if (!hotCompile && isPublic)
-            return true;
+            return null;
 
         //其余的只要未登录都拒绝执行
         if (MyStrUtils.isEmpty(myToken))
-            return false;
+            return "Error: myToken not found";
         String userId = DB.qryString("select userId from users where myToken=", DB.que(myToken));
         if (MyStrUtils.isEmpty(userId))
-            return false;
+            return "Error: myToken is not valid or expired";
 
-        //获取登录用户权限列表，这是一个典型的用户-角色-权限多对多关系
+        //获取当前登录用户权限列表，这是一个典型的用户-角色多对多，角色-权限多对多关系
         List<String> powers = DB.qryList("select p.* from users u ", /* userPowerCache可选，见上, */
                 " left join userrole ur on u.userId=ur.userId ", //
                 " left join roles r on ur.roleName=r.roleName ", //
@@ -86,20 +85,18 @@ public class ProjectSecurity implements TokenSecurity {
                 " left join powers p on p.powerName=rp.powerName ", //
                 " where u.userId=", DB.que(userId));
 
-        if (powers.isEmpty()) //如果什么权限都没有，拒绝执行
-            return false;
+        if (hotCompile && !powers.contains("developer")) //如果要求hotCompile,但用户不具有developer权限，拒绝执行 
+            return "Error: no privilege to hot compile";
 
-        if (hotCompile && !powers.contains("hotCompile")) //如果要求hotCompile,但用户不具有hotCompile权限，拒绝执行 
-            return false;
-
-        powers.add("public");//所有已登录用户都自动具有public权限
-
-        for (String p : powers) { //methodId如果以任一个权限开头，就允许执行，注意如果方法ID没有，缺省是default开头
+        if(MyStrUtils.startsWithIgnoreCase(methodId, "public")) //所有已登录用户都可以运行public开头的方法
+            return null;
+                
+        for (String p : powers) { //methodId如果以任一个权限开头，就允许执行，注意如果方法没有定义是并不是空而是而是default，default方法这里没设
             if (MyStrUtils.startsWithIgnoreCase(methodId, p))
-                return true;
+                return null;
         }
 
-        return false;
+        return "Error: no privilege to execute '"+methodId+"' method";
     }
 
 }

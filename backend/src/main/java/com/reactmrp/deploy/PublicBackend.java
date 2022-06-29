@@ -7,10 +7,10 @@ import java.util.Map;
 
 import com.github.drinkjava2.jsqlbox.DB;
 import com.github.drinkjava2.myserverless.MyServerlessEnv;
-import com.reactmrp.config.ProjectSecurity;
+import com.reactmrp.config.ProjectTokenSecurity;
 import com.reactmrp.entity.Role;
 
-public class BackendPublic { //本项目在ProjectSecurity里设定为 只有类名中有public字样就允许执行，所以只这个类里只存放不需要登录就能公开访问的方法
+public class PublicBackend { //本项目在ProjectSecurity里设定为 deploy目录下只要类名以public开头就允许执行，所以只这个类里只存放不需要登录就能公开访问的方法
 
     /**
      * 这个方法接收userId和password,登录后将token放在cookie里并返回true, 如登录失败则返回false
@@ -44,7 +44,7 @@ public class BackendPublic { //本项目在ProjectSecurity里设定为 只有类
      */
     public static class Logout extends template.JavaTemplate {
         public Object executeBody() {
-            ProjectSecurity.logout(myToken);
+            ProjectTokenSecurity.logout(myToken);
             return true;
         }
     }
@@ -54,7 +54,7 @@ public class BackendPublic { //本项目在ProjectSecurity里设定为 只有类
      */
     public static class CheckLogin extends template.JavaTemplate {
         public Object executeBody() {
-            return ProjectSecurity.isValidToken(myToken);
+            return ProjectTokenSecurity.isValidToken(myToken);
         }
     }
     

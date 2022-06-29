@@ -26,7 +26,7 @@ export const login = (username, password) => (dispatch) => {
 
 export const logout = (token) => (dispatch) => {
     return new Promise((resolve, reject) => {
-        my.data$myServerless(`BackendPublic$Logout`)
+        my.data$myServerless(`PublicBackend$Logout`)
         .then((result) => { 
             localStorage.setItem("myToken", null);              
             dispatch(resetUser());  

@@ -77,7 +77,7 @@ input{
 	 
 	 function cookieLogin(){ //cookie登录会在后端response的cookie里返回一个myToken，并且每次访问时myToken会自动加在前端cookie里发送。但是当前后端不在同一域时要解决跨域问题，配置很麻烦
 		localStorage.setItem("myToken", ""); 
-		var result =syncData$myServerless(`BackendPublic$CookieLogin`
+		var result =syncData$myServerless(`PublicBackend$CookieLogin`
 		            , domValById("userId"), domValById("password"));
 	    console.log("result", result);
 		if(result==true){
@@ -88,7 +88,7 @@ input{
 		 
 	 function tokenLogin(){ //这是另一种登录方式，myToken保存在localStorage里，每次访问时myToken会自动加在json里发送，没有跨域问题，但安全性没有cookie安全
   	    localStorage.setItem("myToken", ""); 
-		var myToken =syncData$myServerless(`BackendPublic$TokenLogin`
+		var myToken =syncData$myServerless(`PublicBackend$TokenLogin`
 					, domValById("userId"), domValById("password"));
 		if(myToken){
 			localStorage.setItem("myToken", myToken); 

@@ -109,7 +109,7 @@ public class InitConfig extends HttpServlet {
     public static void insertUserAndPowers() {//插入种子用户、角色、权限
         
         //新建用户 
-        String pwd = ProjectSecurity.encodePassword("123");
+        String pwd = ProjectTokenSecurity.encodePassword("123");
         String p1="https://s1.ax1x.com/2020/04/28/J5hUaT.jpg";
         String p2="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png";
         User u = new User();

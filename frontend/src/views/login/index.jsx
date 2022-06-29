@@ -16,7 +16,7 @@ const Login = (props) => {
   //这个是使用myServerless的登录方法
   const handleLogin = (username, password) => {
     setLoading(true);
-    my.data$myServerless(`BackendPublic$TokenLogin`, username, password)
+    my.data$myServerless(`PublicBackend$TokenLogin`, username, password)
       .then((token) => {
         if(token){  
             localStorage.setItem("myToken", token); 

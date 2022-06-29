@@ -141,8 +141,9 @@ public class MyServerlessServlet extends HttpServlet {
             if (childClass != null) {
                 String methodId = MyStrUtils.substringBefore(childClass.getName(), "_"); //com.xx.deploy.xxPublicx$xxx 
                 methodId = MyStrUtils.substringAfterLast(methodId, "."); // xxPublicx$xxx
-                if (!MyServerlessEnv.tokenSecurity.allow(myToken, methodId, hotCompile)) //重要，在这里调用系统配置的TokenSecurity进行权限检查
-                    return JsonResult.json403("Error: no privilege to execute '" + methodId + "' method");
+                String error=MyServerlessEnv.tokenSecurity.check(myToken, methodId, hotCompile);//重要，在这里调用系统配置的TokenSecurity进行权限检查
+                if(MyStrUtils.isEmpty(error))
+                    return JsonResult.json403(error);
             } else {
                 if (MyServerlessEnv.is_product_stage)
                     return JsonResult.json403("Error: not found class on server.");
@@ -159,8 +160,9 @@ public class MyServerlessServlet extends HttpServlet {
                 String methodId = piece.getClassName(); //admin_rxumbbmwww3r6k3fyp8i
                 methodId = MyStrUtils.substringBefore(methodId, "_");//admin
                 hotCompile=true;
-                if (!MyServerlessEnv.tokenSecurity.allow(myToken, methodId, hotCompile)) //重要，在这里调用系统配置的TokenSecurity进行权限检查 
-                    return JsonResult.json403("Error: no privilege to execute '" + methodId + "' method.");
+                String error=MyServerlessEnv.tokenSecurity.check(myToken, methodId, hotCompile);//重要，在这里调用系统配置的TokenSecurity进行权限检查
+                if(MyStrUtils.isEmpty(error))
+                    return JsonResult.json403(error); 
 
                 String classSrc = SrcBuilder.createSourceCode(templateClass, pieceType, piece);
                 //注意下面这个方法动态编译Java源码，但是它自带缓存，如果相同的内容则直接返回缓存中上次编译后获得的类
