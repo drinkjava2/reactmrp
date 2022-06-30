@@ -33,19 +33,6 @@ class User extends Component {
     }
   }
   
-//  这是原版使用mock的getUsers方法  
-//  getUsers = async () => { 
-//      const result = await getUsers()
-//      console.log("users",result);
-//      const { users, status } = result.data
-//      if (status === 0) {
-//        this.setState({
-//          users
-//        })
-//      }
-//    }
-  
-  
   handleEditUser = (row) => {
     this.setState({
       currentRowData:Object.assign({}, row),
@@ -83,19 +70,6 @@ class User extends Component {
         });
       };
       
-//  这是原版使用Mock的handleDeleteUser方法
-//  handleDeleteUser = (row) => {
-//    const { id } = row
-//    if (id === "admin") {
-//      message.error("不能删除管理员用户！")
-//      return
-//    }
-//    deleteUser({id}).then(res => {
-//      message.success("删除成功")
-//      this.getUsers();
-//    })
-//  }
-
   handleEditUserOk = _ => {
     const { form } = this.editUserFormRef.props;
     form.validateFields((err, values) => {
@@ -105,8 +79,8 @@ class User extends Component {
       this.setState({ editModalLoading: true, });
       
       my.data$javaTx(`#admin 
-import com.github.drinkjava2.myserverless.util.MyStrUtils;
-Map<String,String> v= (Map<String,String>)$1;
+              import com.github.drinkjava2.myserverless.util.MyStrUtils;
+              Map<String,String> v= (Map<String,String>)$1;
               String role=DB.qryString("select roleName from userRole where roleName='developer' and userId=", que(v.get("id")));
               if("developer".equals(role))
                  return "编辑失败， developer不允许被编辑";
@@ -132,26 +106,6 @@ Map<String,String> v= (Map<String,String>)$1;
     });
   };
   
-//  这是原版使用Mock的handleEditUserOk方法
-//  handleEditUserOk = _ => {
-//    const { form } = this.editUserFormRef.props;
-//    form.validateFields((err, values) => {
-//      if (err) {
-//        return;
-//      }
-//      this.setState({ editModalLoading: true, });
-//      editUser(values).then((response) => {
-//        form.resetFields();
-//        this.setState({ editUserModalVisible: false, editUserModalLoading: false });
-//        message.success("编辑成功!")
-//        this.getUsers()
-//      }).catch(e => {
-//        message.success("编辑失败,请重试!")
-//      })
-//      
-//    });
-//  };
-
   handleCancel = _ => {
     this.setState({
       editUserModalVisible: false,
@@ -173,8 +127,8 @@ Map<String,String> v= (Map<String,String>)$1;
           }
           this.setState( { addUserModalLoading: true, } );
           my.data$javaTx(`#admin 
-import com.github.drinkjava2.myserverless.util.MyStrUtils;
-Map<String,String> v= (Map<String,String>)$1;
+             import com.github.drinkjava2.myserverless.util.MyStrUtils;
+             Map<String,String> v= (Map<String,String>)$1;
             if(MyStrUtils.isEmpty(v.get("name"))) //只查name, 不检查userId，因为主键为空不可能插入
                  return null;
              DB.exe("insert into users (userId, name, description) ", par(v.get("id"), v.get("name"), v.get("description")), DB.VQ ); 
@@ -193,26 +147,6 @@ Map<String,String> v= (Map<String,String>)$1;
               );
       } );
   };
-  
-//  这是原版使用mock的handleAddUserOk方法
-//  handleAddUserOk = _ => {
-//    const { form } = this.addUserFormRef.props;
-//    form.validateFields((err, values) => {
-//      if (err) {
-//        return;
-//      }
-//      this.setState({ addUserModalLoading: true, });
-//      addUser(values).then((response) => {
-//        form.resetFields();
-//        this.setState({ addUserModalVisible: false, addUserModalLoading: false });
-//        message.success("添加成功!")
-//        this.getUsers()
-//      }).catch(e => {
-//        message.success("添加失败,请重试!")
-//      })
-//    });
-//  };
-  
   
   componentDidMount() {
     this.getUsers()

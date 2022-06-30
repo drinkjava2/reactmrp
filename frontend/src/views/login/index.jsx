@@ -28,20 +28,6 @@ const Login = (props) => {
         }
       });
   };
-      
-//  //这个是原来使用mock的登录方法
-//  const handleLogin = (username, password) => {
-//    setLoading(true);
-//    login(username, password)
-//      .then((data) => {
-//        message.success("登录成功");
-//        handleUserInfo(data.token);
-//      })
-//      .catch((error) => {
-//        setLoading(false);
-//        message.error(error);
-//      });
-//  };
 
   // 获取用户信息
   const handleUserInfo = (token) => {
