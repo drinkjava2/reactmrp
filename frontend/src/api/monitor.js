@@ -1,4 +1,4 @@
-import request from "E:/reactmrp/frontend/src/utils/request";
+import request from "@/utils/request";
 
 export function tracker(data) {
   return request({

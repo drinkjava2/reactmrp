@@ -1,29 +1,29 @@
 import Loadable from 'react-loadable';
-import Loading from 'E:/reactmrp/frontend/src/components/Loading'
-const Dashboard = Loadable({loader: () => import(/*webpackChunkName:'Dashboard'*/'E:/reactmrp/frontend/src/views/dashboard'),loading: Loading});
-const Doc = Loadable({loader: () => import(/*webpackChunkName:'Doc'*/'E:/reactmrp/frontend/src/views/doc'),loading: Loading});
-const Guide = Loadable({loader: () => import(/*webpackChunkName:'Guide'*/'E:/reactmrp/frontend/src/views/guide'),loading: Loading});
-const Explanation = Loadable({loader: () => import(/*webpackChunkName:'Explanation'*/'E:/reactmrp/frontend/src/views/permission'),loading: Loading});
-const AdminPage = Loadable({loader: () => import(/*webpackChunkName:'AdminPage'*/'E:/reactmrp/frontend/src/views/permission/adminPage'),loading: Loading});
-const GuestPage = Loadable({loader: () => import(/*webpackChunkName:'GuestPage'*/'E:/reactmrp/frontend/src/views/permission/guestPage'),loading: Loading});
-const EditorPage = Loadable({loader: () => import(/*webpackChunkName:'EditorPage'*/'E:/reactmrp/frontend/src/views/permission/editorPage'),loading: Loading});
-const RichTextEditor = Loadable({loader: () => import(/*webpackChunkName:'RichTextEditor'*/'E:/reactmrp/frontend/src/views/components-demo/richTextEditor'),loading: Loading});
-const Markdown = Loadable({loader: () => import(/*webpackChunkName:'Markdown'*/'E:/reactmrp/frontend/src/views/components-demo/Markdown'),loading: Loading});
-const Draggable = Loadable({loader: () => import(/*webpackChunkName:'Draggable'*/'E:/reactmrp/frontend/src/views/components-demo/draggable'),loading: Loading});
-const KeyboardChart = Loadable({loader: () => import(/*webpackChunkName:'KeyboardChart'*/'E:/reactmrp/frontend/src/views/charts/keyboard'),loading: Loading});
-const LineChart = Loadable({loader: () => import(/*webpackChunkName:'LineChart'*/'E:/reactmrp/frontend/src/views/charts/line'),loading: Loading});
-const MixChart = Loadable({loader: () => import(/*webpackChunkName:'MixChart'*/'E:/reactmrp/frontend/src/views/charts/mixChart'),loading: Loading});
-const Menu1_1 = Loadable({loader: () => import(/*webpackChunkName:'Menu1_1'*/'E:/reactmrp/frontend/src/views/nested/menu1/menu1-1'),loading: Loading});
-const Menu1_2_1 = Loadable({loader: () => import(/*webpackChunkName:'Menu1_2_1'*/'E:/reactmrp/frontend/src/views/nested/menu1/menu1-2/menu1-2-1'),loading: Loading});
-const Table = Loadable({loader: () => import(/*webpackChunkName:'Table'*/'E:/reactmrp/frontend/src/views/table'),loading: Loading});
-const ExportExcel = Loadable({loader: () => import(/*webpackChunkName:'ExportExcel'*/'E:/reactmrp/frontend/src/views/excel/exportExcel'),loading: Loading});
-const UploadExcel = Loadable({ loader: () => import(/*webpackChunkName:'UploadExcel'*/'E:/reactmrp/frontend/src/views/excel/uploadExcel'),loading: Loading });
-const Zip = Loadable({loader: () => import(/*webpackChunkName:'Zip'*/'E:/reactmrp/frontend/src/views/zip'),loading: Loading});
-const Clipboard = Loadable({loader: () => import(/*webpackChunkName:'Clipboard'*/'E:/reactmrp/frontend/src/views/clipboard'),loading: Loading});
-const Error404 = Loadable({loader: () => import(/*webpackChunkName:'Error404'*/'E:/reactmrp/frontend/src/views/error/404'),loading: Loading});
-const User = Loadable({loader: () => import(/*webpackChunkName:'User'*/'E:/reactmrp/frontend/src/views/user'),loading: Loading});
-const About = Loadable({loader: () => import(/*webpackChunkName:'About'*/'E:/reactmrp/frontend/src/views/about'),loading: Loading});
-const Bug = Loadable({loader: () => import(/*webpackChunkName:'Bug'*/'E:/reactmrp/frontend/src/views/bug'),loading: Loading});
+import Loading from '@/components/Loading'
+const Dashboard = Loadable({loader: () => import(/*webpackChunkName:'Dashboard'*/'@/views/dashboard'),loading: Loading});
+const Doc = Loadable({loader: () => import(/*webpackChunkName:'Doc'*/'@/views/doc'),loading: Loading});
+const Guide = Loadable({loader: () => import(/*webpackChunkName:'Guide'*/'@/views/guide'),loading: Loading});
+const Explanation = Loadable({loader: () => import(/*webpackChunkName:'Explanation'*/'@/views/permission'),loading: Loading});
+const AdminPage = Loadable({loader: () => import(/*webpackChunkName:'AdminPage'*/'@/views/permission/adminPage'),loading: Loading});
+const GuestPage = Loadable({loader: () => import(/*webpackChunkName:'GuestPage'*/'@/views/permission/guestPage'),loading: Loading});
+const EditorPage = Loadable({loader: () => import(/*webpackChunkName:'EditorPage'*/'@/views/permission/editorPage'),loading: Loading});
+const RichTextEditor = Loadable({loader: () => import(/*webpackChunkName:'RichTextEditor'*/'@/views/components-demo/richTextEditor'),loading: Loading});
+const Markdown = Loadable({loader: () => import(/*webpackChunkName:'Markdown'*/'@/views/components-demo/Markdown'),loading: Loading});
+const Draggable = Loadable({loader: () => import(/*webpackChunkName:'Draggable'*/'@/views/components-demo/draggable'),loading: Loading});
+const KeyboardChart = Loadable({loader: () => import(/*webpackChunkName:'KeyboardChart'*/'@/views/charts/keyboard'),loading: Loading});
+const LineChart = Loadable({loader: () => import(/*webpackChunkName:'LineChart'*/'@/views/charts/line'),loading: Loading});
+const MixChart = Loadable({loader: () => import(/*webpackChunkName:'MixChart'*/'@/views/charts/mixChart'),loading: Loading});
+const Menu1_1 = Loadable({loader: () => import(/*webpackChunkName:'Menu1_1'*/'@/views/nested/menu1/menu1-1'),loading: Loading});
+const Menu1_2_1 = Loadable({loader: () => import(/*webpackChunkName:'Menu1_2_1'*/'@/views/nested/menu1/menu1-2/menu1-2-1'),loading: Loading});
+const Table = Loadable({loader: () => import(/*webpackChunkName:'Table'*/'@/views/table'),loading: Loading});
+const ExportExcel = Loadable({loader: () => import(/*webpackChunkName:'ExportExcel'*/'@/views/excel/exportExcel'),loading: Loading});
+const UploadExcel = Loadable({ loader: () => import(/*webpackChunkName:'UploadExcel'*/'@/views/excel/uploadExcel'),loading: Loading });
+const Zip = Loadable({loader: () => import(/*webpackChunkName:'Zip'*/'@/views/zip'),loading: Loading});
+const Clipboard = Loadable({loader: () => import(/*webpackChunkName:'Clipboard'*/'@/views/clipboard'),loading: Loading});
+const Error404 = Loadable({loader: () => import(/*webpackChunkName:'Error404'*/'@/views/error/404'),loading: Loading});
+const User = Loadable({loader: () => import(/*webpackChunkName:'User'*/'@/views/user'),loading: Loading});
+const About = Loadable({loader: () => import(/*webpackChunkName:'About'*/'@/views/about'),loading: Loading});
+const Bug = Loadable({loader: () => import(/*webpackChunkName:'Bug'*/'@/views/bug'),loading: Loading});
 
 export default [
   { path: "/dashboard", component: Dashboard, roles: ["admin","editor","guest"] },

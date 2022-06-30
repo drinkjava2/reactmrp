@@ -1,5 +1,5 @@
 import React from 'react';
-import TypingCard from 'E:/reactmrp/frontend/src/components/TypingCard'
+import TypingCard from '@/components/TypingCard'
 const Doc = () => {
   const cardContent = `
     本项目是在难凉热血的<a href="https://github.com/NLRX-WJC/react-antd-admin-template" target="_blank">react-antd-admin-template前端框架模板</a>基础上把mock换为MyServerless后端，以演示MyServerless的使用。<br/><br/>

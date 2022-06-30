@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Form, Input, Select, Modal } from "antd";
-import { reqValidatUserID } from "E:/reactmrp/frontend/src/api/user";
-import * as my from "E:/reactmrp/frontend/src/myserverless/myserverless.js";
+import { reqValidatUserID } from "@/api/user";
+import * as my from "@/myserverless/myserverless.js";
 const { TextArea } = Input;
 class AddUserForm extends Component {
   validatUserID = async (rule, value, callback) => {

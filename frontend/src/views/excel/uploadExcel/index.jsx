@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Table } from "antd";
-import UploadExcelComponent from "E:/reactmrp/frontend/src/components/UploadExcel";
+import UploadExcelComponent from "@/components/UploadExcel";
 class UploadExcel extends Component {
   state = {
     tableData: [],

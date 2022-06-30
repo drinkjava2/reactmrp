@@ -4,9 +4,9 @@ import DocumentTitle from "react-document-title";
 import { connect } from "react-redux";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import { Layout } from "antd";
-import { getMenuItemInMenuListByProperty } from "E:/reactmrp/frontend/src/utils";
-import routeList from "E:/reactmrp/frontend/src/config/routeMap";
-import menuList from "E:/reactmrp/frontend/src/config/menuConfig";
+import { getMenuItemInMenuListByProperty } from "@/utils";
+import routeList from "@/config/routeMap";
+import menuList from "@/config/menuConfig";
 const { Content } = Layout;
 
 const getPageTitle = (menuList, pathname) => {

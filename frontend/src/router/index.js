@@ -1,9 +1,9 @@
 import React from "react";
 import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
-import { getUserInfo } from "E:/reactmrp/frontend/src/store/actions";
-import Layout from "E:/reactmrp/frontend/src/views/layout";
-import Login from "E:/reactmrp/frontend/src/views/login";
+import { getUserInfo } from "@/store/actions";
+import Layout from "@/views/layout";
+import Login from "@/views/login";
 class Router extends React.Component {
   render() {
     console.log("props",this.props);  

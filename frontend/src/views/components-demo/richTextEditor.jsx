@@ -1,6 +1,6 @@
 import React from "react";
-import RichTextEditor from "E:/reactmrp/frontend/src/components/RichTextEditor";
-import TypingCard from "E:/reactmrp/frontend/src/components/TypingCard";
+import RichTextEditor from "@/components/RichTextEditor";
+import TypingCard from "@/components/TypingCard";
 
 const RichTextEditorDemo = () => {
   const cardContent = `

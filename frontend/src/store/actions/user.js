@@ -1,6 +1,6 @@
 import * as types from "../action-types";
-import { reqUserInfo } from "E:/reactmrp/frontend/src/api/user";
-import * as my from "E:/reactmrp/frontend/src/myserverless/myserverless.js";
+import { reqUserInfo } from "@/api/user";
+import * as my from "@/myserverless/myserverless.js";
 
 export const getUserInfo = (token) => (dispatch) => {
     return new Promise((resolve) => {

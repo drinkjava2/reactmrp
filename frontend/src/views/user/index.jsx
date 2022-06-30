@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Card, Button, Modal, Table, message, Divider } from "antd";
-import { getUsers, deleteUser, editUser, addUser } from "E:/reactmrp/frontend/src/api/user";
-import TypingCard from 'E:/reactmrp/frontend/src/components/TypingCard'
+import { getUsers, deleteUser, editUser, addUser } from "@/api/user";
+import TypingCard from '@/components/TypingCard'
 import EditUserForm from "./forms/edit-user-form"
 import AddUserForm from "./forms/add-user-form"
-import * as my from "E:/reactmrp/frontend/src/myserverless/myserverless.js";
+import * as my from "@/myserverless/myserverless.js";
 
 const { Column } = Table;
 class User extends Component {

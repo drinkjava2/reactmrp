@@ -1,7 +1,7 @@
 import { setUserToken, resetUser } from "./user";
-import { reqLogin, reqLogout } from "E:/reactmrp/frontend/src/api/login";
-import { setToken, removeToken } from "E:/reactmrp/frontend/src/utils/auth";
-import * as my from "E:/reactmrp/frontend/src/myserverless/myserverless.js";
+import { reqLogin, reqLogout } from "@/api/login";
+import { setToken, removeToken } from "@/utils/auth";
+import * as my from "@/myserverless/myserverless.js";
 
 export const login = (username, password) => (dispatch) => {
   return new Promise((resolve, reject) => {

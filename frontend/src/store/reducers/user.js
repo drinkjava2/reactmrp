@@ -1,6 +1,6 @@
 import * as types from "../action-types";
-//import { getToken } from "E:/reactmrp/frontend/src/utils/auth";
-import * as my from "E:/reactmrp/frontend/src/myserverless/myserverless.js";
+//import { getToken } from "@/utils/auth";
+import * as my from "@/myserverless/myserverless.js";
 
 const initUserInfo = {
   name: "",

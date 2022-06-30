@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Drawer, Switch, Row, Col, Divider, Alert, Icon, Button } from "antd";
-import { toggleSettingPanel, changeSetting } from "E:/reactmrp/frontend/src/store/actions";
-import clip from "E:/reactmrp/frontend/src/utils/clipboard";
+import { toggleSettingPanel, changeSetting } from "@/store/actions";
+import clip from "@/utils/clipboard";
 
 const RightPanel = (props) => {
   const {

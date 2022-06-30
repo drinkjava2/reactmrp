@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Card, Progress } from "antd";
 import { connect } from "react-redux";
-import PanThumb from 'E:/reactmrp/frontend/src/components/PanThumb'
-import Mallki from 'E:/reactmrp/frontend/src/components//Mallki'
+import PanThumb from '@/components/PanThumb'
+import Mallki from '@/components//Mallki'
 import './index.less'
 class BoxCard extends Component {
   state = {};

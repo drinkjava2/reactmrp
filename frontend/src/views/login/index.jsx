@@ -4,8 +4,8 @@ import { Form, Icon, Input, Button, message, Spin } from "antd";
 import { connect } from "react-redux";
 import DocumentTitle from "react-document-title";
 import "./index.less";
-import { login, getUserInfo } from "E:/reactmrp/frontend/src/store/actions";
-import * as my from "E:/reactmrp/frontend/src/myserverless/myserverless.js";
+import { login, getUserInfo } from "@/store/actions";
+import * as my from "@/myserverless/myserverless.js";
 
 const Login = (props) => {
   const { form, token, login, getUserInfo } = props;
