@@ -86,7 +86,7 @@ public class ProjectTokenSecurity implements TokenSecurity {
                 " where u.userId=", DB.que(userId));
 
         if (hotCompile && !powers.contains("developer")) //如果要求hotCompile,但用户不具有developer权限，拒绝执行 
-            return "Error: no privilege to hot compile";
+            return "Error: no privilege to compile and run frontend SQL/Java, need 'developer' privilege.";
 
         if(MyStrUtils.startsWithIgnoreCase(methodId, "public")) //所有已登录用户都可以运行public开头的方法
             return null;

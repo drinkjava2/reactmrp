@@ -88,7 +88,7 @@ const Login = (props) => {
                     message: "请输入用户名",
                   },
                 ],
-                initialValue: "admin", // 初始值
+                initialValue: "developer", // 初始值
               })(
                 <Input
                   prefix={

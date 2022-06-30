@@ -124,10 +124,10 @@ public class InitConfig extends HttpServlet {
         new Role().setRoleName("editor").setRoleLevel(3).insert();
         new Role().setRoleName("guest").setRoleLevel(4).insert();
 
-        //给用户添加角色
+        //给用户添加角色，一个用户可以分配多个角色，这个演示只是简单分配一个用户对应同名的一个的角色
         UserRole ur = new UserRole();
         ur.setUserId("developer").setRoleName("developer").insert();
-        ur.setUserId("developer").setRoleName("admin").insert(); //developer用户通常同时具有developer和admin两个角色，但是前端只需要返回一个角色时，只返回admin角色以方便开发和测试。
+        ur.setUserId("developer").setRoleName("admin").insert(); //developer用户同时具有developer和admin两个角色，但前端查询developer的角色时只需要返回admin角色，是因为网上找的这个前端只支持一个用户一个角色，不想改太多前端了
         ur.setUserId("admin").setRoleName("admin").insert();
         ur.setUserId("editor").setRoleName("editor").insert();
         ur.setUserId("guest").setRoleName("guest").insert();
@@ -138,9 +138,9 @@ public class InitConfig extends HttpServlet {
         new Power().setPowerName("editor").insert();
         new Power().setPowerName("guest").insert();
 
-        //给角色添加权限
+        //给角色添加权限，一个角色可以分配多个权限，这个演示只是简单分配一个角色对应同名的一个的权限
         RolePower ra = new RolePower();
-        ra.setRoleName("developer").setPowerName("developer").insert();//developer权限允许动态编译前端代码
+        ra.setRoleName("developer").setPowerName("developer").insert();
         ra.setRoleName("admin").setPowerName("admin").insert();
         ra.setRoleName("editor").setPowerName("editor").insert();
         ra.setRoleName("guest").setPowerName("guest").insert();

@@ -142,7 +142,7 @@ public class MyServerlessServlet extends HttpServlet {
                 String methodId = MyStrUtils.substringBefore(childClass.getName(), "_"); //com.xx.deploy.xxPublicx$xxx 
                 methodId = MyStrUtils.substringAfterLast(methodId, "."); // xxPublicx$xxx
                 String error=MyServerlessEnv.tokenSecurity.check(myToken, methodId, hotCompile);//重要，在这里调用系统配置的TokenSecurity进行权限检查
-                if(MyStrUtils.isEmpty(error))
+                if(!MyStrUtils.isEmpty(error))
                     return JsonResult.json403(error);
             } else {
                 if (MyServerlessEnv.is_product_stage)
@@ -161,7 +161,7 @@ public class MyServerlessServlet extends HttpServlet {
                 methodId = MyStrUtils.substringBefore(methodId, "_");//admin
                 hotCompile=true;
                 String error=MyServerlessEnv.tokenSecurity.check(myToken, methodId, hotCompile);//重要，在这里调用系统配置的TokenSecurity进行权限检查
-                if(MyStrUtils.isEmpty(error))
+                if(!MyStrUtils.isEmpty(error))
                     return JsonResult.json403(error); 
 
                 String classSrc = SrcBuilder.createSourceCode(templateClass, pieceType, piece);
