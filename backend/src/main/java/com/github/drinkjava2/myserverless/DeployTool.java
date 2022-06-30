@@ -84,9 +84,8 @@ public class DeployTool {
             System.out.println(file.getAbsolutePath());
             DeployToolUtils.oneFileToServ(sqlJavaPieces, file, true);
         }
-        for (SqlJavaPiece sqlJavaPiece : sqlJavaPieces) {
-            System.out.println(sqlJavaPiece.getDebugInfo());
-        }
+        // for (SqlJavaPiece sqlJavaPiece : sqlJavaPieces) 
+        // System.out.println(sqlJavaPiece.getDebugInfo()); 
         exportApiDoc(sqlJavaPieces);
         System.out.println("Done!");
     }

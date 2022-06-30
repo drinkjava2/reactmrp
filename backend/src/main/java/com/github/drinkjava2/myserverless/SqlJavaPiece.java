@@ -38,19 +38,19 @@ public class SqlJavaPiece {
     String className = ""; // class name, like "DemoUser"
     String location = ""; //the piece located in which file
 
-    public String getDebugInfo() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("=====SqlJavaPiece debugInfo====\r");
-        sb.append("id=(").append(id).append(")\r");
-        sb.append("imports=(").append(imports).append(")\r");
-        sb.append("body=(").append(body).append(")\r");
-        sb.append("originText=(").append(originText).append(")\r");
-        sb.append("methodType=(").append(methodType).append(")\r");
-        sb.append("packageName=(").append(packageName).append(")\r");
-        sb.append("className=(").append(className).append(")\r");
-        sb.append("location=(").append(location).append(")\r");
-        return sb.toString();
-    }
+//    public String getDebugInfo() {
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("=====SqlJavaPiece debugInfo====\r");
+//        sb.append("id=(").append(id).append(")\r");
+//        sb.append("imports=(").append(imports).append(")\r");
+//        sb.append("body=(").append(body).append(")\r");
+//        sb.append("originText=(").append(originText).append(")\r");
+//        sb.append("methodType=(").append(methodType).append(")\r");
+//        sb.append("packageName=(").append(packageName).append(")\r");
+//        sb.append("className=(").append(className).append(")\r");
+//        sb.append("location=(").append(location).append(")\r");
+//        return sb.toString();
+//    }
 
     public SqlJavaPiece trim() {
         if (this.body == null)

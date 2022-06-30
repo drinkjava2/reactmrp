@@ -113,8 +113,8 @@ public class InitConfig extends HttpServlet {
         String p1="https://s1.ax1x.com/2020/04/28/J5hUaT.jpg";
         String p2="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png";
         User u = new User();
-        u.setUserId("developer").setName("张三").setAvatar(p1).setDescription("开发者，拥有所有业务权限并允许动态编译执行前端发来的SQL和Java").setPassword(pwd).insert();
-        u.setUserId("admin").setName("李四").setAvatar(p1).setDescription("管理员，拥有所有业务权限").setPassword(pwd).insert();
+        u.setUserId("developer").setName("张三").setAvatar(p1).setDescription("开发者，拥有所有业务权限，允许执行前端发来的SQL和Java").setPassword(pwd).insert();
+        u.setUserId("admin").setName("李四").setAvatar(p1).setDescription("管理员，拥有所有业务权限，但没有权限执行前端发来的SQL和Java").setPassword(pwd).insert();
         u.setUserId("editor").setName("王二麻").setAvatar(p2).setDescription("编辑者，可以看到除用户管理页面之外的所有页面").setPassword(pwd).insert();
         u.setUserId("guest").setName("孙小狗").setAvatar(p2).setDescription("普通用户，仅能看到主版、作者博客、权限测试和关于作者四个页面").setPassword(pwd).insert();
 
