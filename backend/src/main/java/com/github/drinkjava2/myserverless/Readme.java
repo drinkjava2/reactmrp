@@ -11,6 +11,7 @@
 package com.github.drinkjava2.myserverless;
 
 /**
- * All files in this folder is belong to myserverless-core project, usually no need change any file in this folder 
+ * MyServerless 4.0
+ * All files in this folder is belong to MyServerless project, usually no need change any file in this folder 
  */
 public class Readme { }

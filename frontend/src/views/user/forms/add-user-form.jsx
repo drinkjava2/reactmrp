@@ -10,9 +10,6 @@ class AddUserForm extends Component {
         callback("用户ID必须为1-6位数字或字母组合");
       }
       let status = await my.data$qryString(`#admin select 1 from users where userId=?`, value);
-//      原版本用Mock是这样写的      
-//      let res = await reqValidatUserID(value);
-//      const { status } = res.data;
        if (status) {
         callback("该用户ID已存在");
       }

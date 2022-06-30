@@ -1,9 +1,0 @@
-Hot Compile,,"use's one power is ""developer"""
-,,
-Execute,,use's one power is incluced in methodID
-,or,"methodId include ""public"" and class already exist on server "
-,,
-keep on back,,methodId include backend
-,,
-,,
-keep on front,,methodId include frontend
