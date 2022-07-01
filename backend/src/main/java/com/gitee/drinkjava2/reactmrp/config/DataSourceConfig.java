@@ -1,4 +1,4 @@
-package com.reactmrp.config;
+package com.gitee.drinkjava2.reactmrp.config;
 
 import com.github.drinkjava2.jbeanbox.BeanBox;
 import com.zaxxer.hikari.HikariDataSource;

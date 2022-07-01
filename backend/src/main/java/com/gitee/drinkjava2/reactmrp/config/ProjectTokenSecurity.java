@@ -8,16 +8,16 @@
  * OF ANY KIND, either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package com.reactmrp.config;
+package com.gitee.drinkjava2.reactmrp.config;
 
 import java.util.List;
 
+import com.gitee.drinkjava2.reactmrp.entity.User;
 import com.github.drinkjava2.jdialects.StrUtils;
 import com.github.drinkjava2.jsqlbox.DB;
 import com.github.drinkjava2.myserverless.TokenSecurity;
 import com.github.drinkjava2.myserverless.util.MD5Util;
 import com.github.drinkjava2.myserverless.util.MyStrUtils;
-import com.reactmrp.entity.User;
 
 /**
  * MyServerless的TokenSecurity接口两个方法必须实现，以实现登录和token检查功能

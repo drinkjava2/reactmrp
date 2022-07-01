@@ -146,15 +146,15 @@ public class MyServerlessServlet extends HttpServlet {
                     return JsonResult.json403(error);
             } else {
                 if (MyServerlessEnv.is_product_stage)
-                    return JsonResult.json403("Error: not found class on server.");
+                    return JsonResult.json403("Error: hot compile is not allowed in product stage.");
 
                 if (MyStrUtils.isEmpty(myToken) || myToken.length() < 10) //如果myToken没有，直接报错，不允许动态编译
-                    return JsonResult.json403("Error: hot compile is not allowed.");
+                    return JsonResult.json403("Error: myToken not found.");
 
                 PieceType pieceType = PieceType.byRemoteMethodName(remoteMethod);
                 Class<?> templateClass = MyServerlessEnv.methodTemplates.get(remoteMethod);
                 if (templateClass == null)
-                    return JsonResult.json403("Error: server method '" + remoteMethod + "' not found.", req, jsonString);
+                    return JsonResult.json403("Error: server template '" + remoteMethod + "' not found.", req, jsonString);
 
                 SqlJavaPiece piece = SqlJavaPiece.parseFromFrontText(remoteMethod, sqlOrJavaPiece);
                 String methodId = piece.getClassName(); //admin_rxumbbmwww3r6k3fyp8i
@@ -168,14 +168,14 @@ public class MyServerlessServlet extends HttpServlet {
                 //注意下面这个方法动态编译Java源码，但是它自带缓存，如果相同的内容则直接返回缓存中上次编译后获得的类
                 childClass = DynamicCompileEngine.instance.javaCodeToClass(MyServerlessEnv.deploy_package + "." + piece.getClassName(), classSrc);
                 if (childClass == null) //still is null
-                    return JsonResult.json403("Error: compile failed on server side.", req, jsonString);
+                    return JsonResult.json403("Error: hot compile failed.", req, jsonString);
             }
 
             BaseTemplate instance = null;
             if (BaseTemplate.class.isAssignableFrom(childClass)) {
                 instance = (BaseTemplate) childClass.newInstance(); //这里只能用newInstance生成多例，如果要采用单例模式虽然可以节省一点内存，但是req、rep、json只能放在线程变量里传递太麻烦
             } else
-                return JsonResult.json403("Error: incorrect MyServerless child template error.", req, jsonString);
+                return JsonResult.json403("Error: incorrect base template.", req, jsonString);
 
             instance.initParams(req, resp, params, myToken);
 

@@ -8,12 +8,12 @@
  * OF ANY KIND, either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package com.reactmrp;
+package com.gitee.drinkjava2.reactmrp;
 
 import java.io.File;
 
+import com.gitee.drinkjava2.reactmrp.config.InitConfig;
 import com.github.drinkjava2.myserverless.MyServerlessServlet;
-import com.reactmrp.config.InitConfig;
 
 import io.undertow.Undertow;
 import io.undertow.server.handlers.resource.FileResourceManager;

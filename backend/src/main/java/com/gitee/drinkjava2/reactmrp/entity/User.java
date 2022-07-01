@@ -1,4 +1,4 @@
-package com.reactmrp.entity;
+package com.gitee.drinkjava2.reactmrp.entity;
 
 import com.github.drinkjava2.jdialects.annotation.jdia.COLUMN;
 import com.github.drinkjava2.jdialects.annotation.jpa.Id;

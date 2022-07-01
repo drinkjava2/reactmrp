@@ -16,8 +16,6 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONObject;
-
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -91,16 +89,6 @@ public class JsonUtil {
     public static <T> T toObj(String json, Class<T> claz) {
         try {
             return singleTonObjectMapper_NON_NULL.readValue(json, claz);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /** 把json字符串转为JSONObject, 如失败返回null */
-    public static JSONObject toJSONObject(String json) {
-        try {
-            return singleTonObjectMapper_NON_NULL.readValue(json, JSONObject.class);
         } catch (IOException e) {
             e.printStackTrace();
             return null;

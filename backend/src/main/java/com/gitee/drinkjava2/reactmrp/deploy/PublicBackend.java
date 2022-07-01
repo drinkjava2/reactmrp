@@ -1,14 +1,14 @@
-package com.reactmrp.deploy;
+package com.gitee.drinkjava2.reactmrp.deploy;
 
 import static com.github.drinkjava2.jsqlbox.DB.que;
 
 import java.util.List;
 import java.util.Map;
 
+import com.gitee.drinkjava2.reactmrp.config.ProjectTokenSecurity;
+import com.gitee.drinkjava2.reactmrp.entity.Role;
 import com.github.drinkjava2.jsqlbox.DB;
 import com.github.drinkjava2.myserverless.MyServerlessEnv;
-import com.reactmrp.config.ProjectTokenSecurity;
-import com.reactmrp.entity.Role;
 
 public class PublicBackend { //本项目在ProjectSecurity里设定为 deploy目录下只要类名以public开头就允许执行，所以只这个类里只存放不需要登录就能公开访问的方法
 

@@ -8,27 +8,26 @@
  * OF ANY KIND, either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package com.reactmrp;
+package com.gitee.drinkjava2.reactmrp;
 
 import java.io.File;
 
 import org.junit.Test;
 
+import com.gitee.drinkjava2.reactmrp.config.InitConfig;
 import com.github.drinkjava2.myserverless.DeployTool;
 import com.github.drinkjava2.myserverless.util.MyFileUtils;
 import com.github.drinkjava2.myserverless.util.MyStrUtils;
-import com.reactmrp.config.InitConfig;
 
 /**
- *  Deploy工具必须先调用initMyServerlessTemplates方法才可以使用，每个项目的初始化方法内容可能不一样
- *  用法： 
+ *  Deploy工具必须先调用initMyServerlessTemplates方法才可以使用，用法： 
  *  <pre>
  *  
  *  将服务器的MyServerless片段移到前端HTML页面里
- *  java -classpath ".;*" com.reactmrp.Deploy goFront
+ *  java -classpath ".;*" com.xx.xx.Deploy goFront
  *  
  *  将MyServerless片段从HTML页面移到服务器，以实现安全
- *  java -classpath ".;*" com.reactmrp.Deploy goServer
+ *  java -classpath ".;*" com.xx.xx.Deploy goServer
  *  
  *  </pre>
  */

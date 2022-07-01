@@ -1,3 +1,3 @@
 cd target\classes
-java -classpath ".;*" com.reactmrp.Deploy goFront
+java -classpath ".;*" com.gitee.drinkjava2.reactmrp.Deploy goFront
 @pause

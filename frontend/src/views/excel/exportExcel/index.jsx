@@ -66,6 +66,7 @@ class Excel extends Component {
   fetchData = () => {
     excelList().then((response) => {
       const list = response.data.data.items;
+      console.log("excel", list);
       if (this._isMounted) {
         this.setState({ list });
       }

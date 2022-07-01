@@ -8,9 +8,10 @@
  * OF ANY KIND, either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package com.reactmrp.config;
+package com.gitee.drinkjava2.reactmrp.config;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +19,12 @@ import javax.sql.DataSource;
 
 import org.junit.Test;
 
+import com.gitee.drinkjava2.reactmrp.config.DataSourceConfig.DataSourceBox;
+import com.gitee.drinkjava2.reactmrp.entity.Power;
+import com.gitee.drinkjava2.reactmrp.entity.Role;
+import com.gitee.drinkjava2.reactmrp.entity.RolePower;
+import com.gitee.drinkjava2.reactmrp.entity.User;
+import com.gitee.drinkjava2.reactmrp.entity.UserRole;
 import com.github.drinkjava2.jbeanbox.ClassScanner;
 import com.github.drinkjava2.jbeanbox.JBEANBOX;
 import com.github.drinkjava2.jdialects.Dialect;
@@ -25,12 +32,7 @@ import com.github.drinkjava2.jsqlbox.DB;
 import com.github.drinkjava2.jsqlbox.DbContext;
 import com.github.drinkjava2.jtransactions.tinytx.TinyTxConnectionManager;
 import com.github.drinkjava2.myserverless.MyServerlessEnv;
-import com.reactmrp.config.DataSourceConfig.DataSourceBox;
-import com.reactmrp.entity.Power;
-import com.reactmrp.entity.Role;
-import com.reactmrp.entity.RolePower;
-import com.reactmrp.entity.User;
-import com.reactmrp.entity.UserRole;
+import com.github.javafaker.Faker;
 
 import template.ExecuteSqlTemplate;
 import template.JavaTemplate;
@@ -92,7 +94,7 @@ public class InitConfig extends HttpServlet {
         DbContext.setGlobalDbContext(ctx);// 设定全局缺省上下文
 
         //创建数据库表
-        List<Class> classes = ClassScanner.scanPackages("com.reactmrp.entity"); //扫描所有实体以创建数据库表
+        List<Class> classes = ClassScanner.scanPackages("com.gitee.drinkjava2.reactmrp.entity"); //扫描所有实体以创建数据库表
 
         for (int i = 0; i < 10; i++) //我够狠，先静默删库10遍，保证所有表格包括有关联约束关系的表格都全部删除
             classes.stream().distinct().forEach(e -> {
@@ -127,7 +129,7 @@ public class InitConfig extends HttpServlet {
         //给用户添加角色，一个用户可以分配多个角色，这个演示只是简单分配一个用户对应同名的一个的角色
         UserRole ur = new UserRole();
         ur.setUserId("developer").setRoleName("developer").insert();
-        ur.setUserId("developer").setRoleName("admin").insert(); //developer用户同时具有developer和admin两个角色，但前端查询developer的角色时只需要返回admin角色，是因为网上找的这个前端只支持一个用户一个角色，不想改太多前端了
+        ur.setUserId("developer").setRoleName("admin").insert(); //developer用户同时具有developer和admin两个角色，但本项目前端只需要返回一个角色，所以在查询developer的角色时只返回最高业务角色admin
         ur.setUserId("admin").setRoleName("admin").insert();
         ur.setUserId("editor").setRoleName("editor").insert();
         ur.setUserId("guest").setRoleName("guest").insert();
@@ -140,10 +142,21 @@ public class InitConfig extends HttpServlet {
 
         //给角色添加权限，一个角色可以分配多个权限，这个演示只是简单分配一个角色对应同名的一个的权限
         RolePower ra = new RolePower();
-        ra.setRoleName("developer").setPowerName("developer").insert();
+        ra.setRoleName("developer").setPowerName("developer").insert(); 
         ra.setRoleName("admin").setPowerName("admin").insert();
+        //ra.setRoleName("admin").setPowerName("developer").insert(); 如果加上这行，admin角色也可以动态编译执行
         ra.setRoleName("editor").setPowerName("editor").insert();
-        ra.setRoleName("guest").setPowerName("guest").insert();
+        ra.setRoleName("guest").setPowerName("guest").insert(); 
+        
+        Faker f = new Faker(new Locale("zh-CN"));
+        for (int i = 0; i <10; i++) {
+            System.out.println(f.number().numberBetween(100, 999));
+            System.out.println(f.name().name());
+        System.out.println(f.date().birthday());
+        System.out.println(f.address().fullAddress());
+        System.out.println(f.avatar().image());  
+        }
+        
     }
 
     @Test

@@ -8,7 +8,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific
  * language governing permissions and limitations under the License.
  */
-package com.reactmrp.config;
+package com.gitee.drinkjava2.reactmrp.config;
 
 import com.github.drinkjava2.jdialects.NamingConversion;
 
