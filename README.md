@@ -12,10 +12,10 @@ MySQL或H2 - 后端数据库，H2用于测试或演示
 可以看出以上是一个非常简短的全栈开发工具链，这是针对MRP系统或小型网站的特点设计的。MRP之类应用的特点是在线人数少，但是业务逻辑非常复杂且业务需求变换快，所以工具链不能太复杂，之所以采用MyServerless这种开发模式，也是针对这个特点设计的，也就是说，架构一定要扁平化，在拿到UI数据的第一时间就要直接捅到数据库里去访问，不需要通过API和文档充当中介中转，这样才能适应业务需求的快速变化。  
 
 # 安全
-ReactMRP的安全性是由MyServerless来保障的。相对于GraphQL/XXXAPI之类一两页讲不清的工具，MyServerless的安全机制很简单，几名话可以说清：  
+ReactMRP的安全性是由MyServerless来提供的，这个安全机制很简单，几名话可以说清：  
 1. 开发期用具有developer权限的账户登录，可在前端任意写SQL和Java，并发送到后端动态编译执行。  
-2. 开发期对于每一个方法，由前端赋一个方法前缀名，比如 my.$executeSql(`#ReadUsers delete from users where id>?`, 10); 这个ReadUsers方法前缀说明登录用户必须配置有ReadUsers权限才能运行，用这种方式可以精确控制每个方法的执行权限。无须登录的公开方法必须起名为public前缀。如方法名省略，系统默认起名为default。
-3. 发布前进行命名检查，防止方法名要求的权限与它的代码内容不符，比如上面这个ReadUsers方法，它的命名和它的代码内容不符，所以要改方法名或修正代码。
+2. 开发期对于每一个方法，由前端赋一个方法前缀名，比如 my.$executeSql(`#ReadUsers delete from users where id>?`, 10); 这个ReadUsers方法前缀说明登录用户必须配置有ReadUsers权限才能运行，用这种方式可以精确控制每个方法的执行权限。无须登录的公开方法必须起名为public前缀。如方法名省略，系统默认起名为default，。
+3. 发布前进行命名检查，防止方法名要求的权限与它的代码内容不符，比如上面这个ReadUsers方法，它的命名和它的代码内容不符，所以要修改方法名或代码。
 4. 发布前，用MyServerless提供的打包工具将前端SQL和java代码抽取到后端，这样线上运行时前端是看不到SQL和Java源码的，而且线上运行配置成拒绝动态编译执行。  
 5. 方法也可以采用传统前后分离模式直接写在后端，参见项目中PublicBackend$TokenLogin示例，签权依然是按方法名来判断。
 关于本项目的安全设计，大家可以试着用developer和admin、guest账号登录体验一下就知道了，除了developer账号，其余账号都无权动态执行前端的SQL和Java。欢迎大家来攻破本项目的安全架构，虽然理论上是不可能的。  
@@ -124,8 +124,8 @@ MyServerless这种开发模式决定了它在开发过程中已经手工反复�
 
 ## 版权 | License
 
-前端：Apache 2.0 License
-后端：MIT License
+前端：MIT License
+后端：Apache 2.0 License
 
 ## 关注我 | About Me
 [码云](https://gitee.com/drinkjava2)  

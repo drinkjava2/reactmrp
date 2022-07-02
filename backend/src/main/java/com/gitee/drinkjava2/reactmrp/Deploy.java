@@ -20,8 +20,8 @@ import com.github.drinkjava2.myserverless.util.MyFileUtils;
 import com.github.drinkjava2.myserverless.util.MyStrUtils;
 
 /**
- *  Deploy工具必须先调用initMyServerlessTemplates方法才可以使用，用法： 
- *  <pre>
+ *  goServer和goFront方法分别对应backend路径下的go-backend.bat和go-frontend.bat
+ *  也可以直接在IDE里运行这两个方法.
  *  
  *  将服务器的MyServerless片段移到前端HTML页面里
  *  java -classpath ".;*" com.xx.xx.Deploy goFront
@@ -49,16 +49,19 @@ public class Deploy {
         DeployTool.deploy("goFront");
     }
 
+    //下面两个方法不一定要用。这两个方法一个用来将前端的@符号替换成本地路径，一个再换回来，某些情况下方便IDE在Javascript文件之间跳转。
+    static final String SRC = "E:/reactmrp/frontend/src/";
+
     @Test
     public void replaceAtToAbolutePath() {//切换@符号到绝对路径以方便IDE跳转，否则eclipse+typescript插件是不支持@符号的
-        for (File file : DeployTool.searchSupportedWebFilesInOnePath("E:\\reactmrp\\frontend\\src", null)) {
+        for (File file : DeployTool.searchSupportedWebFilesInOnePath(SRC, null)) {
             String fp = file.getAbsolutePath();
-            String s = MyFileUtils.readFile(fp, "utf-8"); 
-            if ((fp.endsWith(".js") || fp.endsWith(".jsx")) && (s.contains("import \"@/") || s.contains(" from \"@/") ||  s.contains(" from '@/")  || s.contains("'*/'@/") )) {
-                s = MyStrUtils.replace(s, "import \"@/", "import \"E:/reactmrp/frontend/src/");
-                s = MyStrUtils.replace(s, " from \"@/", " from \"E:/reactmrp/frontend/src/");
-                s = MyStrUtils.replace(s, " from '@/", " from 'E:/reactmrp/frontend/src/");
-                s = MyStrUtils.replace(s, "'*/'@/", "'*/'E:/reactmrp/frontend/src/");
+            String s = MyFileUtils.readFile(fp, "utf-8");
+            if ((fp.endsWith(".js") || fp.endsWith(".jsx")) && (s.contains("import \"@/") || s.contains(" from \"@/") || s.contains(" from '@/") || s.contains("'*/'@/"))) {
+                s = MyStrUtils.replace(s, "import \"@/", "import \"" + SRC);
+                s = MyStrUtils.replace(s, " from \"@/", " from \"" + SRC);
+                s = MyStrUtils.replace(s, " from '@/", " from '" + SRC);
+                s = MyStrUtils.replace(s, "'*/'@/", "'*/'" + SRC);
                 MyFileUtils.writeAndPrintFilename(file.getAbsolutePath(), s, "utf-8");
                 System.out.println(file.getAbsolutePath());
             }
@@ -67,11 +70,11 @@ public class Deploy {
 
     @Test
     public void replaceAbolutePathToAt() {//正式发布或提交到git服务器上之前，切换回绝对路径为@符号
-        for (File file : DeployTool.searchSupportedWebFilesInOnePath("E:\\reactmrp\\frontend\\src", null)) {
+        for (File file : DeployTool.searchSupportedWebFilesInOnePath(SRC, null)) {
             String fp = file.getAbsolutePath();
             String s = MyFileUtils.readFile(fp, "utf-8");
-            if ((fp.endsWith(".js") || fp.endsWith(".jsx")) && s.contains("E:/reactmrp/frontend/src/")) {
-                s = MyStrUtils.replace(s, "E:/reactmrp/frontend/src/", "@/");
+            if ((fp.endsWith(".js") || fp.endsWith(".jsx")) && s.contains(SRC)) {
+                s = MyStrUtils.replace(s, SRC, "@/");
                 MyFileUtils.writeAndPrintFilename(file.getAbsolutePath(), s, "utf-8");
                 System.out.println(file.getAbsolutePath());
             }
