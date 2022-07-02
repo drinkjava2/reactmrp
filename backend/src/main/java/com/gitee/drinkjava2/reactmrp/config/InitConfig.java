@@ -11,6 +11,8 @@
 package com.gitee.drinkjava2.reactmrp.config;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,6 +24,7 @@ import com.gitee.drinkjava2.reactmrp.config.DataSourceConfig.DataSourceBox;
 import com.gitee.drinkjava2.reactmrp.entity.Power;
 import com.gitee.drinkjava2.reactmrp.entity.Role;
 import com.gitee.drinkjava2.reactmrp.entity.RolePower;
+import com.gitee.drinkjava2.reactmrp.entity.Sample;
 import com.gitee.drinkjava2.reactmrp.entity.User;
 import com.gitee.drinkjava2.reactmrp.entity.UserRole;
 import com.github.drinkjava2.jbeanbox.ClassScanner;
@@ -31,6 +34,7 @@ import com.github.drinkjava2.jsqlbox.DB;
 import com.github.drinkjava2.jsqlbox.DbContext;
 import com.github.drinkjava2.jtransactions.tinytx.TinyTxConnectionManager;
 import com.github.drinkjava2.myserverless.MyServerlessEnv;
+import com.github.javafaker.Faker;
 
 import template.ExecuteSqlTemplate;
 import template.JavaTemplate;
@@ -60,7 +64,7 @@ public class InitConfig extends HttpServlet {
     public void init() throws ServletException {
         initMyServerlessTemplates(); //登记自定义的MyServerless模板
         initDataBase(); //删除并重建数据库
-        insertUserAndPowers(); //插入初始用户、角色、权限
+        initSeedData(); //插入初始用户、角色、权限
     }
 
     public static void initMyServerlessTemplates() { //登记自定义的MyServerless模板
@@ -86,6 +90,7 @@ public class InitConfig extends HttpServlet {
 
         //本项目使用jSqlBox作为DAO工具，以下是jSqlBox的配置
         DbContext.setGlobalNextAllowShowSql(true); //允许输出SQL日志到控制台
+        Dialect.setGlobalAllowReservedWords(true); //允许用保留字做列名
         Dialect.setGlobalNamingConversion(new ProjectNamingRule()); //全局表和字段名映射，表名列名为一对一关系，不作变换
         DbContext ctx = new DbContext(ds); //ctx是全局单例
         ctx.setConnectionManager(TinyTxConnectionManager.instance());// 事务配置
@@ -106,8 +111,7 @@ public class InitConfig extends HttpServlet {
 
     }
 
-    public static void insertUserAndPowers() {//插入种子用户、角色、权限
-
+    public static void initSeedData() {//插入种子数据，包括用户、角色、权限等 
         //新建用户 
         String pwd = ProjectTokenSecurity.encodePassword("123");
         String p1 = "https://s1.ax1x.com/2020/04/28/J5hUaT.jpg";
@@ -145,6 +149,18 @@ public class InitConfig extends HttpServlet {
         //ra.setRoleName("admin").setPowerName("developer").insert(); 如果加上这行，admin角色也可以动态编译执行
         ra.setRoleName("editor").setPowerName("editor").insert();
         ra.setRoleName("guest").setPowerName("guest").insert();
+
+        Faker f = new Faker(new Locale("zh-CN"));
+        Sample sp = new Sample();//演示表，这个不是MRP一部分，以后会删除 
+        for (int i = 0; i < 300; i++)
+            sp.putField("id", i, //
+                    "title", f.book().title(), //
+                    "author", f.book().author(), //
+                    "readings", new Random().nextInt(500), //
+                    "star", new String[]{"★","★★","★★★"}[new Random().nextInt(3)], //
+                    "date", f.date().birthday(), //
+                    "status", new String[]{"published", "draft"}[new Random().nextInt(2)]//
+            ).insert();
     }
 
     @Test
@@ -152,7 +168,7 @@ public class InitConfig extends HttpServlet {
         Dialect.setGlobalAllowReservedWords(false);
         initDataBase();
         //DbContext.gctx().setAllowShowSQL(true);
-        insertUserAndPowers();
+        initSeedData();
         List<String> powers = DB.qryList("select p.* from users u ", //
                 " left join userrole ur on u.userId=ur.userId ", //
                 " left join roles r on ur.roleName=r.roleName ", //

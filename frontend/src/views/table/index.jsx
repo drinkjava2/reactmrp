@@ -44,6 +44,7 @@ class TableComponent extends Component {
     this.setState({ loading: true });
     tableList(this.state.listQuery).then((response) => {
       this.setState({ loading: false });
+      console.log("result",response.data.data);
       const list = response.data.data.items;
       const total = response.data.data.total;
       if (this._isMounted) {

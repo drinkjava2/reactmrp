@@ -44,8 +44,8 @@ public abstract class SrcBuilder { // NOSONAR
      * @param sqlJavaPiece
      * @return
      */
-    public static String createSourceCode(Class<?> templateClass, PieceType piectType, SqlJavaPiece sqlJavaPiece) {
-        if (piectType == null)
+    public static String createSourceCode(Class<?> templateClass, PieceType pieceType, SqlJavaPiece sqlJavaPiece) {
+        if (pieceType == null)
             throw new NullPointerException("PieceType can not be null when create source code");
         String classSrc;
 
@@ -57,9 +57,9 @@ public abstract class SrcBuilder { // NOSONAR
         String classDeclar = MyStrUtils.substringBetween(classSrc, "public ", "{");
         classSrc = MyStrUtils.replaceFirst(classSrc, classDeclar, "class " + sqlJavaPiece.getClassName() + " extends " + templateClass.getName());
 
-        if (PieceType.JAVA.equals(piectType)) {
+        if (PieceType.JAVA.equals(pieceType)) {
             classSrc = MyStrUtils.replaceOneBetween(classSrc, "/* MYSERVERLESS BODY BEGIN */", "/* MYSERVERLESS BODY END */", sqlJavaPiece.getBody());
-        } else if (PieceType.QRY.equals(piectType)) {
+        } else if (PieceType.QRY.equals(pieceType) || PieceType.EXECUTE.equals(pieceType)) {
             String sql = sqlJavaPiece.getBody();
             sql = MyStrUtils.replace(sql, "\\`", "`");
             sql = MyStrUtils.replace(sql, "\"", "\\\"");
@@ -76,7 +76,7 @@ public abstract class SrcBuilder { // NOSONAR
             if (head.length() > 0 && body != null && body.length() > 0 && body.charAt(0) == ' ')
                 head = head.substring(0, head.length() - 1);
             return head + body;
-        } else if (PieceType.QRY.equals(pieceType)) {
+        } else if (PieceType.QRY.equals(pieceType) || PieceType.EXECUTE.equals(pieceType)) {
             String sql = piece.getBody();
             sql = MyStrUtils.substringAfter(sql, "\"");
             sql = MyStrUtils.substringBeforeLast(sql, "\"");

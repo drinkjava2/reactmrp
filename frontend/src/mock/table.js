@@ -1,57 +1,51 @@
 import Mock from "mockjs";
-let List = [];
-const count = 100;
+import * as my from "@/myserverless/myserverless.js";
 
-for (let i = 0; i < count; i++) {
-  List.push(
-    Mock.mock({
-      id: i,
-      title: "@ctitle(5, 10)",
-      author: "@cname",
-      readings: "@integer(300, 5000)",
-      "star|1-3": "★",
-      "status|1": ["published", "draft"],
-      date: "@datetime",
-    })
-  );
-}
 export default {
   tableList: (config) => {
-    const { pageNumber, pageSize, title, status, star } = JSON.parse(
-      config.body
-    );
-    let start = (pageNumber - 1) * pageSize;
-    let end = pageNumber * pageSize;
-    let mockList = List.filter((item) => {
-      if (star && item.star.length !== star) return false;
-      if (status && item.status !== status) return false;
-      if (title && item.title.indexOf(title) < 0) return false;
-      return true;
-    });
-    let pageList = mockList.slice(start, end);
+     let result = my.syncData$java(`#public
+            Map m=(Map) $1;
+            Object[] sql=new Object[]{" from sample where 1=1 ",
+                    noBlank(" and title like ?","%",m.get("title"),"%"),
+                    notBlank(" and star=?", m.get("star")),
+                    notBlank(" and status=?", m.get("status"))
+                    };
+            List items=DB.qryMapList("select * ",sql,  pagin((int)m.get("pageNumber"), (int)m.get("pageSize")));
+            int total=DB.qryIntValue("select count(*) ",sql);
+            m.clear();
+            m.put("items", items);
+            m.put("total", total);
+            return m;
+      `, JSON.parse( config.body) );
     return {
       code: 20000,
-      data: {
-        total: mockList.length,
-        items: pageList,
-      },
+      data: result,
     };
   },
+  
+  
   deleteItem: (config) => {
-    const { id } = JSON.parse(config.body);
-    const item = List.filter((item) => item.id === id);
-    const index = List.indexOf(item[0]);
-    List.splice(index, 1);
-    return {
-      code: 20000,
-    };
-  },
+      const { id } = JSON.parse(config.body);
+      my.sync$executeSql(`#admin delete from sample where id=?`, id);
+      return {
+        code: 20000,
+      };
+    },
+    
+  
+  
   editItem: (config) => {
     const data = JSON.parse(config.body);
-    const { id } = data;
-    const item = List.filter((item) => item.id === id);
-    const index = List.indexOf(item[0]);
-    List.splice(index, 1, data);
+    my.sync$java(`#admin
+            Map m=(Map)$1;
+            DB.exe("update sample set ",// 
+              "star=", que(m.get("star")), //
+              " , status=", que(m.get("status")), //
+              " , title=", que(m.get("title")), //
+              " , date=", que(m.get("date")),//
+              " where id =", que(m.get("id"))
+            ); 
+            `, data);
     return {
       code: 20000,
     };
