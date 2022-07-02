@@ -8,7 +8,7 @@ export function excelList() {
         import com.github.javafaker.Faker;
         Faker f = new Faker(new Locale("zh-CN")); 
         List l=new ArrayList();
-        for (int i = 0; i < 20; i++) { 
+        for (int i = 1; i <= 20; i++) { 
             Map m=new HashMap();
             m.put("id",  i);
             m.put("title",  f.book().title());

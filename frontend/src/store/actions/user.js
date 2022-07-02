@@ -4,7 +4,7 @@ import * as my from "@/myserverless/myserverless.js";
 
 export const getUserInfo = (token) => (dispatch) => {
     return new Promise((resolve) => {
-      my.data$myServerless(`PublicBackend$GetUserInfo`)
+      my.data$myServerless(`PublicBackend$GetCurrentLoginUser`)
         .then((userInfo) => { 
           if (userInfo) {
             dispatch(setUserInfo(userInfo));

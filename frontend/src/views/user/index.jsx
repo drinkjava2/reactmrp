@@ -21,8 +21,9 @@ class User extends Component {
     let json=await my.$java(`#admin List<Map<String, Object>> users = DB.qryMapList("select userId as id,  name, description from users order by userId");
             for (Map<String, Object> m : users) {
                 List<Object> roles = DB.qryList("select roleName from userRole where userId=", que(m.get("id"))," order by roleName desc");
-                if(!roles.isEmpty())
-                      m.put("role", roles.get(0));
+                if(!roles.isEmpty()) {
+                         m.put("role", roles.get(0));
+                      }
             }
             return users;`);  
     const { data: users, code: status } = json; 

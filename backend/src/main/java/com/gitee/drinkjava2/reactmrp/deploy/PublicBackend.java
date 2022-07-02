@@ -57,29 +57,19 @@ public class PublicBackend { //本项目在ProjectSecurity里设定为 deploy目
             return ProjectTokenSecurity.isValidToken(myToken);
         }
     }
-    
-    static Role getHighestBussinessRole(String userId) {//role只返回一个排除developer之后的最高级角色，通常是admin/editor/guest等
-        List<String> ids =  DB.qryList("select r.roleName from users u ", //
-                " left join userrole ur on u.userId=ur.userId ", //
-                " left join roles r on ur.roleName=r.roleName ", //
-                " where u.userId=", DB.que(userId), " and r.roleName<>'developer' order by roleLevel"); //排除developer角色
-        if (ids.isEmpty()) //如果什么权限都没有
-            return null;
-        return new Role().loadById(ids.get(0)); //loadbyId, 只返回等级最高的role
-    }
-    
+
 
     /**
-     * 返回当前登录用户信息，因为原前端GetUserInfo方法 一个用户只能有1个角色（role），所以这个方法中如果用户有多个角色，也只取一个除developer之外最高等级的角色以兼容原前端代码 
+     * 返回当前登录用户信息，因为原前端仅用户来控制菜单显示且一个用户仅限1个角色（role），所以这个方法中如果用户有多个角色，也只取一个除developer之外最高等级的角色以兼容原前端代码 
      */
-    public static class GetUserInfo extends template.JavaTemplate {
+    public static class GetCurrentLoginUser extends template.JavaTemplate {
         public Object executeBody() {
             Map<String, Object> user = DB.qryMap("select userId as id, name, description, myToken as token, avatar, '' as role from users where myToken=", que(myToken));
             if (!user.isEmpty()) {
                 List<String> roles =  DB.qryList("select r.roleName from users u ", //
                         " left join userrole ur on u.userId=ur.userId ", //
                         " left join roles r on ur.roleName=r.roleName ", //
-                        " where u.userId=", DB.que(user.get("id")), " and r.roleName<>'developer' order by roleLevel"); //排除developer角色
+                        " where u.userId=", DB.que(user.get("id")), " and r.roleName<>'developer' order by roleLevel"); //排除developer角色之后的最高业务级别role
                 if (!roles.isEmpty())
                     user.put("role", roles.get(0)); //取roleLevel最小的roleName,即最高等级的角色 
             }
