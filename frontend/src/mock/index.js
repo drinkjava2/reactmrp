@@ -1,7 +1,7 @@
 import Mock from "mockjs";
 //import loginAPI from "./login";
 import remoteSearchAPI from "./remoteSearch";
-import excelAPI from "./excel";
+//import excelAPI from "./excel";
 import tableAPI from "./table";
 import monitor from "./monitor";
 
@@ -20,7 +20,7 @@ import monitor from "./monitor";
 Mock.mock(/\/transaction\/list/, "get", remoteSearchAPI.transactionList);
 
 // excel
-Mock.mock(/\/excel\/list/, "get", excelAPI.excelList);
+//Mock.mock(/\/excel\/list/, "get", excelAPI.excelList);
 
 // table
 Mock.mock(/\/table\/list/, "post", tableAPI.tableList);

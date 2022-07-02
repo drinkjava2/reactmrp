@@ -9,7 +9,7 @@
     <!-- Dao and database initialization 初始化数据库以备测试 -->  
 	<servlet>
 	   <servlet-name>InitConfig</servlet-name>
-	   <servlet-class>com.reactmrp.InitConfig</servlet-class>
+	   <servlet-class>com.gitee.drinkjava2.reactmrp.InitConfig</servlet-class>
 	   <load-on-startup>0</load-on-startup>
 	</servlet>  
 

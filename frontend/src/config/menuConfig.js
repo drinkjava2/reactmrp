@@ -22,6 +22,12 @@ const menuList = [
     roles:["admin","editor"]
   },
   {
+      title: "用户管理",
+      path: "/user",
+      icon: "usergroup-add",
+      roles:["admin"]
+    },
+  {
     title: "权限测试",
     path: "/permission",
     icon: "lock",
@@ -159,12 +165,6 @@ const menuList = [
     path: "/clipboard",
     icon: "copy",
     roles:["admin","editor"]
-  },
-  {
-    title: "用户管理",
-    path: "/user",
-    icon: "usergroup-add",
-    roles:["admin"]
   },
   {
     title: "关于作者",

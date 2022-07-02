@@ -131,7 +131,7 @@ class User extends Component {
              Map<String,String> v= (Map<String,String>)$1;
             if(MyStrUtils.isEmpty(v.get("name"))) //只查name, 不检查userId，因为主键为空不可能插入
                  return null;
-             String pwd=com.reactmrp.config.ProjectTokenSecurity.encodePassword("123");
+             String pwd=com.gitee.drinkjava2.reactmrp.config.ProjectTokenSecurity.encodePassword("123");
              DB.exe("insert into users (userId, name, description, password) ", par(v.get("id"), v.get("name"), v.get("description"), pwd), DB.VQ ); 
              DB.exe("insert into userRole (userId, roleName) ", par(v.get("id"), v.get("role")), DB.VQ );  
              return true;`, values).then(( result ) => {

@@ -50,8 +50,7 @@ class Zip extends Component {
     selectedRowKeys: [],
   };
   fetchData = () => {
-    excelList().then((response) => {
-      const list = response.data.data.items;
+    excelList().then((list) => {
       if (this._isMounted) {
         this.setState({ list });
       }

@@ -64,9 +64,7 @@ class Excel extends Component {
     selectedRowKeys: [],
   };
   fetchData = () => {
-    excelList().then((response) => {
-      const list = response.data.data.items;
-      console.log("excel", list);
+    excelList().then((list) => {
       if (this._isMounted) {
         this.setState({ list });
       }

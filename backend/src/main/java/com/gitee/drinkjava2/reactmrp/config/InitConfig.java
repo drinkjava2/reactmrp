@@ -11,7 +11,6 @@
 package com.gitee.drinkjava2.reactmrp.config;
 
 import java.util.List;
-import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -32,7 +31,6 @@ import com.github.drinkjava2.jsqlbox.DB;
 import com.github.drinkjava2.jsqlbox.DbContext;
 import com.github.drinkjava2.jtransactions.tinytx.TinyTxConnectionManager;
 import com.github.drinkjava2.myserverless.MyServerlessEnv;
-import com.github.javafaker.Faker;
 
 import template.ExecuteSqlTemplate;
 import template.JavaTemplate;
@@ -109,11 +107,11 @@ public class InitConfig extends HttpServlet {
     }
 
     public static void insertUserAndPowers() {//插入种子用户、角色、权限
-        
+
         //新建用户 
         String pwd = ProjectTokenSecurity.encodePassword("123");
-        String p1="https://s1.ax1x.com/2020/04/28/J5hUaT.jpg";
-        String p2="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png";
+        String p1 = "https://s1.ax1x.com/2020/04/28/J5hUaT.jpg";
+        String p2 = "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png";
         User u = new User();
         u.setUserId("developer").setName("张三").setAvatar(p1).setDescription("开发者，拥有所有业务权限，允许执行前端发来的SQL和Java").setPassword(pwd).insert();
         u.setUserId("admin").setName("李四").setAvatar(p1).setDescription("管理员，拥有所有业务权限，但没有权限执行前端发来的SQL和Java").setPassword(pwd).insert();
@@ -142,21 +140,11 @@ public class InitConfig extends HttpServlet {
 
         //给角色添加权限，一个角色可以分配多个权限，这个演示只是简单分配一个角色对应同名的一个的权限
         RolePower ra = new RolePower();
-        ra.setRoleName("developer").setPowerName("developer").insert(); 
+        ra.setRoleName("developer").setPowerName("developer").insert();
         ra.setRoleName("admin").setPowerName("admin").insert();
         //ra.setRoleName("admin").setPowerName("developer").insert(); 如果加上这行，admin角色也可以动态编译执行
         ra.setRoleName("editor").setPowerName("editor").insert();
-        ra.setRoleName("guest").setPowerName("guest").insert(); 
-        
-        Faker f = new Faker(new Locale("zh-CN"));
-        for (int i = 0; i <10; i++) {
-            System.out.println(f.number().numberBetween(100, 999));
-            System.out.println(f.name().name());
-        System.out.println(f.date().birthday());
-        System.out.println(f.address().fullAddress());
-        System.out.println(f.avatar().image());  
-        }
-        
+        ra.setRoleName("guest").setPowerName("guest").insert();
     }
 
     @Test
