@@ -1,5 +1,6 @@
-const host="";
+//myserverless-pure.js是给不使用web工程化的场合使用的，如果使用了webpack，应当使用myserverless.js，这两个文件的区别是后者用在方法前加了export
 
+const host="";
 // Return example: {"code":200, "msg":"sucess", data:"foo", debugInfo:"bar"}
 async function fetchJSon(methodName, text, args){//异步ajax
     let bodyJsonStr=getBodyJsonStr(methodName, text, args);
