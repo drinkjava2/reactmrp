@@ -48,15 +48,15 @@ public class JsonResult {
         this.data = data;
     }
 
-    public static JsonResult json403(String msg, HttpServletRequest request, String json ) {
-        JsonResult result = new JsonResult(403, msg).setStatus(403);
+    public static JsonResult json206(String msg, HttpServletRequest request, String json ) {
+        JsonResult result = new JsonResult(500, msg).setStatus(500);
         if (MyServerlessEnv.allow_debug_info)
             result.setDebugInfo(getDebugInfo(request, json));
         return result;
     }
     
-    public static JsonResult json403(String msg) {
-        return new JsonResult(403, msg).setStatus(403);
+    public static JsonResult json206(String msg) {
+        return new JsonResult(500, msg).setStatus(500);
     }
     
     /**  Get debug info of request   */

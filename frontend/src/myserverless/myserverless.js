@@ -30,13 +30,10 @@ function syncXhrJSon(methodName, text, args){//同步ajax
 	//xhr.withCredentials = true;
 	try {
 	  xhr.send(bodyJsonStr);
-	  if (xhr.status !== 200) {
-		  return {"code":403, "msg":"Request failed", "data":null};
-	  } else {
-		  let obj= JSON.parse(xhr.responseText);
-		  if(obj.debugInfo)console.error(obj.debugInfo);
-		  return obj;
-	  }
+     let obj= JSON.parse(xhr.responseText);
+	 if(obj.debugInfo)
+		   console.error(obj.debugInfo);
+	  return obj; 
 	} catch(err) {
 		return {"code":403, "msg":"Request failed", "data":null};
 	}

@@ -97,14 +97,14 @@ public class MyServerlessServlet extends HttpServlet {
         try {
             req.setCharacterEncoding("utf-8");
         } catch (UnsupportedEncodingException e1) {
-            return JsonResult.json403("Error: unsupported utf-8 encoding on server side.", req, null);
+            return JsonResult.json206("Error: unsupported utf-8 encoding on server side.", req, null);
         }
 
         try {
             BufferedReader reader = req.getReader();
             jsonString = reader.readLine();
         } catch (IOException e1) {
-            return JsonResult.json403("Error: can not read json on server side.", req, null);
+            return JsonResult.json206("Error: can not read json on server side.", req, null);
         }
 
         Map<String, Object> params = null;
@@ -114,7 +114,7 @@ public class MyServerlessServlet extends HttpServlet {
             e.printStackTrace();
         }
         if (params == null)
-            return JsonResult.json403("Error: unsupport json format on server side.", req, null);
+            return JsonResult.json206("Error: unsupport json format on server side.", req, null);
 
         String sqlOrJavaPiece = (String) params.get("$0");
         String remoteMethod = (String) params.get("remoteMethod"); // like java/javaTx/qryMapList...
@@ -132,7 +132,7 @@ public class MyServerlessServlet extends HttpServlet {
         }
 
         if (MyStrUtils.isEmpty(sqlOrJavaPiece))
-            return JsonResult.json403("Error: request body is empty.", req, jsonString);
+            return JsonResult.json206("Error: request body is empty.", req, jsonString);
 
         Class<?> childClass = null;
         boolean hotCompile=false;
@@ -143,18 +143,18 @@ public class MyServerlessServlet extends HttpServlet {
                 methodId = MyStrUtils.substringAfterLast(methodId, "."); // xxPublicx$xxx
                 String error=MyServerlessEnv.tokenSecurity.check(myToken, methodId, hotCompile);//重要，在这里调用系统配置的TokenSecurity进行权限检查
                 if(!MyStrUtils.isEmpty(error))
-                    return JsonResult.json403(error);
+                    return JsonResult.json206(error);
             } else {
                 if (MyServerlessEnv.is_product_stage)
-                    return JsonResult.json403("Error: hot compile is not allowed in product stage.");
+                    return JsonResult.json206("Error: hot compile is not allowed in product stage.");
 
                 if (MyStrUtils.isEmpty(myToken) || myToken.length() < 10) //如果myToken没有，直接报错，不允许动态编译
-                    return JsonResult.json403("Error: myToken not found.");
+                    return JsonResult.json206("Error: myToken not found.");
 
                 PieceType pieceType = PieceType.byRemoteMethodName(remoteMethod);
                 Class<?> templateClass = MyServerlessEnv.methodTemplates.get(remoteMethod);
                 if (templateClass == null)
-                    return JsonResult.json403("Error: server template '" + remoteMethod + "' not found.", req, jsonString);
+                    return JsonResult.json206("Error: server template '" + remoteMethod + "' not found.", req, jsonString);
 
                 SqlJavaPiece piece = SqlJavaPiece.parseFromFrontText(remoteMethod, sqlOrJavaPiece);
                 String methodId = piece.getClassName(); //admin_rxumbbmwww3r6k3fyp8i
@@ -162,20 +162,20 @@ public class MyServerlessServlet extends HttpServlet {
                 hotCompile=true;
                 String error=MyServerlessEnv.tokenSecurity.check(myToken, methodId, hotCompile);//重要，在这里调用系统配置的TokenSecurity进行权限检查
                 if(!MyStrUtils.isEmpty(error))
-                    return JsonResult.json403(error); 
+                    return JsonResult.json206(error); 
 
                 String classSrc = SrcBuilder.createSourceCode(templateClass, pieceType, piece);
                 //注意下面这个方法动态编译Java源码，但是它自带缓存，如果相同的内容则直接返回缓存中上次编译后获得的类
                 childClass = DynamicCompileEngine.instance.javaCodeToClass(MyServerlessEnv.deploy_package + "." + piece.getClassName(), classSrc);
                 if (childClass == null) //still is null
-                    return JsonResult.json403("Error: hot compile failed.", req, jsonString);
+                    return JsonResult.json206("Error: hot compile failed.", req, jsonString);
             }
 
             BaseTemplate instance = null;
             if (BaseTemplate.class.isAssignableFrom(childClass)) {
                 instance = (BaseTemplate) childClass.newInstance(); //这里只能用newInstance生成多例，如果要采用单例模式虽然可以节省一点内存，但是req、rep、json只能放在线程变量里传递太麻烦
             } else
-                return JsonResult.json403("Error: incorrect base template.", req, jsonString);
+                return JsonResult.json206("Error: incorrect base template.", req, jsonString);
 
             instance.initParams(req, resp, params, myToken);
 
@@ -183,9 +183,9 @@ public class MyServerlessServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             if (MyServerlessEnv.allow_debug_info) //if debugInfo is true, will put exception message and debug info in JSON
-                return new JsonResult(403, "Error: server internal error.").setStatus(403).setDebugInfo(JsonResult.getDebugInfo(req, jsonString) + "\n" + e.getMessage());
+                return JsonResult.json206("Error: server internal error.").setDebugInfo(JsonResult.getDebugInfo(req, jsonString) + "\n" + e.getMessage());
             else
-                return JsonResult.json403("Error: server internal error.", req, jsonString);
+                return JsonResult.json206("Error: server internal error.");
         }
     } 
 }

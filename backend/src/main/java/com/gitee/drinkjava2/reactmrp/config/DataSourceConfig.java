@@ -12,7 +12,7 @@ import com.zaxxer.hikari.HikariDataSource;
  */
 public class DataSourceConfig {
 
-    public static class DataSourceBox extends H2DataSourceBox { //H2或MySql数据源, 分别继承于 H2DataSourceBox或MySqlDataSourceUtcTimeBox
+    public static class DataSourceBox extends MySqlDataSourceUtcTimeBox { //H2或MySql数据源, 分别继承于 H2DataSourceBox或MySqlDataSourceUtcTimeBox
     }
 
     // H2Database memory database connection URL

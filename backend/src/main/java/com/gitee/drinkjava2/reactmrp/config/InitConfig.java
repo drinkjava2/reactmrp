@@ -10,8 +10,8 @@
  */
 package com.gitee.drinkjava2.reactmrp.config;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Random;
 
 import javax.servlet.ServletException;
@@ -34,7 +34,6 @@ import com.github.drinkjava2.jsqlbox.DB;
 import com.github.drinkjava2.jsqlbox.DbContext;
 import com.github.drinkjava2.jtransactions.tinytx.TinyTxConnectionManager;
 import com.github.drinkjava2.myserverless.MyServerlessEnv;
-import com.github.javafaker.Faker;
 
 import template.ExecuteSqlTemplate;
 import template.JavaTemplate;
@@ -150,17 +149,28 @@ public class InitConfig extends HttpServlet {
         ra.setRoleName("editor").setPowerName("editor").insert();
         ra.setRoleName("guest").setPowerName("guest").insert();
 
-        Faker f = new Faker(new Locale("zh-CN"));
-        Sample sp = new Sample();//演示表，这个不是MRP一部分，以后会删除 
+        Sample sp = new Sample();//演示表，生成随机数据，这个不是MRP一部分，以后会删除
+        Random r = new Random();
         for (int i = 0; i < 300; i++)
             sp.putField("id", i, //
-                    "title", f.book().title(), //
-                    "author", f.book().author(), //
+                    "title", randomChinese(12), //
+                    "author", new String[]{"张", "王", "李", "赵"}[r.nextInt(4)] + new String[]{"三", "四", "五", "六"}[r.nextInt(4)], //
                     "readings", new Random().nextInt(500), //
-                    "star", new String[]{"★","★★","★★★"}[new Random().nextInt(3)], //
-                    "date", f.date().birthday(), //
-                    "status", new String[]{"published", "draft"}[new Random().nextInt(2)]//
+                    "star", new String[]{"★", "★★", "★★★"}[r.nextInt(3)], //
+                    "date", new Date(300L*r.nextInt()), //
+                    "status", new String[]{"published", "draft"}[r.nextInt(2)]//
             ).insert();
+    }
+
+    private static String randomChinese(int length) {//随机生成常用汉字
+        String s = "";
+        Random r = new Random();
+        for (int i = 0; i < length; i++)
+            try {//176和161分别是汉字区码和位码起点
+                s += new String(new byte[]{(byte) (176 + r.nextInt(9)), (byte) (161 + r.nextInt(9))}, "GBK");
+            } catch (Exception e) {
+            }
+        return s;
     }
 
     @Test

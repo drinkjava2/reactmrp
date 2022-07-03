@@ -40,18 +40,48 @@ class TableComponent extends Component {
       title: ""
     }
   };
+  
+//  fetchData = () => {
+//    this.setState({ loading: true });
+//    tableList(this.state.listQuery).then((response) => {
+//      this.setState({ loading: false });
+//      console.log("result",response.data.data);
+//      const list = response.data.data.items;
+//      const total = response.data.data.total;
+//      if (this._isMounted) {
+//        this.setState({ list, total });
+//      }
+//    });
+//  };
+
   fetchData = () => {
-    this.setState({ loading: true });
-    tableList(this.state.listQuery).then((response) => {
-      this.setState({ loading: false });
-      console.log("result",response.data.data);
-      const list = response.data.data.items;
-      const total = response.data.data.total;
-      if (this._isMounted) {
-        this.setState({ list, total });
-      }
-    });
-  };
+      this.setState({ loading: true });
+      tableList(this.state.listQuery).then((result) => {
+        this.setState({ loading: false }); 
+        const list = result.items;
+        const total = result.total;
+        if (this._isMounted) {
+          this.setState({ list, total });
+        }
+      });
+    };
+    
+ 
+    
+
+//    tableList(this.state.listQuery).then((result) => {
+//      this.setState({ loading: false });
+//      console.log("result", result);
+//      const list =  result.items;
+//      const total = result.total;
+//      if (this._isMounted) {
+//        this.setState({ list, total });
+ //     }
+  //  });
+ // };
+
+
+
   componentDidMount() {
     this._isMounted = true;
     this.fetchData();
