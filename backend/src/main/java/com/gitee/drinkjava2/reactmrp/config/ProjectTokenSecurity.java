@@ -75,7 +75,7 @@ public class ProjectTokenSecurity implements TokenSecurity {
             return "Error: myToken not found";
         String userId = DB.qryString("select userId from users where myToken=", DB.que(myToken));
         if (MyStrUtils.isEmpty(userId))
-            return "Error: myToken is not valid or expired";
+            return "Error: myToken is invalid or expired";
 
         //获取当前登录用户权限列表，这是一个典型的用户-角色多对多，角色-权限多对多关系
         List<String> powers = DB.qryList("select p.* from users u ", /* userPowerCache可选，见上, */

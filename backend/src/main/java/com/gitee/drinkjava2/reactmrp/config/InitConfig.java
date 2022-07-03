@@ -159,7 +159,7 @@ public class InitConfig extends HttpServlet {
                     "star", new String[]{"★", "★★", "★★★"}[r.nextInt(3)], //
                     "date", new Date(300L*r.nextInt()), //
                     "status", new String[]{"published", "draft"}[r.nextInt(2)]//
-            ).insert();
+            ).insert();        
     }
 
     private static String randomChinese(int length) {//随机生成常用汉字

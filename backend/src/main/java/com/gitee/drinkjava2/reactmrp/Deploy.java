@@ -49,7 +49,7 @@ public class Deploy {
         DeployTool.deploy("goFront");
     }
 
-    //下面两个方法不一定要用。这两个方法一个用来将前端的@符号替换成本地路径，一个再换回来，某些情况下方便IDE在Javascript文件之间跳转。
+    //下面两个方法不一定要用。这两个方法一个用来将前端的@符号替换成本地路径，一个再换回来，方便IDE在Javascript文件之间跳转
     static final String SRC = "E:/reactmrp/frontend/src/";
 
     @Test

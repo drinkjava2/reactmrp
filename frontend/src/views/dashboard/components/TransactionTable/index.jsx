@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Table, Tag } from "antd";
 import { transactionList } from "@/api/remoteSearch";
+import * as my from "@/myserverless/myserverless.js";
 
 const columns = [
   {
@@ -35,12 +36,23 @@ class TransactionTable extends Component {
     list: [],
   };
   fetchData = () => {
-    transactionList().then((response) => {
-      const list = response.data.data.items.slice(0, 13);
-      if (this._isMounted) { 
-        this.setState({ list });
-      }
-    });
+      my.data$java(`#public
+        List l=new ArrayList();
+        for (int i = 0; i<13; i++) {
+            Map m=new HashMap<>();
+            m.put("key", i);
+            m.put("order_no", UUID.randomUUID().toString());
+            m.put("price", (float)Math.round(1000000*new Random().nextFloat())/100);
+            m.put("tag", new String[] {"pending", "success" }[new Random().nextInt(2)]);
+            l.add(m);
+        }
+        return l;
+        `).then((data) => {
+          const list = data;
+          if (this._isMounted) { 
+            this.setState({ list });
+          }
+        }); 
   };
   componentDidMount() {
     this._isMounted = true;

@@ -1,42 +1,25 @@
 package com.gitee.drinkjava2.reactmrp;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import com.github.drinkjava2.myserverless.BaseTemplate; 
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
 @SuppressWarnings("all")
-public class Temp extends BaseTemplate {
+public class Temp {//临时类，用于调试前端小片段
 
-    @Override
-	public Object executeBody() {
-        if(1>0) {
-            
-            try {
-                Date d=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("");
-            } catch (ParseException e) {
-                
-            }
-                    
-		/* MYSERVERLESS BODY BEGIN */
-//
-//            
-//            Sample s =new Sample().loadById($1);
-//            s.setAuthor(author);
-//            s.setDate(date);
-//            s.setReadings(readings);
-//            s.setStar(star);
-//            s.setStatus(status);
-//            s.setTitle(title);
-//            s.update();
-//            
-            
-            
-        /* MYSERVERLESS BODY END */
-        } 
-        return null;
-	}
+    public static void main(String[] args) {
+        List l = new ArrayList();
+        for (int i = 0; i < 13; i++) {
+            Map m = new HashMap<>();
+            m.put("key", i);
+            m.put("order_no", UUID.randomUUID().toString());
+            m.put("price", (float) Math.round(10000 * new Random().nextFloat()) / 100);
+            m.put("tag", new String[]{"pending", "success"}[new Random().nextInt(2)]);
+            l.add(m);
+        }
+    }
 
 }

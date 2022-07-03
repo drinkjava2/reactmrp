@@ -11,7 +11,7 @@ const obj = {};
 
 class Bug extends Component {
   jsError = () => {
-    console.log(obj.a.length);
+    //console.log(obj.a.length);
   };
   loadResourceError = () => {
     let img = document.createElement("img");

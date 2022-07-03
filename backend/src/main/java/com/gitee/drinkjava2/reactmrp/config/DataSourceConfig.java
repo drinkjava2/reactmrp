@@ -5,14 +5,14 @@ import com.zaxxer.hikari.HikariDataSource;
 
 /**
  * Project DataSource Configuration
- * 这里用到了jBeanBox来配置数据源，jBeanBox是一个小型的IOC/AOP工具，功能与Spring-Core类似
+ * 这里用到了jBeanBox来配置数据源，jBeanBox是一个小型的IOC/AOP工具，功能与Spring-Core或Guice类似
  * 
  * @author Yong Zhu
  * @since 1.0.0
  */
 public class DataSourceConfig {
 
-    public static class DataSourceBox extends MySqlDataSourceUtcTimeBox { //H2或MySql数据源, 分别继承于 H2DataSourceBox或MySqlDataSourceUtcTimeBox
+    public static class DataSourceBox extends MySqlDataSourceUtcTimeBox { //缺省用H2，如果本机装了MySql可以用MySQL。分别 对应 H2DataSourceBox或MySqlDataSourceUtcTimeBox
     }
 
     // H2Database memory database connection URL

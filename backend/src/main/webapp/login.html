@@ -79,7 +79,6 @@ input{
 		localStorage.setItem("myToken", ""); 
 		var result =syncData$myServerless(`PublicBackend$CookieLogin`
 		            , domValById("userId"), domValById("password"));
-	    console.log("result", result);
 		if(result==true){
 		   window.location.href="/welcome.html";
 		} else

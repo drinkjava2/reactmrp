@@ -58,11 +58,13 @@ class TableComponent extends Component {
       this.setState({ loading: true });
       tableList(this.state.listQuery).then((result) => {
         this.setState({ loading: false }); 
-        const list = result.items;
-        const total = result.total;
-        if (this._isMounted) {
-          this.setState({ list, total });
-        }
+        if(result){ 
+            const list = result.items;
+            const total = result.total;
+            if (this._isMounted) {
+                this.setState({ list, total });
+            }
+        }   
       });
     };
     
@@ -142,7 +144,7 @@ class TableComponent extends Component {
     );
   };
   handleDelete = (row) => {
-    deleteItem({id:row.id}).then(res => {
+    deleteItem(row.id).then(res => {
       message.success("删除成功")
       this.fetchData();
     })
