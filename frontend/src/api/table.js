@@ -25,7 +25,7 @@ export function tableList(query) {
             m.put("items", items);
             m.put("total", total);
             return m;
-      `, JSON.parse(query));
+      `, query);
 }
 
 export function deleteItem(data) {
