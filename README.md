@@ -124,6 +124,11 @@ MyServerless这种开发模式决定了它在开发过程中已经手工反复�
 # IDE
 IDE要看个人喜好。我用Eclipse安装TypeScript插件，就可同时导入和编辑前后端两个项目。
 
+# 项目截图
+![pic1](pic1.png)  
+
+![pic2](pic2.png)  
+
 ## 版权 | License
 前端：MIT License
 后端：Apache 2.0 License
