@@ -3,12 +3,14 @@ ReactMRP是一个微型MRP系统，主要特点是技术上基于MyServerless，
 
 ## 架构
 ReactMRP技术栈基于以下开源项目：  
+
 Ant-Design - 这是一个UI库，提供多种Web UI组件  
 React - 这是个前端框架，是UI组件化的基础  
 MyServerless  - 这是我写的微型Serverless工具，是前后端的桥梁，支持将SQL和Java写在前端并动态编择执行，并提供打包功能。MyServerless是一个servlet，处理*.do后缀的访问，可以单独或与旧系统集成配置到Servlet服务器上运行。  
 Undertow - 这是随便找的一个Servlet服务器，作用是处理HTTP协议和管理线程。  
 jSqlBox - 这是我写的后端DAO工具，提供了较全的数据库存取功能，如：参数内嵌式SQL/ORM/ActiveRecord/DDL生成/分页/分库分表/事务等。  
 H2或MySQL - 后端数据库，H2内存数据库用于演示，MySql用于调试和生产  
+  
 可以看出以上是一个非常短的全栈开发工具链，这是针对MRP/ERP之类小型网站的特点设计的。MRP之类应用特点是在线人数少，但是业务逻辑非常复杂且业务需求变换快，所以工具链不能复杂，之所以采用MyServerless这种开发模式，也是针对这个特点设计的，也就是说架构一定要扁平化，在拿到UI数据的第一时间就要直接捅到数据库里去访问，不要通过API和文档充当中介，这样才能减少沟通，适应业务需求的快速变化。  
 
 ## 安全
@@ -31,17 +33,17 @@ ReactMRP分为后端和前端两部分，分别位于backend和frontend两个目
 启动完成后会自动打开浏览器访问 [http://localhost:3000](http://localhost:3000) 
 
 ## 前端
-前端是基于难凉热血的[react-antd-admin-template](https://nlrx-wjc.github.io/react-antd-admin-template/) 前端模板基础上修改而来。
-目前只是刚刚完成了将用户登录和用户管理模块的Mock部分用实际数据库代替，具体的MRP业务逻辑(基础数据/BOM/库存管理/订单等)还待添加。但是这个架构已经成型了，可以基于当前框架进行CRUD，能看出MyServerless的优点了，所以虽然业务部分还没完成，我也把它共享出来了。实际上，MRP/ERP之类的系统每个企业都不一样，都是需要定制修改的，一个企业的MRP代码对另一个企业可能就是垃圾。框架本身是否支持快速开发、是否有可维护性才是最有价值的地方。  
+前端是基于难凉热血的[react-antd-admin-template](https://nlrx-wjc.github.io/react-antd-admin-template/) 前端模板基础上修改而来。  
+目前只是刚刚完成了将用户登录和用户管理模块的Mock部分用实际数据库代替，具体的MRP业务逻辑(基础数据/BOM/库存管理/订单等)还待添加。但是这个架构已经成型了，可以基于当前框架进行CRUD，能看出MyServerless的优点了，所以虽然业务部分还没完成，我也把它共享出来了。实际上MRP/ERP之类的系统每个企业都不一样，都是需要定制修改的，一个企业的代码对另一个企业可能就是垃圾。开发框架本身是否支持快速开发、具有可维护性才是最关键的。  
 目前这个开发框架的缺点是表单的增删改查比较繁琐，这个在后续版本会继续改进。  
 
 ### 前端安装依赖  
 npm install  
-或如在国内，使用淘宝源加快下载速度:  
+如在国内，可使用淘宝源加快下载速度:  
 npm install --registry=https://registry.npm.taobao.org  
 
 ### 前端启动
-运行front目录下的run_npm_start.bat即可启动前端
+npm start
 启动完成后会自动打开浏览器访问 [http://localhost:3000](http://localhost:3000)  
 
 ### 前端打包
