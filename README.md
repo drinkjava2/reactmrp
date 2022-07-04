@@ -11,7 +11,7 @@ jSqlBox - 这是我写的后端DAO工具，提供了较全的数据库存取功�
 H2或MySQL - 后端数据库，H2内存数据库用于演示，MySql用于调试和生产  
 可以看出以上是一个非常短的全栈开发工具链，这是针对MRP/ERP之类小型网站的特点设计的。MRP之类应用特点是在线人数少，但是业务逻辑非常复杂且业务需求变换快，所以工具链不能复杂，之所以采用MyServerless这种开发模式，也是针对这个特点设计的，也就是说架构一定要扁平化，在拿到UI数据的第一时间就要直接捅到数据库里去访问，不要通过API和文档充当中介，这样才能减少沟通，适应业务需求的快速变化。  
 
-##安全
+## 安全
 ReactMRP的安全性是由MyServerless来提供的，这个安全机制很简单，几名话可以说清：  
 1. 开发期用具有developer权限的账户登录，可在前端任意写SQL和Java，并发送到后端动态编译执行。  
 2. 开发期对于每一个方法，由前端赋一个方法前缀名，比如 my.$executeSql(`#ReadUsers delete from users where id>?`, 10); 这个ReadUsers方法前缀说明登录用户必须服务端配置有ReadUsers权限才能运行，用这种方式可以精确控制每个方法的执行权限。无须登录的公开方法必须起名为public前缀。如方法名省略，系统默认起名为default。
@@ -129,6 +129,8 @@ IDE要看个人喜好。我用Eclipse安装TypeScript插件，就可同时导入
 ![pic1](pic1.png)  
 
 ![pic2](pic2.png)  
+
+![pic3](pic3.png)  
 
 ## 版权 | License
 前端：MIT License
