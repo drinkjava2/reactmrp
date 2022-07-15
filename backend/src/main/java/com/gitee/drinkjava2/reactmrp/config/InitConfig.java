@@ -21,12 +21,12 @@ import javax.sql.DataSource;
 import org.junit.Test;
 
 import com.gitee.drinkjava2.reactmrp.config.DataSourceConfig.DataSourceBox;
-import com.gitee.drinkjava2.reactmrp.entity.Power;
-import com.gitee.drinkjava2.reactmrp.entity.Role;
-import com.gitee.drinkjava2.reactmrp.entity.RolePower;
-import com.gitee.drinkjava2.reactmrp.entity.Sample;
-import com.gitee.drinkjava2.reactmrp.entity.User;
-import com.gitee.drinkjava2.reactmrp.entity.UserRole;
+import com.gitee.drinkjava2.reactmrp.entity.security.Power;
+import com.gitee.drinkjava2.reactmrp.entity.security.Role;
+import com.gitee.drinkjava2.reactmrp.entity.security.RolePower;
+import com.gitee.drinkjava2.reactmrp.entity.security.Sample;
+import com.gitee.drinkjava2.reactmrp.entity.security.User;
+import com.gitee.drinkjava2.reactmrp.entity.security.UserRole;
 import com.github.drinkjava2.jbeanbox.ClassScanner;
 import com.github.drinkjava2.jbeanbox.JBEANBOX;
 import com.github.drinkjava2.jdialects.Dialect;

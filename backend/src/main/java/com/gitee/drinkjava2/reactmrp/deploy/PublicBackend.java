@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.gitee.drinkjava2.reactmrp.config.ProjectTokenSecurity;
-import com.gitee.drinkjava2.reactmrp.entity.Role;
+import com.gitee.drinkjava2.reactmrp.entity.security.Role;
 import com.github.drinkjava2.jsqlbox.DB;
 import com.github.drinkjava2.myserverless.MyServerlessEnv;
 

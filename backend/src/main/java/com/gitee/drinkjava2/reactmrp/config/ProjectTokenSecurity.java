@@ -12,7 +12,7 @@ package com.gitee.drinkjava2.reactmrp.config;
 
 import java.util.List;
 
-import com.gitee.drinkjava2.reactmrp.entity.User;
+import com.gitee.drinkjava2.reactmrp.entity.security.User;
 import com.github.drinkjava2.jdialects.StrUtils;
 import com.github.drinkjava2.jsqlbox.DB;
 import com.github.drinkjava2.myserverless.TokenSecurity;
