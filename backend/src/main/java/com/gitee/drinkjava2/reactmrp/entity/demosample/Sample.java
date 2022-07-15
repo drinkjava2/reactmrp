@@ -1,4 +1,4 @@
-package com.gitee.drinkjava2.reactmrp.entity.security;
+package com.gitee.drinkjava2.reactmrp.entity.demosample;
 
 import java.util.Date;
 
