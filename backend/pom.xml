@@ -69,12 +69,12 @@
     	<version>2.13.3</version>
 	</dependency>
 
-    <!-- jSqlBox is a DAO tool based on Apache-DbUtils -->
-    <dependency>
+	<!-- jSqlBox is a DAO tool, here embeded source code in ReactMRP project for debug purpose -->
+    <!--dependency>
       <groupId>com.github.drinkjava2</groupId>
       <artifactId>jsqlbox</artifactId>
-      <version>5.0.13.jre8</version><!--Or newest jSqlBox -->
-    </dependency>  
+      <version>5.0.13.jre8</version>
+    </dependency-->
 	
    <!-- HikariCP is a dataSource pool -->
     <dependency>
