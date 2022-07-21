@@ -16,11 +16,11 @@ H2或MySQL - 后端数据库，H2内存数据库用于演示，MySql用于调试
 ## 安全
 ReactMRP的安全性是由MyServerless来提供的，这个安全机制很简单，几名话可以说清：  
 1. 开发期用具有developer权限的账户登录，可在前端任意写SQL和Java，并发送到后端动态编译执行。  
-2. 开发期对于每一个方法，由前端赋一个方法前缀名，比如 my.$executeSql(`#ReadUsers delete from users where id>?`, 10); 这个ReadUsers方法前缀说明登录用户必须服务端配置有ReadUsers权限才能运行，用这种方式可以精确控制每个方法的执行权限。无须登录的公开方法必须起名为public前缀。如方法名省略，系统默认起名为default。
-3. 发布前进行命名检查，防止方法名要求的权限与它的代码内容不符，比如上面这个ReadUsers方法，它的代码是在删库，和命名完全不符，所以要修改代码或者修改方法名。
+2. 开发期对于每一个方法，由前端赋一个方法前缀名，比如 my.$executeSql(`#ReadUsers delete from users where id>?`, 10); 这个ReadUsers方法前缀说明登录用户必须服务端配置有ReadUsers权限才能运行，用这种方式可以精确控制每个方法的执行权限。无须登录的公开方法必须起名为public前缀。如方法名省略，系统默认起名为default。  
+3. 发布前进行命名检查，防止方法名要求的权限与它的代码内容不符，比如上面这个ReadUsers方法，它的代码是在删库，和命名完全不符，所以要修改代码或者修改方法名。  
 4. 发布前，用MyServerless提供的打包工具将前端SQL和java代码抽取到后端，这样线上运行时前端是看不到SQL和Java源码的，而且线上运行配置成拒绝动态编译执行。  
-5. 方法也可以采用传统前后分离模式直接写在后端，参见项目中PublicBackend$TokenLogin示例，签权依然是统一按方法名来判断。
-关于本项目的安全设计，大家可以试着用developer和admin、guest账号登录体验一下就知道了，除了developer账号，其余账号都无权动态执行前端的SQL和Java。欢迎大家来找出本项目的安全漏破，虽然理论上是不存在的。  
+5. 方法也可以采用传统前后分离模式直接写在后端，参见项目中PublicBackend$TokenLogin示例，签权依然是统一按方法名来判断。  
+关于本项目的安全设计，大家可以试着用developer和admin、guest账号登录体验一下就知道了，除了developer账号，其余账号都无权动态执行前端的SQL和Java。欢迎大家来找出本项目的安全漏洞，虽然理论上是不存在的。  
 
 ## 开发
 ReactMRP分为后端和前端两部分，分别位于backend和frontend两个目录下，开发阶段要同时启动后端和前端服务。对于团队开发，后端服务可以布置在远程，所有前端直接基于同一个远程后端进行开发，把SQL和业务代码直接写在前端PHP/HTML/JS/TS/JSX里即可。  
@@ -47,7 +47,7 @@ npm start
 启动完成后会自动打开浏览器访问 [http://localhost:3000](http://localhost:3000)  
 
 ### 前端打包
-1) 运行backend目录下的go-backend.bat，把SQL和Java抽取到后端，以实现安全性。  
+1) 运行backend目录下的go-backend.bat，把SQL和Java抽取到后端，以实现安全性。 （重要！)   
 2) 运行npm run build 生成发布包，并上传到生产服务器  
 
 ## 关于测试和文档
